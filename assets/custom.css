@@ -1,0 +1,25 @@
+/* ==========================================================================
+   KINU — surcouche de direction artistique
+   --------------------------------------------------------------------------
+   Chargée en dernier dans <head> (layout/theme.liquid) : ces règles gagnent
+   sur celles du thème Horizon sans qu'on ait à modifier ses fichiers.
+
+   Convention : toute classe créée ici est préfixée `kn-`.
+   Horizon possède déjà .hero, .grid, .card, .btn, .icon, .media — les
+   réutiliser provoque des conflits silencieux.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Jetons de design (couleurs, typo, rythme)
+   -------------------------------------------------------------------------- */
+:root {
+  --kn-space-xs: 0.5rem;
+  --kn-space-sm: 1rem;
+  --kn-space-md: 2rem;
+  --kn-space-lg: 4rem;
+  --kn-space-xl: 8rem;
+}
+
+/* --------------------------------------------------------------------------
+   2. Direction artistique (à remplir selon le brief client)
+   -------------------------------------------------------------------------- */
