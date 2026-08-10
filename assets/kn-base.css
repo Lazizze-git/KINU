@@ -1,0 +1,382 @@
+/* ==========================================================================
+   KINŪ — Socle global
+   --------------------------------------------------------------------------
+   Base typographique, angles vifs, suppression des ombres, et les quelques
+   utilitaires partagés par toutes les feuilles de domaine.
+   Chargé juste après custom.css. Voir DIRECTION-ARTISTIQUE.md §4, §5.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Socle
+   -------------------------------------------------------------------------- */
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--kn-ivory);
+  color: var(--kn-ink);
+  font-family: var(--kn-font-text);
+  font-size: var(--kn-fs-body);
+  font-weight: var(--kn-fw-regular);
+  line-height: var(--kn-lh-body);
+  letter-spacing: var(--kn-ls-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Empêche le débordement horizontal induit par les sections full-bleed. */
+body {
+  overflow-x: clip;
+}
+
+/* --------------------------------------------------------------------------
+   2. Titres — DM Sans, casse normale, interlettrage négatif (DA §4.2)
+   -------------------------------------------------------------------------- */
+
+h1, h2, h3, h4, h5, h6,
+.kn-display, .kn-h1, .kn-h2, .kn-h3, .kn-h4 {
+  font-family: var(--kn-font-display);
+  font-weight: var(--kn-fw-bold);
+  line-height: var(--kn-lh-title);
+  letter-spacing: var(--kn-ls-title);
+  text-transform: none;
+  text-wrap: balance;
+  margin: 0;
+}
+
+.kn-display { font-size: var(--kn-fs-display); line-height: var(--kn-lh-display); letter-spacing: var(--kn-ls-display); }
+h1, .kn-h1   { font-size: var(--kn-fs-h1); line-height: 1.02; letter-spacing: -0.025em; }
+h2, .kn-h2   { font-size: var(--kn-fs-h2); }
+h3, .kn-h3   { font-size: var(--kn-fs-h3); font-weight: var(--kn-fw-medium); line-height: 1.18; letter-spacing: -0.015em; }
+h4, .kn-h4   { font-size: var(--kn-fs-h4); font-weight: var(--kn-fw-medium); line-height: 1.3; letter-spacing: -0.01em; }
+
+/* --------------------------------------------------------------------------
+   3. Texte courant
+   -------------------------------------------------------------------------- */
+
+p, li, dd, dt, blockquote {
+  font-family: var(--kn-font-text);
+  letter-spacing: var(--kn-ls-body);
+  line-height: var(--kn-lh-body);
+  text-wrap: pretty;
+}
+
+.kn-lead {
+  font-size: var(--kn-fs-lead);
+  line-height: 1.55;
+  max-width: var(--kn-measure);
+}
+
+.kn-body  { font-size: var(--kn-fs-body); max-width: var(--kn-measure); }
+.kn-sm    { font-size: var(--kn-fs-sm); line-height: 1.55; }
+.kn-muted { color: var(--kn-surface-muted); }
+
+/* Libellés, sur-titres, fil d'Ariane, boutons : DM Sans, majuscules, chassé positif. */
+.kn-label {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-label);
+  font-weight: var(--kn-fw-medium);
+  line-height: var(--kn-lh-tight);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
+}
+
+.kn-price {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-price);
+  font-weight: var(--kn-fw-medium);
+  line-height: var(--kn-lh-tight);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+/* Chiffres tabulaires partout où une valeur peut varier (DA §4.2). */
+.kn-price, .kn-qty, time, [data-kn-numeric] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   4. Angles vifs & zéro ombre (DA §5.4)
+   Horizon livre des rayons de 14px et des ombres de carte : on les écrase.
+   -------------------------------------------------------------------------- */
+
+body :where(button, input, select, textarea, dialog, details, summary, img, video, picture, .card, .button, [class*="button"], [class*="card"], [class*="drawer"], [class*="popover"], [class*="modal"]) {
+  border-radius: var(--kn-radius);
+}
+
+body :where(*) {
+  box-shadow: none;
+}
+
+/* Les pastilles et badges restent en pilule : contraste volontaire. */
+.kn-pill,
+.kn-badge,
+.kn-cart-count {
+  border-radius: var(--kn-radius-pill);
+}
+
+/* --------------------------------------------------------------------------
+   5. Conteneurs & pleine largeur (DA §5.1)
+   -------------------------------------------------------------------------- */
+
+.kn-container {
+  width: 100%;
+  max-width: var(--kn-container);
+  margin-inline: auto;
+  padding-inline: var(--kn-gutter);
+}
+
+.kn-container--narrow {
+  max-width: var(--kn-container-narrow);
+}
+
+.kn-measure {
+  max-width: var(--kn-measure);
+}
+
+/* Fait sortir un bloc de son conteneur pour aller bord à bord (DA §3.4 R1). */
+.kn-bleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}
+
+.kn-section {
+  padding-block: var(--kn-section-y);
+}
+
+/* Une surface colorée reçoit toujours plus d'air (DA §5.3). */
+[data-kn-surface="flood"].kn-section,
+[data-kn-surface="dark"].kn-section {
+  padding-block: var(--kn-section-y-flood);
+}
+
+/* --------------------------------------------------------------------------
+   6. Liens
+   -------------------------------------------------------------------------- */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Soulignement révélé (DA §3.4 R8) — réservé aux liens en ligne et CTA tertiaires. */
+.kn-underline {
+  position: relative;
+  display: inline-block;
+  color: var(--kn-surface-fg);
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-underline::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -2px;
+  height: var(--kn-stroke);
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--kn-dur-3) var(--kn-ease-out);
+}
+
+.kn-underline:hover {
+  color: var(--kn-surface-accent);
+}
+
+.kn-underline:hover::after,
+.kn-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* --------------------------------------------------------------------------
+   7. Boutons (DA §7.4)
+   -------------------------------------------------------------------------- */
+
+.kn-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--kn-space-2xs);
+  min-height: 52px;
+  padding-inline: var(--kn-space-lg);
+  border: var(--kn-stroke) solid transparent;
+  border-radius: var(--kn-radius);
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-btn);
+  font-weight: var(--kn-fw-medium);
+  letter-spacing: var(--kn-ls-btn);
+  line-height: 1;
+  text-transform: uppercase;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color var(--kn-dur-2) var(--kn-ease-state),
+              color var(--kn-dur-2) var(--kn-ease-state),
+              border-color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+@media (min-width: 640px) {
+  .kn-btn {
+    min-height: 56px;
+    width: auto;
+  }
+}
+
+.kn-btn--primary {
+  background-color: var(--kn-ink);
+  color: var(--kn-ivory);
+  border-color: var(--kn-ink);
+}
+
+.kn-btn--primary:hover {
+  background-color: var(--kn-forest);
+  border-color: var(--kn-forest);
+}
+
+.kn-btn--primary:active {
+  background-color: var(--kn-forest-deep);
+  border-color: var(--kn-forest-deep);
+}
+
+.kn-btn--secondary {
+  background-color: transparent;
+  color: var(--kn-surface-fg);
+  border-color: currentColor;
+}
+
+.kn-btn--secondary:hover {
+  background-color: var(--kn-ink);
+  color: var(--kn-ivory);
+  border-color: var(--kn-ink);
+}
+
+/* Sur surface inondée ou sombre, le primaire s'inverse. */
+[data-kn-surface="flood"] .kn-btn--primary,
+[data-kn-surface="dark"] .kn-btn--primary {
+  background-color: var(--kn-ivory);
+  color: var(--kn-forest);
+  border-color: var(--kn-ivory);
+}
+
+[data-kn-surface="flood"] .kn-btn--primary:hover,
+[data-kn-surface="dark"] .kn-btn--primary:hover {
+  background-color: var(--kn-sage);
+  border-color: var(--kn-sage);
+}
+
+[data-kn-surface="flood"] .kn-btn--secondary:hover,
+[data-kn-surface="dark"] .kn-btn--secondary:hover {
+  background-color: var(--kn-ivory);
+  color: var(--kn-forest);
+  border-color: var(--kn-ivory);
+}
+
+/* --------------------------------------------------------------------------
+   8. Champs de saisie
+   -------------------------------------------------------------------------- */
+
+.kn-input {
+  width: 100%;
+  min-height: var(--kn-tap);
+  padding: var(--kn-space-xs) 0;
+  background-color: transparent;
+  color: var(--kn-surface-fg);
+  border: 0;
+  border-bottom: var(--kn-stroke) solid var(--kn-surface-line);
+  border-radius: var(--kn-radius);
+  font-family: var(--kn-font-text);
+  font-size: var(--kn-fs-body);
+  transition: border-color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-input::placeholder {
+  color: var(--kn-surface-muted);
+}
+
+.kn-input:hover {
+  border-bottom-color: var(--kn-surface-fg);
+}
+
+.kn-input:focus {
+  outline: none;
+  border-bottom-width: var(--kn-stroke-strong);
+  border-bottom-color: var(--kn-surface-accent);
+}
+
+/* --------------------------------------------------------------------------
+   9. Accessibilité
+   -------------------------------------------------------------------------- */
+
+:focus-visible {
+  outline: var(--kn-stroke-strong) solid var(--kn-surface-accent);
+  outline-offset: 2px;
+}
+
+.kn-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Toute cible tactile fait au moins 44×44 (DA §7.1). */
+.kn-tap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--kn-tap);
+  min-height: var(--kn-tap);
+}
+
+/* --------------------------------------------------------------------------
+   10. Apparition au scroll (DA §8) — piloté par kn-base.js
+   -------------------------------------------------------------------------- */
+
+.kn-reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity var(--kn-dur-4) var(--kn-ease-out),
+              transform var(--kn-dur-4) var(--kn-ease-out);
+  transition-delay: var(--kn-reveal-delay, 0ms);
+}
+
+.kn-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kn-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   11. Images
+   -------------------------------------------------------------------------- */
+
+.kn-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--kn-radius);
+  background-color: var(--kn-sage);
+}
+
+.kn-ratio {
+  position: relative;
+  display: block;
+  aspect-ratio: var(--kn-ratio, var(--kn-ratio-card));
+  overflow: hidden;
+  background-color: var(--kn-sage);
+}

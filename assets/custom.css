@@ -1,25 +1,264 @@
 /* ==========================================================================
-   KINU — surcouche de direction artistique
+   KINŪ — Jetons de design & pont vers Horizon
    --------------------------------------------------------------------------
-   Chargée en dernier dans <head> (layout/theme.liquid) : ces règles gagnent
-   sur celles du thème Horizon sans qu'on ait à modifier ses fichiers.
-
-   Convention : toute classe créée ici est préfixée `kn-`.
-   Horizon possède déjà .hero, .grid, .card, .btn, .icon, .media — les
-   réutiliser provoque des conflits silencieux.
+   Chargé en PREMIER de la surcouche KINŪ, avant kn-base.css et les feuilles
+   de domaine (kn-chrome, kn-home, kn-catalog, kn-product).
+   Ne contient QUE des variables et le mapping vers les variables natives du
+   thème — aucune règle de mise en page. Voir DIRECTION-ARTISTIQUE.md.
    ========================================================================== */
 
-/* --------------------------------------------------------------------------
-   1. Jetons de design (couleurs, typo, rythme)
-   -------------------------------------------------------------------------- */
 :root {
-  --kn-space-xs: 0.5rem;
-  --kn-space-sm: 1rem;
-  --kn-space-md: 2rem;
-  --kn-space-lg: 4rem;
-  --kn-space-xl: 8rem;
+  /* ---- Couleurs ------------------------------------------------------- */
+  --kn-ivory:        #f7f5f0;
+  --kn-ink:          #1b1a16;
+  --kn-forest:       #1e4d3b;
+  --kn-forest-deep:  #163a2c;
+  --kn-forest-soft:  #6fa98c;
+  --kn-sage:         #e6eae3;
+  --kn-sage-deep:    #d8dfd6;
+  --kn-grey:         #6e6b62;
+  --kn-white:        #ffffff;
+  --kn-error:        #a63a22;
+  --kn-success:      var(--kn-forest);
+
+  --kn-line:         rgba(27, 26, 22, 0.14);
+  --kn-line-invert:  rgba(247, 245, 240, 0.22);
+  --kn-scrim:        rgba(27, 26, 22, 0.4);
+  --kn-muted-invert: rgba(247, 245, 240, 0.7);
+  --kn-faint-invert: rgba(247, 245, 240, 0.45);
+
+  /* ---- Surface courante (réassignée par [data-kn-surface]) ------------- */
+  --kn-surface-bg:   var(--kn-ivory);
+  --kn-surface-fg:   var(--kn-ink);
+  --kn-surface-line: var(--kn-line);
+  --kn-surface-muted: var(--kn-grey);
+  --kn-surface-accent: var(--kn-forest);
+
+  /* ---- Typographie ---------------------------------------------------- */
+  --kn-font-display: var(--font-heading--family, "DM Sans", sans-serif);
+  --kn-font-ui:      var(--font-heading--family, "DM Sans", sans-serif);
+  --kn-font-text:    var(--font-body--family, "Montserrat", sans-serif);
+
+  --kn-fw-regular: 400;
+  --kn-fw-medium:  500;
+  --kn-fw-bold:    700;
+
+  --kn-fs-display: clamp(2.75rem, 11vw, 7rem);
+  --kn-fs-h1:      clamp(2rem, 6.5vw, 3.75rem);
+  --kn-fs-h2:      clamp(1.625rem, 4.5vw, 2.5rem);
+  --kn-fs-h3:      clamp(1.25rem, 2.6vw, 1.75rem);
+  --kn-fs-h4:      1.125rem;
+  --kn-fs-lead:    clamp(1.0625rem, 1.6vw, 1.25rem);
+  --kn-fs-body:    1rem;
+  --kn-fs-sm:      0.875rem;
+  --kn-fs-label:   0.6875rem;
+  --kn-fs-price:   0.9375rem;
+  --kn-fs-btn:     0.8125rem;
+
+  --kn-lh-display: 0.94;
+  --kn-lh-title:   1.08;
+  --kn-lh-body:    1.65;
+  --kn-lh-tight:   1.2;
+
+  --kn-ls-display: -0.03em;
+  --kn-ls-title:   -0.02em;
+  --kn-ls-body:    -0.005em;
+  --kn-ls-label:    0.12em;
+  --kn-ls-btn:      0.08em;
+
+  --kn-measure: 68ch;
+
+  /* ---- Espacement (échelle 8) ------------------------------------------ */
+  --kn-space-3xs: 0.25rem;
+  --kn-space-2xs: 0.5rem;
+  --kn-space-xs:  0.75rem;
+  --kn-space-sm:  1rem;
+  --kn-space-md:  1.5rem;
+  --kn-space-lg:  2rem;
+  --kn-space-xl:  3rem;
+  --kn-space-2xl: 4rem;
+  --kn-space-3xl: 6rem;
+  --kn-space-4xl: 8rem;
+  --kn-space-5xl: 10rem;
+
+  --kn-section-y:       clamp(3.5rem, 9vw, 7.5rem);
+  --kn-section-y-flood: clamp(5rem, 12vw, 10rem);
+
+  /* ---- Grille & conteneurs --------------------------------------------- */
+  --kn-container:        1560px;
+  --kn-container-narrow: 1120px;
+  --kn-gutter:           clamp(1rem, 4vw, 2.5rem);
+  --kn-grid-gap:         clamp(1rem, 2vw, 1.5rem);
+  --kn-grid-row-gap:     var(--kn-space-2xl);
+  --kn-grid-cols:        4;
+
+  /* ---- Traits, rayons, cibles ------------------------------------------ */
+  --kn-radius:        0;
+  --kn-radius-pill:   999px;
+  --kn-stroke:        1px;
+  --kn-stroke-strong: 2px;
+  --kn-stroke-icon:   1.5px;
+  --kn-territory-bar: 3px;
+  --kn-tap:           44px;
+
+  --kn-header-h:     56px;
+  --kn-header-shift: 64px;
+  --kn-drawer-w:     440px;
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --kn-dur-1: 160ms;
+  --kn-dur-2: 240ms;
+  --kn-dur-3: 320ms;
+  --kn-dur-4: 560ms;
+  --kn-ease-out:   cubic-bezier(0.22, 1, 0.36, 1);
+  --kn-ease-state: cubic-bezier(0.4, 0, 0.2, 1);
+  --kn-ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* ---- Ratios d'image ---------------------------------------------------- */
+  --kn-ratio-card:     3 / 4;
+  --kn-ratio-portrait: 4 / 5;
+  --kn-ratio-square:   1 / 1;
+  --kn-ratio-wide:     21 / 9;
+  --kn-ratio-hero:     16 / 9;
 }
 
-/* --------------------------------------------------------------------------
-   2. Direction artistique (à remplir selon le brief client)
-   -------------------------------------------------------------------------- */
+@media (min-width: 640px) {
+  :root { --kn-grid-cols: 6; }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --kn-grid-cols: 12;
+    --kn-header-h: 72px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --kn-dur-1: 1ms;
+    --kn-dur-2: 1ms;
+    --kn-dur-3: 1ms;
+    --kn-dur-4: 1ms;
+  }
+}
+
+/* ==========================================================================
+   Surfaces — les trois plans, et rien d'autre (DA §3.3)
+   Se pose sur n'importe quel <section>, <main> ou conteneur.
+   ========================================================================== */
+
+[data-kn-surface="light"] {
+  --kn-surface-bg: var(--kn-ivory);
+  --kn-surface-fg: var(--kn-ink);
+  --kn-surface-line: var(--kn-line);
+  --kn-surface-muted: var(--kn-grey);
+  --kn-surface-accent: var(--kn-forest);
+}
+
+[data-kn-surface="sage"] {
+  --kn-surface-bg: var(--kn-sage);
+  --kn-surface-fg: var(--kn-ink);
+  --kn-surface-line: var(--kn-line);
+  --kn-surface-muted: var(--kn-grey);
+  --kn-surface-accent: var(--kn-forest);
+}
+
+[data-kn-surface="flood"] {
+  --kn-surface-bg: var(--kn-forest);
+  --kn-surface-fg: var(--kn-ivory);
+  --kn-surface-line: var(--kn-line-invert);
+  --kn-surface-muted: var(--kn-muted-invert);
+  --kn-surface-accent: var(--kn-ivory);
+}
+
+[data-kn-surface="dark"] {
+  --kn-surface-bg: var(--kn-ink);
+  --kn-surface-fg: var(--kn-ivory);
+  --kn-surface-line: var(--kn-line-invert);
+  --kn-surface-muted: var(--kn-muted-invert);
+  --kn-surface-accent: var(--kn-forest-soft);
+}
+
+[data-kn-surface] {
+  background-color: var(--kn-surface-bg);
+  color: var(--kn-surface-fg);
+}
+
+/* ==========================================================================
+   Territoires de collection (DA §3.4 R3)
+   `data-kn-territory` est posé sur <body> par layout/theme.liquid.
+   Seul le <main> bascule : le header et le footer gardent leur logique.
+   ========================================================================== */
+
+[data-kn-territory="fluid-motion"] .kn-territory-surface {
+  --kn-surface-bg: var(--kn-ivory);
+  --kn-surface-fg: var(--kn-ink);
+  --kn-surface-line: var(--kn-line);
+  --kn-surface-muted: var(--kn-grey);
+  --kn-surface-accent: var(--kn-forest);
+}
+
+[data-kn-territory="crossover"] .kn-territory-surface {
+  --kn-surface-bg: var(--kn-ink);
+  --kn-surface-fg: var(--kn-ivory);
+  --kn-surface-line: var(--kn-line-invert);
+  --kn-surface-muted: var(--kn-muted-invert);
+  --kn-surface-accent: var(--kn-forest-soft);
+}
+
+[data-kn-territory="amplitude"] .kn-territory-surface {
+  --kn-surface-bg: var(--kn-forest);
+  --kn-surface-fg: var(--kn-ivory);
+  --kn-surface-line: var(--kn-line-invert);
+  --kn-surface-muted: var(--kn-muted-invert);
+  --kn-surface-accent: var(--kn-ivory);
+}
+
+/* Couleur du filet de territoire posé sous le fil d'Ariane (DA §3.4 R4) */
+[data-kn-territory="fluid-motion"] { --kn-territory-color: var(--kn-forest); }
+[data-kn-territory="crossover"]    { --kn-territory-color: var(--kn-ink); }
+[data-kn-territory="amplitude"]    { --kn-territory-color: var(--kn-forest); }
+
+/* ==========================================================================
+   Pont vers les variables natives de Horizon
+   Le thème pilote ses composants par ces variables : les réassigner suffit
+   à repeindre tout ce qu'on ne réécrit pas (panier, recherche, formulaires).
+   ========================================================================== */
+
+:root,
+.shopify-section,
+[class*="color-scheme-"] {
+  --color-background: var(--kn-surface-bg);
+  --color-foreground: var(--kn-surface-fg);
+  --color-border: var(--kn-surface-line);
+  --color-shadow: transparent;
+
+  --color-primary-button-background: var(--kn-ink);
+  --color-primary-button-text: var(--kn-ivory);
+  --color-primary-button-border: var(--kn-ink);
+  --color-primary-button-hover-background: var(--kn-forest);
+  --color-primary-button-hover-text: var(--kn-ivory);
+  --color-primary-button-hover-border: var(--kn-forest);
+
+  --color-secondary-button-background: transparent;
+  --color-secondary-button-text: var(--kn-ink);
+  --color-secondary-button-border: var(--kn-ink);
+  --color-secondary-button-hover-background: var(--kn-ink);
+  --color-secondary-button-hover-text: var(--kn-ivory);
+  --color-secondary-button-hover-border: var(--kn-ink);
+
+  --color-input-background: transparent;
+  --color-input-text: var(--kn-ink);
+  --color-input-border: var(--kn-line);
+
+  --color-error: var(--kn-error);
+  --color-success: var(--kn-success);
+
+  --style-border-radius-buttons-primary: var(--kn-radius);
+  --style-border-radius-buttons-secondary: var(--kn-radius);
+  --style-border-radius-inputs: var(--kn-radius);
+  --style-border-radius-popover: var(--kn-radius);
+
+  --page-width: var(--kn-container);
+  --page-margin: var(--kn-gutter);
+}

@@ -42,8 +42,23 @@
     {%- render 'theme-styles-variables' -%}
     {%- render 'color-palette' -%}
 
-    {%- comment -%} Surcouche de direction artistique KINU — doit rester en dernier {%- endcomment -%}
+    {%- comment -%}
+      Surcouche de direction artistique KINŪ — doit rester en dernier pour
+      l'emporter sur les feuilles du thème. L'ordre est significatif :
+      jetons → socle → feuilles de domaine.
+    {%- endcomment -%}
     {{ 'custom.css' | asset_url | stylesheet_tag }}
+    {{ 'kn-base.css' | asset_url | stylesheet_tag }}
+    {{ 'kn-chrome.css' | asset_url | stylesheet_tag }}
+    {{ 'kn-home.css' | asset_url | stylesheet_tag }}
+    {{ 'kn-catalog.css' | asset_url | stylesheet_tag }}
+    {{ 'kn-product.css' | asset_url | stylesheet_tag }}
+
+    <script src="{{ 'kn-base.js' | asset_url }}" defer></script>
+    <script src="{{ 'kn-chrome.js' | asset_url }}" defer></script>
+    <script src="{{ 'kn-home.js' | asset_url }}" defer></script>
+    <script src="{{ 'kn-catalog.js' | asset_url }}" defer></script>
+    <script src="{{ 'kn-product.js' | asset_url }}" defer></script>
 
     {% if request.design_mode %}
       {%- render 'theme-editor' -%}
@@ -52,7 +67,32 @@
     {{ content_for_header }}
   </head>
 
-  <body class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}">
+  {%- comment -%}
+    Territoire de collection KINŪ (DIRECTION-ARTISTIQUE.md §3.4 R3).
+    Chaque univers de marque colore la page de collection qui lui correspond :
+    Fluid-Motion → ivoire, CrossOver → encre, Amplitude → vert forêt.
+    L'attribut est lu par `custom.css`, qui bascule la surface du <main>.
+  {%- endcomment -%}
+  {%- liquid
+    assign kn_universes = 'fluid-motion,crossover,amplitude' | split: ','
+    assign kn_territory = ''
+    if collection.handle != blank and kn_universes contains collection.handle
+      assign kn_territory = collection.handle
+    endif
+    if kn_territory == blank and product != blank
+      for kn_collection in product.collections
+        if kn_universes contains kn_collection.handle
+          assign kn_territory = kn_collection.handle
+          break
+        endif
+      endfor
+    endif
+  -%}
+
+  <body
+    class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}"
+    {% if kn_territory != blank %}data-kn-territory="{{ kn_territory }}"{% endif %}
+  >
     {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
 
     {% render 'chat-drawer' %}
@@ -132,7 +172,7 @@
 
       <main
         id="MainContent"
-        class="content-for-layout"
+        class="content-for-layout kn-territory-surface"
         role="main"
         data-page-transition-enabled="{{ settings.page_transition_enabled }}"
         data-product-transition="{{ settings.transition_to_main_product }}"
