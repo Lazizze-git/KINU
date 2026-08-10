@@ -1,0 +1,170 @@
+{%- doc -%}
+  Panneau de filtres KINŪ — drawer latéral (DIRECTION-ARTISTIQUE.md §7.7, §9).
+
+  Utilise les vraies facettes Shopify (`collection.filters`). Le panneau est un
+  formulaire GET complet : sans JavaScript il reste affiché en ligne et le
+  bouton « voir les résultats » recharge la page. Avec JavaScript,
+  `kn-catalog.js` le transforme en drawer et met à jour la grille en Ajax.
+
+  Le panneau garde toujours la surface CLAIRE, même sur un territoire encre ou
+  forêt : c’est un plan posé au-dessus de la page, comme le panier (§7.5).
+
+  @param {string} section_id - Identifiant de la section hôte.
+  @param {object} results - `collection`.
+  @param {string} title - Titre du panneau.
+  @param {string} apply_label - Libellé du bouton de validation.
+  @param {string} clear_label - Libellé du lien « tout effacer ».
+  @param {string} close_label - Libellé accessible du bouton de fermeture.
+  @param {string} price_min_label - Libellé du champ prix minimum.
+  @param {string} price_max_label - Libellé du champ prix maximum.
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_form_id = 'KnFacetsForm-' | append: section_id
+  assign kn_panel_id = 'KnFacets-' | append: section_id
+  assign kn_title_id = 'KnFacetsTitle-' | append: section_id
+-%}
+
+<div class="kn-facets__scrim" data-kn-facets-scrim hidden></div>
+
+<div
+  class="kn-facets"
+  id="{{ kn_panel_id }}"
+  data-kn-surface="light"
+  data-kn-facets
+  data-kn-open="false"
+  aria-labelledby="{{ kn_title_id }}"
+>
+  <form
+    class="kn-facets__form"
+    id="{{ kn_form_id }}"
+    method="get"
+    action="{{ results.url }}"
+    data-kn-facets-form
+  >
+    <div class="kn-facets__head">
+      <span class="kn-label" id="{{ kn_title_id }}">{{ title }}</span>
+      <button type="button" class="kn-tap kn-facets__close" data-kn-facets-close>
+        <span class="kn-visually-hidden">{{ close_label }}</span>
+        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+          <path d="M4 4 16 16M16 4 4 16" fill="none" stroke="currentColor" stroke-width="1.5" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="kn-facets__body" data-kn-facets-body>
+      {%- for kn_filter in results.filters -%}
+        <details class="kn-facets__group" open>
+          <summary class="kn-facets__summary kn-label">
+            {{ kn_filter.label }}
+            <svg class="kn-facets__chevron" viewBox="0 0 12 8" aria-hidden="true" focusable="false">
+              <path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+            </svg>
+          </summary>
+
+          {%- case kn_filter.type -%}
+            {%- when 'price_range' -%}
+              {%- liquid
+                comment
+                  Les valeurs de facette sont en centimes. On divise plutôt que
+                  d’utiliser `money_without_currency` : le format suisse insère
+                  une apostrophe de milliers qu’un `input[type=number]` refuse.
+                endcomment
+                assign kn_range_max = kn_filter.range_max | divided_by: 100
+                assign kn_price_min = kn_filter.min_value.value | divided_by: 100
+                assign kn_price_max = kn_filter.max_value.value | divided_by: 100
+              -%}
+              <div class="kn-facets__price">
+                <label class="kn-facets__price-field">
+                  <span class="kn-label kn-muted">{{ price_min_label }}</span>
+                  <input
+                    class="kn-input kn-facets__number"
+                    type="number"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    min="0"
+                    max="{{ kn_range_max }}"
+                    step="1"
+                    name="{{ kn_filter.min_value.param_name }}"
+                    {% if kn_filter.min_value.value %}value="{{ kn_price_min }}"{% endif %}
+                    placeholder="0"
+                  >
+                </label>
+                <label class="kn-facets__price-field">
+                  <span class="kn-label kn-muted">{{ price_max_label }}</span>
+                  <input
+                    class="kn-input kn-facets__number"
+                    type="number"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    min="0"
+                    max="{{ kn_range_max }}"
+                    step="1"
+                    name="{{ kn_filter.max_value.param_name }}"
+                    {% if kn_filter.max_value.value %}value="{{ kn_price_max }}"{% endif %}
+                    placeholder="{{ kn_range_max }}"
+                  >
+                </label>
+              </div>
+
+            {%- else -%}
+              <ul class="kn-facets__values" role="list">
+                {%- for kn_value in kn_filter.values -%}
+                  {%- liquid
+                    assign kn_disabled = false
+                    if kn_value.count == 0 and kn_value.active == false
+                      assign kn_disabled = true
+                    endif
+                    comment
+                      Un identifiant stable : après une mise à jour Ajax, le
+                      focus clavier est rendu à la case qu’on vient de cocher.
+                    endcomment
+                    assign kn_key = kn_value.param_name | replace: '.', '-'
+                    assign kn_input_id = 'KnFacet-' | append: section_id | append: '-' | append: kn_key | append: '-' | append: forloop.index
+                  -%}
+                  <li>
+                    <label class="kn-facets__option{% if kn_disabled %} kn-facets__option--off{% endif %}">
+                      <input
+                        type="checkbox"
+                        class="kn-facets__input"
+                        id="{{ kn_input_id }}"
+                        name="{{ kn_value.param_name }}"
+                        value="{{ kn_value.value }}"
+                        {% if kn_value.active %}checked{% endif %}
+                        {% if kn_disabled %}disabled{% endif %}
+                      >
+                      <span class="kn-facets__box" aria-hidden="true">
+                        <svg viewBox="0 0 12 10" focusable="false">
+                          <path d="M1 5 4.5 8.5 11 1.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+                        </svg>
+                      </span>
+                      {%- if kn_value.swatch -%}
+                        <span
+                          class="kn-facets__swatch"
+                          aria-hidden="true"
+                          {% if kn_value.swatch.image %}
+                            style="background-image: url({{ kn_value.swatch.image | image_url: width: 48 }});"
+                          {% elsif kn_value.swatch.color %}
+                            style="background-color: rgb({{ kn_value.swatch.color.rgb }});"
+                          {% endif %}
+                        ></span>
+                      {%- endif -%}
+                      <span class="kn-facets__name">{{ kn_value.label }}</span>
+                      <span class="kn-facets__count" aria-hidden="true">{{ kn_value.count }}</span>
+                    </label>
+                  </li>
+                {%- endfor -%}
+              </ul>
+          {%- endcase -%}
+        </details>
+      {%- endfor -%}
+    </div>
+
+    <div class="kn-facets__foot">
+      <a class="kn-label kn-underline kn-facets__reset" href="{{ results.url }}" data-kn-clear>
+        {{- clear_label -}}
+      </a>
+      <button type="submit" class="kn-btn kn-btn--primary kn-facets__apply">{{ apply_label }}</button>
+    </div>
+  </form>
+</div>

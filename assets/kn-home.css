@@ -1,1 +1,462 @@
-/* KINŪ — kn-home : feuille de domaine (à écrire). */
+/* ==========================================================================
+   KINŪ — kn-home : la page d'accueil
+   --------------------------------------------------------------------------
+   Six sections, un seul rythme : média plein cadre → ivoire → forêt → ivoire
+   → sauge → forêt (DIRECTION-ARTISTIQUE.md §3.4 R2).
+   Aucune valeur en dur : tout vient des jetons --kn-*. Mobile-first.
+   Chargé après kn-base.css.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   0. Vocabulaire partagé par les sections de l'accueil
+   Un en-tête de section = un filet, jamais un grand vide (DA §5.3).
+   -------------------------------------------------------------------------- */
+
+.kn-home-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--kn-space-md);
+  padding-block-end: var(--kn-space-md);
+  border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-home-head__text {
+  display: grid;
+  gap: var(--kn-space-2xs);
+  min-width: 0;
+}
+
+.kn-home-head__eyebrow {
+  color: var(--kn-surface-muted);
+}
+
+.kn-home-head__link {
+  flex: none;
+}
+
+/* Titre de section → contenu : 32 px mobile, 48 px desktop (DA §5.3). */
+.kn-home-body {
+  margin-block-start: var(--kn-space-lg);
+}
+
+@media (min-width: 1024px) {
+  .kn-home-body {
+    margin-block-start: var(--kn-space-xl);
+  }
+}
+
+/* Un titre de rang h3 qui porte l'échelle d'un h2 : la hiérarchie du document
+   reste juste, et c'est bien le titre qui domine à l'écran. Sans cela, la règle
+   `h3` du socle imposerait sa graisse 500 et son interlettrage. */
+.kn-universe__cat,
+.kn-editorial__title {
+  font-size: var(--kn-fs-h2);
+  font-weight: var(--kn-fw-bold);
+  line-height: var(--kn-lh-title);
+  letter-spacing: var(--kn-ls-title);
+}
+
+/* Horizon ne remet à zéro les marges des <p> que sur le premier et le dernier
+   enfant. Partout où l'écart est porté par `gap`, la marge UA doit sauter,
+   sinon elle s'ajoute silencieusement au rythme. */
+.kn-hero__inner > p,
+.kn-home-empty > p,
+.kn-manifesto__aside > p {
+  margin: 0;
+}
+
+/* État vide sobre : une phrase, un bouton. Pas d'illustration (DA §7.5). */
+.kn-home-empty {
+  display: grid;
+  justify-items: start;
+  gap: var(--kn-space-md);
+  padding-block: var(--kn-space-xl);
+  border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+/* --------------------------------------------------------------------------
+   1. Bannière vidéo (DA §6)
+   4:5 sur mobile — une 16:9 sur un téléphone ne montre rien.
+   -------------------------------------------------------------------------- */
+
+.kn-hero {
+  position: relative;
+  width: 100%;
+}
+
+.kn-hero__frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: var(--kn-ratio-portrait);
+  overflow: hidden;
+  background-color: var(--kn-sage);
+}
+
+@media (min-width: 768px) {
+  .kn-hero__frame {
+    aspect-ratio: var(--kn-ratio-hero);
+    max-height: 88vh;
+  }
+}
+
+.kn-hero__poster,
+.kn-hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* La vidéo se substitue au poster une fois qu'elle joue réellement :
+   aucun cadre noir, aucun saut. Sous mouvement réduit, elle n'arrive jamais. */
+.kn-hero__video {
+  opacity: 0;
+  transition: opacity var(--kn-dur-3) var(--kn-ease-state);
+}
+
+.kn-hero__video.is-playing {
+  opacity: 1;
+}
+
+.kn-hero__embed {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.kn-hero__embed iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  aspect-ratio: var(--kn-ratio-hero);
+  height: 100%;
+  width: auto;
+  min-width: 100%;
+  border: 0;
+}
+
+/* Voile : uniquement quand la bannière porte du texte (DA §6). */
+.kn-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background-color: color-mix(in srgb, var(--kn-ink) var(--kn-hero-scrim, 0%), transparent);
+  pointer-events: none;
+}
+
+/* Le contenu redéfinit la gamme pour lui-même : il ne connaît pas son fond. */
+.kn-hero__content {
+  --kn-surface-fg: var(--kn-ivory);
+  --kn-surface-line: var(--kn-line-invert);
+  --kn-surface-muted: var(--kn-muted-invert);
+  --kn-surface-accent: var(--kn-ivory);
+
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  padding-block-end: var(--kn-space-lg);
+  color: var(--kn-surface-fg);
+}
+
+@media (min-width: 1024px) {
+  .kn-hero__content {
+    padding-block-end: var(--kn-space-xl);
+  }
+}
+
+/* Seul bloc de texte posé bord à bord : il doit tenir compte de l'encoche
+   en paysage, que la gouttière standard ignore. */
+.kn-hero__content > .kn-container {
+  padding-inline-start: max(var(--kn-gutter), env(safe-area-inset-left));
+  padding-inline-end: max(var(--kn-gutter), env(safe-area-inset-right));
+}
+
+.kn-hero__inner {
+  display: grid;
+  justify-items: start;
+  gap: var(--kn-space-md);
+  max-width: var(--kn-measure);
+}
+
+.kn-hero__title {
+  font-size: var(--kn-fs-h1);
+}
+
+/* Sous mouvement réduit, la bannière EST son poster : rien ne joue, et
+   kn-home.js ne pose aucune source dans le DOM — rien n'est téléchargé. */
+@media (prefers-reduced-motion: reduce) {
+  .kn-hero__video,
+  .kn-hero__embed {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Les trois univers (DA §7.2 — la catégorie domine, la collection signe)
+   -------------------------------------------------------------------------- */
+
+.kn-universes__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: var(--kn-grid-gap);
+  row-gap: var(--kn-space-xl);
+}
+
+@media (min-width: 768px) {
+  .kn-universes__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .kn-universes__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.kn-universe {
+  display: flex;
+  flex-direction: column;
+}
+
+.kn-universe__frame {
+  --kn-ratio: var(--kn-ratio-portrait);
+}
+
+.kn-universe__frame .kn-img {
+  position: absolute;
+  inset: 0;
+}
+
+/* Fondu croisé vers la seconde image. Pas de zoom, pas de translation (DA §6). */
+.kn-universe__img--alt {
+  opacity: 0;
+  transition: opacity var(--kn-dur-3) var(--kn-ease-state);
+}
+
+.kn-universe:hover .kn-universe__img--alt,
+.kn-universe:focus-visible .kn-universe__img--alt {
+  opacity: 1;
+}
+
+.kn-universe__text {
+  display: grid;
+  gap: var(--kn-space-3xs);
+  padding-block-start: var(--kn-space-md);
+}
+
+.kn-universe__collection {
+  color: var(--kn-surface-muted);
+}
+
+.kn-universe__cat {
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-universe:hover .kn-universe__cat,
+.kn-universe:focus-visible .kn-universe__cat {
+  color: var(--kn-surface-accent);
+}
+
+.kn-universe__note {
+  color: var(--kn-surface-muted);
+  margin-block-start: var(--kn-space-2xs);
+}
+
+/* --------------------------------------------------------------------------
+   3. Manifeste — inondation 1 (DA §3.4 R1, R9)
+   -------------------------------------------------------------------------- */
+
+.kn-manifesto__head {
+  display: grid;
+  gap: var(--kn-space-lg);
+}
+
+@media (min-width: 1024px) {
+  .kn-manifesto__head {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    column-gap: var(--kn-space-2xl);
+    align-items: start;
+  }
+}
+
+.kn-manifesto__eyebrow {
+  display: block;
+  margin-block-end: var(--kn-space-md);
+  color: var(--kn-surface-muted);
+}
+
+.kn-manifesto__title {
+  font-size: var(--kn-fs-h1);
+}
+
+.kn-manifesto__aside {
+  display: grid;
+  justify-items: start;
+  gap: var(--kn-space-lg);
+}
+
+.kn-manifesto__pillars {
+  display: grid;
+  grid-template-columns: 1fr;
+  column-gap: var(--kn-grid-gap);
+  margin-block-start: var(--kn-space-2xl);
+}
+
+@media (min-width: 768px) {
+  .kn-manifesto__pillars {
+    grid-template-columns: repeat(var(--kn-pillar-count, 3), minmax(0, 1fr));
+  }
+}
+
+/* Les filets hauts s'alignent en une ligne continue sur desktop, et deviennent
+   des séparateurs horizontaux dès que la grille se replie. */
+.kn-manifesto__pillar {
+  padding-block: var(--kn-space-md);
+  border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-manifesto__key {
+  display: block;
+  font-size: var(--kn-fs-h3);
+  font-family: var(--kn-font-ui);
+  font-weight: var(--kn-fw-medium);
+  line-height: var(--kn-lh-tight);
+  letter-spacing: -0.015em;
+}
+
+.kn-manifesto__pillar p {
+  margin-block: var(--kn-space-2xs) 0;
+  color: var(--kn-surface-muted);
+  max-width: var(--kn-measure);
+}
+
+/* --------------------------------------------------------------------------
+   4. Nouveautés (DA §5.2 — 2 colonnes mobile minimum)
+   -------------------------------------------------------------------------- */
+
+.kn-products__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--kn-grid-gap);
+  row-gap: var(--kn-grid-row-gap);
+}
+
+@media (min-width: 640px) {
+  .kn-products__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .kn-products__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. Bandeau journal (surface sauge)
+   Un seul grand visuel horizontal : l'exhalaison après la grille produits.
+   -------------------------------------------------------------------------- */
+
+/* L'image occupe toute la largeur de la section, sans passer par un débord en
+   `vw` : au-delà de 990px, Horizon fait défiler `.page-wrapper` et non la
+   fenêtre, et 100vw y déclencherait une barre de défilement horizontale. */
+.kn-editorial__frame {
+  --kn-ratio: var(--kn-ratio-portrait);
+}
+
+@media (min-width: 768px) {
+  .kn-editorial__frame {
+    --kn-ratio: var(--kn-ratio-wide);
+  }
+}
+
+.kn-editorial__feature {
+  display: block;
+}
+
+.kn-editorial__body {
+  max-width: var(--kn-measure);
+  margin-block-start: var(--kn-space-lg);
+}
+
+.kn-editorial__meta {
+  display: block;
+  color: var(--kn-surface-muted);
+}
+
+.kn-editorial__title {
+  margin-block-start: var(--kn-space-xs);
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-editorial__feature:hover .kn-editorial__title,
+.kn-editorial__feature:focus-visible .kn-editorial__title {
+  color: var(--kn-surface-accent);
+}
+
+.kn-editorial__excerpt {
+  margin: var(--kn-space-md) 0 0;
+}
+
+.kn-editorial__more {
+  margin-block-start: var(--kn-space-lg);
+}
+
+/* Le soulignement se révèle depuis la carte entière, pas depuis le seul mot. */
+.kn-editorial__feature:hover .kn-editorial__more::after,
+.kn-editorial__feature:focus-visible .kn-editorial__more::after {
+  transform: scaleX(1);
+}
+
+.kn-editorial__list {
+  display: grid;
+  column-gap: var(--kn-grid-gap);
+  list-style: none;
+  margin: var(--kn-space-xl) 0 0;
+  padding: 0;
+}
+
+@media (min-width: 768px) {
+  .kn-editorial__list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.kn-editorial__item {
+  border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-editorial__link {
+  display: grid;
+  gap: var(--kn-space-3xs);
+  padding-block: var(--kn-space-md);
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-editorial__link:hover,
+.kn-editorial__link:focus-visible {
+  color: var(--kn-surface-accent);
+}
+
+.kn-editorial__item-date {
+  color: var(--kn-surface-muted);
+}
+
+/* --------------------------------------------------------------------------
+   6. Éditeur de thème : une section vide reste manipulable
+   -------------------------------------------------------------------------- */
+
+.kn-home-placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 40vh;
+  padding: var(--kn-space-lg);
+  background-color: var(--kn-sage);
+  color: var(--kn-grey);
+  text-align: center;
+}

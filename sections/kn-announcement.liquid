@@ -1,0 +1,170 @@
+{%- comment -%}
+  KINŪ — Barre d'annonce
+  Aplat forêt bord à bord, 32 px, défilement horizontal infini.
+  Le défilement s'arrête au survol, au focus clavier et sous
+  `prefers-reduced-motion`. Voir DIRECTION-ARTISTIQUE.md §7.1 et §8.
+{%- endcomment -%}
+
+{%- liquid
+  assign kn_has_content = false
+  for block in section.blocks
+    if block.settings.text != blank
+      assign kn_has_content = true
+      break
+    endif
+  endfor
+-%}
+
+{%- if kn_has_content -%}
+  <div
+    class="kn-announce"
+    id="kn-announce-{{ section.id }}"
+    data-kn-surface="flood"
+    data-kn-announce
+    data-kn-announce-speed="{{ section.settings.speed }}"
+    {{ section.shopify_attributes }}
+  >
+    <div class="kn-announce__viewport">
+      <div class="kn-announce__track" data-kn-announce-track>
+        {%- for kn_copy in (1..4) -%}
+          {%- liquid
+            assign kn_decorative = true
+            if forloop.first
+              assign kn_decorative = false
+            endif
+          -%}
+          <div
+            class="kn-announce__group"
+            {% if kn_decorative %}
+              aria-hidden="true"
+            {% endif %}
+          >
+            {%- for block in section.blocks -%}
+              {%- if block.settings.text == blank -%}
+                {%- continue -%}
+              {%- endif -%}
+              {%- if block.settings.link != blank -%}
+                <a
+                  class="kn-announce__item kn-label"
+                  href="{{ block.settings.link }}"
+                  {% if kn_decorative %}
+                    tabindex="-1"
+                  {% endif %}
+                  {{ block.shopify_attributes }}
+                >
+                  {{- block.settings.text | escape -}}
+                </a>
+              {%- else -%}
+                <span class="kn-announce__item kn-label" {{ block.shopify_attributes }}>
+                  {{- block.settings.text | escape -}}
+                </span>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- if section.settings.dismissible -%}
+      <button
+        type="button"
+        class="kn-announce__close"
+        data-kn-announce-close
+        aria-controls="kn-announce-{{ section.id }}"
+      >
+        {%- render 'kn-icon', name: 'close', size: 12 -%}
+        <span class="kn-visually-hidden">{{ section.settings.close_label | escape }}</span>
+      </button>
+    {%- endif -%}
+  </div>
+
+  <script>
+    /* Rétablit le choix de fermeture avant la première peinture : sans cela la
+       barre clignote à chaque page pour un visiteur qui l'a déjà fermée. */
+    (function () {
+      try {
+        if (sessionStorage.getItem('kn-announce-dismissed') !== '1') return;
+        var el = document.getElementById('kn-announce-{{ section.id }}');
+        if (el) el.setAttribute('hidden', '');
+      } catch (error) {
+        /* sessionStorage indisponible (navigation privée stricte) : on affiche. */
+      }
+    })();
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "KINŪ · Barre d'annonce",
+  "tag": "aside",
+  "class": "kn-announcement-section",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "range",
+      "id": "speed",
+      "label": "Vitesse de défilement",
+      "info": "En pixels par seconde. Plus la valeur est basse, plus le défilement est calme.",
+      "min": 10,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "checkbox",
+      "id": "dismissible",
+      "label": "Autoriser la fermeture",
+      "info": "Le choix du visiteur est mémorisé pour la durée de sa visite. C’est aussi le seul moyen d’arrêter le défilement au clavier : à laisser activé.",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "close_label",
+      "label": "Libellé du bouton de fermeture",
+      "info": "Lu par les lecteurs d'écran.",
+      "default": "Fermer la barre d'annonce"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "kn_announcement",
+      "name": "Annonce",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Texte",
+          "default": "Livraison offerte en Suisse dès 150 CHF"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Lien (facultatif)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KINŪ · Barre d'annonce",
+      "blocks": [
+        {
+          "type": "kn_announcement",
+          "settings": {
+            "text": "Livraison offerte en Suisse dès 150 CHF"
+          }
+        },
+        {
+          "type": "kn_announcement",
+          "settings": {
+            "text": "Retours gratuits sous 30 jours"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

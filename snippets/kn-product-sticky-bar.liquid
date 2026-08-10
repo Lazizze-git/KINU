@@ -1,0 +1,32 @@
+{%- doc -%}
+  Bandeau d'achat collant — mobile uniquement (DA §9 : interdit sur desktop).
+  Surface claire, filet haut, aucun autre ornement. Le bouton soumet le
+  formulaire principal via l'attribut `form`, donc le même tunnel Horizon.
+
+  @param {object} product
+  @param {object} opts
+  @param {string} form_id
+  @param {boolean} can_add
+  @param {string} button_label
+  @param {string} price
+{%- enddoc -%}
+
+<div class="kn-sticky" data-kn-sticky hidden>
+  <div class="kn-sticky__inner">
+    <div class="kn-sticky__text">
+      <span class="kn-sticky__name">{{ product.title }}</span>
+      <span class="kn-price" data-kn-price>{{ price }}</span>
+    </div>
+    <button
+      type="submit"
+      form="{{ form_id }}"
+      class="kn-btn kn-btn--primary kn-sticky__button"
+      data-kn-atc
+      {% unless can_add %}
+        disabled
+      {% endunless %}
+    >
+      <span data-kn-btn-label>{{ button_label }}</span>
+    </button>
+  </div>
+</div>

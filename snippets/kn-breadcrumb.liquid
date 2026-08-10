@@ -1,0 +1,152 @@
+{%- doc -%}
+  Fil d’Ariane KINŪ (DIRECTION-ARTISTIQUE.md §7.7).
+
+  `Accueil / Femme / T-shirts` en `.kn-label` sur `--kn-surface-muted`.
+  Fonctionne sur une page collection comme sur une page produit : la catégorie
+  intermédiaire est reconstruite depuis l’univers auquel appartient la
+  ressource (Fluid-Motion → Femme, CrossOver → Homme, Amplitude → Unisexe).
+  Émet aussi un `BreadcrumbList` en JSON-LD pour le référencement.
+
+  @param {object} [product] - Produit courant. Par défaut l’objet global `product`.
+  @param {object} [collection] - Collection courante. Par défaut l’objet global `collection`.
+  @param {string} [current_title] - Force le libellé du dernier maillon.
+  @param {boolean} [rule] - Ajoute le filet de territoire de 3 px sous le fil (DA §3.4 R4).
+  @param {string} [home_label] - Libellé du premier maillon. Défaut « Accueil ».
+  @param {string} [nav_label] - Libellé accessible du `<nav>`. Défaut « Fil d’Ariane ».
+  @param {string} [class] - Classes supplémentaires sur le `<nav>`.
+
+  @example
+  {% render 'kn-breadcrumb', rule: true %}
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_home = home_label | default: 'Accueil'
+  assign kn_nav_label = "Fil d’Ariane"
+  assign kn_universes = 'fluid-motion,crossover,amplitude' | split: ','
+
+  comment
+    1. Trouver l’univers de rattachement : la collection courante si elle en
+       est un, sinon son métachamp `kn.universe`, sinon celui du produit.
+  endcomment
+  assign kn_universe = nil
+  if collection.handle != blank and kn_universes contains collection.handle
+    assign kn_universe = collection
+  endif
+  if kn_universe == nil and collection.metafields.kn.universe != blank
+    assign kn_universe = collection.metafields.kn.universe.value
+  endif
+  if kn_universe == nil and product != blank
+    for kn_group in product.collections limit: 12
+      if kn_universes contains kn_group.handle
+        assign kn_universe = kn_group
+        break
+      endif
+    endfor
+  endif
+
+  assign kn_category = ''
+  if kn_universe != nil
+    assign kn_category = kn_universe.metafields.kn.category.value
+    if kn_category == blank
+      case kn_universe.handle
+        when 'fluid-motion'
+          assign kn_category = 'Femme'
+        when 'crossover'
+          assign kn_category = 'Homme'
+        when 'amplitude'
+          assign kn_category = 'Unisexe'
+        else
+          assign kn_category = kn_universe.title
+      endcase
+    endif
+  endif
+
+  comment
+    2. Composer au plus trois maillons : Accueil / Catégorie / Page courante.
+       Sur la page d’un univers, la catégorie EST la page courante.
+  endcomment
+  assign kn_mid_label = ''
+  assign kn_mid_url = ''
+  assign kn_last_label = current_title
+  assign kn_last_url = ''
+
+  if product != blank
+    assign kn_last_label = kn_last_label | default: product.title
+    assign kn_last_url = product.url
+    if kn_category != blank
+      assign kn_mid_label = kn_category
+      assign kn_mid_url = kn_universe.url
+    endif
+  elsif collection != blank
+    assign kn_last_url = collection.url
+    if kn_universe.handle == collection.handle
+      assign kn_last_label = kn_last_label | default: kn_category | default: collection.title
+    else
+      assign kn_last_label = kn_last_label | default: collection.title
+      if kn_category != blank
+        assign kn_mid_label = kn_category
+        assign kn_mid_url = kn_universe.url
+      endif
+    endif
+  else
+    assign kn_last_url = request.path
+  endif
+-%}
+
+{%- if kn_last_label != blank -%}
+  <nav class="kn-breadcrumb {{ class }}" aria-label="{{ nav_label | default: kn_nav_label | escape }}">
+    <ol class="kn-breadcrumb__list" role="list">
+      <li class="kn-breadcrumb__item kn-label">
+        <a class="kn-breadcrumb__link" href="{{ routes.root_url }}">{{ kn_home }}</a>
+      </li>
+      {%- if kn_mid_label != blank -%}
+        <li class="kn-breadcrumb__item kn-label">
+          <a class="kn-breadcrumb__link" href="{{ kn_mid_url }}">{{ kn_mid_label }}</a>
+        </li>
+      {%- endif -%}
+      <li class="kn-breadcrumb__item kn-label">
+        <span class="kn-breadcrumb__current" aria-current="page">{{ kn_last_label }}</span>
+      </li>
+    </ol>
+    {%- if rule -%}
+      <span class="kn-breadcrumb__rule" aria-hidden="true"></span>
+    {%- endif -%}
+  </nav>
+
+  {%- capture kn_jsonld -%}
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": {{ kn_home | json }},
+          "item": {{ request.origin | append: routes.root_url | json }}
+        }
+        {%- if kn_mid_label != blank -%}
+          ,{
+            "@type": "ListItem",
+            "position": 2,
+            "name": {{ kn_mid_label | json }},
+            "item": {{ request.origin | append: kn_mid_url | json }}
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": {{ kn_last_label | json }},
+            "item": {{ request.origin | append: kn_last_url | json }}
+          }
+        {%- else -%}
+          ,{
+            "@type": "ListItem",
+            "position": 2,
+            "name": {{ kn_last_label | json }},
+            "item": {{ request.origin | append: kn_last_url | json }}
+          }
+        {%- endif -%}
+      ]
+    }
+  {%- endcapture -%}
+  <script type="application/ld+json">{{ kn_jsonld }}</script>
+{%- endif -%}

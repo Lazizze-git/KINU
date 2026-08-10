@@ -1,0 +1,48 @@
+{%- doc -%}
+  Données structurées Product (schema.org) — le client vend en Suisse,
+  le référencement compte. Une offre par variante : prix, disponibilité, SKU.
+
+  @param {object} product
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_origin = request.origin
+  assign kn_images = ''
+  for kn_media in product.media limit: 6
+    if kn_media.media_type == 'image'
+      assign kn_src = kn_media.preview_image | image_url: width: 1600 | prepend: 'https:'
+      assign kn_images = kn_images | append: kn_src | append: '||'
+    endif
+  endfor
+  assign kn_image_list = kn_images | split: '||'
+  assign kn_description = product.description | strip_html | strip | truncate: 480
+-%}
+
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": {{ product.title | strip_html | json }},
+    "description": {{ kn_description | json }},
+    "url": {{ kn_origin | append: product.url | json }},
+    "image": {{ kn_image_list | json }},
+    "brand": {
+      "@type": "Brand",
+      "name": {{ product.vendor | default: shop.name | json }}
+    },
+    "offers": [
+      {%- for kn_v in product.variants -%}
+        {
+          "@type": "Offer",
+          "name": {{ kn_v.title | json }},
+          "sku": {{ kn_v.sku | default: kn_v.id | append: '' | json }},
+          "url": {{ kn_origin | append: kn_v.url | json }},
+          "price": {{ kn_v.price | divided_by: 100.0 }},
+          "priceCurrency": {{ shop.currency | json }},
+          "itemCondition": "https://schema.org/NewCondition",
+          "availability": "https://schema.org/{% if kn_v.available %}InStock{% else %}OutOfStock{% endif %}"
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ]
+  }
+</script>

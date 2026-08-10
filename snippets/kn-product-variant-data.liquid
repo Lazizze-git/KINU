@@ -1,0 +1,37 @@
+{%- doc -%}
+  Sérialise les variantes pour `kn-product.js` : résolution des options,
+  prix, disponibilité et média associé, sans le moindre aller-retour réseau.
+
+  @param {object} product
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_with_currency = settings.currency_code_enabled_product_pages
+-%}
+
+<script type="application/json" data-kn-variants>
+  [
+    {%- for kn_v in product.variants -%}
+      {%- liquid
+        if kn_with_currency
+          assign kn_v_price = kn_v.price | money_with_currency | strip_html | strip
+          assign kn_v_compare = kn_v.compare_at_price | money_with_currency | strip_html | strip
+        else
+          assign kn_v_price = kn_v.price | money | strip_html | strip
+          assign kn_v_compare = kn_v.compare_at_price | money | strip_html | strip
+        endif
+      -%}
+      {
+        "id": {{ kn_v.id }},
+        "available": {% if kn_v.available %}true{% else %}false{% endif %},
+        "options": {{ kn_v.options | json }},
+        "title": {{ kn_v.title | json }},
+        "price": {{ kn_v_price | json }},
+        "compare": {% if kn_v.compare_at_price > kn_v.price %}{{ kn_v_compare | json }}{% else %}null{% endif %},
+        "sku": {{ kn_v.sku | default: '' | json }},
+        "media": {% if kn_v.featured_media %}{{ kn_v.featured_media.id }}{% else %}null{% endif %},
+        "url": {{ kn_v.url | json }}
+      }{% unless forloop.last %},{% endunless %}
+    {%- endfor -%}
+  ]
+</script>

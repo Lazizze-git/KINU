@@ -1,0 +1,113 @@
+{%- doc -%}
+  Galerie de la page produit KINŪ (DA §6, §7.7).
+  Desktop : vignettes en colonne à gauche, un visuel affiché, colonne collante.
+  Mobile : défilement horizontal calé, indicateurs en filets 1 px.
+  Zoom au clic uniquement — jamais au survol.
+
+  @param {object} product
+  @param {object} opts
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_media = product.media
+  assign kn_count = kn_media.size
+  assign kn_sizes = '(min-width: 1200px) 520px, (min-width: 1024px) 45vw, 100vw'
+  assign kn_widths = '320, 480, 640, 750, 900, 1040, 1200, 1600'
+-%}
+
+<div class="kn-gal" data-kn-gallery>
+  {%- if kn_count > 1 -%}
+    <div class="kn-gal__thumbs">
+      {%- for media in kn_media -%}
+        <button
+          type="button"
+          class="kn-gal__thumb{% if forloop.first %} is-active{% endif %}"
+          data-kn-thumb
+          data-kn-index="{{ forloop.index0 }}"
+          aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
+        >
+          {{
+            media.preview_image
+            | image_url: width: 160
+            | image_tag:
+              widths: '64, 128, 160',
+              sizes: '64px',
+              loading: 'lazy',
+              alt: '',
+              class: 'kn-img'
+          }}
+          <span class="kn-visually-hidden">
+            {{- opts.label_thumbnail }} {{ forloop.index -}}
+          </span>
+        </button>
+      {%- endfor -%}
+    </div>
+  {%- endif -%}
+
+  <div class="kn-gal__stage">
+    <div class="kn-gal__track" data-kn-track>
+      {%- if kn_count == 0 -%}
+        <div class="kn-gal__slide is-active" data-kn-slide data-kn-index="0">
+          <div class="kn-gal__frame" aria-hidden="true"></div>
+        </div>
+      {%- endif -%}
+
+      {%- for media in kn_media -%}
+        {%- liquid
+          assign kn_loading = 'lazy'
+          assign kn_priority = 'auto'
+          if forloop.first
+            assign kn_loading = 'eager'
+            assign kn_priority = 'high'
+          endif
+        -%}
+        <div
+          class="kn-gal__slide{% if forloop.first %} is-active{% endif %}"
+          data-kn-slide
+          data-kn-index="{{ forloop.index0 }}"
+          data-kn-media-id="{{ media.id }}"
+        >
+          {%- if media.media_type == 'image' -%}
+            <button
+              type="button"
+              class="kn-gal__frame kn-gal__frame--zoom"
+              data-kn-zoom
+              data-kn-index="{{ forloop.index0 }}"
+              aria-label="{{ opts.label_zoom | escape }}"
+            >
+              {%- render 'kn-product-media',
+                media: media,
+                product: product,
+                opts: opts,
+                sizes: kn_sizes,
+                widths: kn_widths,
+                loading: kn_loading,
+                priority: kn_priority
+              -%}
+            </button>
+          {%- else -%}
+            <div class="kn-gal__frame">
+              {%- render 'kn-product-media',
+                media: media,
+                product: product,
+                opts: opts,
+                sizes: kn_sizes,
+                widths: kn_widths,
+                loading: kn_loading,
+                priority: kn_priority
+              -%}
+            </div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if kn_count > 1 -%}
+      <div class="kn-gal__dots" aria-hidden="true">
+        {%- for media in kn_media -%}
+          <span class="kn-gal__dot{% if forloop.first %} is-active{% endif %}" data-kn-dot></span>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>

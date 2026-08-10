@@ -1,0 +1,31 @@
+{%- doc -%}
+  En-tête de page collection (DIRECTION-ARTISTIQUE.md §7.7).
+  Fil d’Ariane, sur-titre = la collection, H1 = la catégorie, une phrase de
+  contexte bornée à `--kn-measure`. Le tout sur la surface du territoire.
+
+  @param {string} eyebrow - Sur-titre, ex. « Fluid-Motion ».
+  @param {string} title - Titre H1, ex. « Femme ».
+  @param {string} intro - Phrase de contexte. Peut être vide.
+  @param {boolean} show_breadcrumb - Affiche le fil d’Ariane.
+{%- enddoc -%}
+
+{%- comment -%}
+  Pas de `.kn-reveal` ici : l’en-tête est toujours au-dessus de la ligne de
+  flottaison et son H1 est souvent l’élément LCP. Le faire apparaître en fondu
+  retarderait l’affichage du contenu principal pour rien.
+{%- endcomment -%}
+<header class="kn-container kn-collection__head">
+  {%- if show_breadcrumb -%}
+    {%- render 'kn-breadcrumb' -%}
+  {%- endif -%}
+
+  {%- if eyebrow != blank -%}
+    <p class="kn-label kn-collection__eyebrow">{{ eyebrow }}</p>
+  {%- endif -%}
+
+  <h1 class="kn-collection__title">{{ title }}</h1>
+
+  {%- if intro != blank -%}
+    <div class="kn-lead kn-collection__intro">{{ intro }}</div>
+  {%- endif -%}
+</header>

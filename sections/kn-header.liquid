@@ -1,0 +1,309 @@
+{%- comment -%}
+  KINŪ — Header
+  Aucun libellé de menu visible : [burger] — [logo] — [recherche · compte · panier].
+  Hauteur constante, sticky, jamais masqué. Seule la couleur bouge au scroll
+  (geste signature, DIRECTION-ARTISTIQUE.md §3.4 R5 et §7.1).
+{%- endcomment -%}
+
+{%- liquid
+  assign kn_logo = section.settings.logo | default: settings.logo
+  assign kn_use_drawer = false
+  if settings.cart_type == 'drawer' and template.name != 'cart'
+    assign kn_use_drawer = true
+  endif
+-%}
+
+{%- comment -%}
+  Le compteur du panier réutilise le composant natif d'Horizon : il est déjà
+  branché sur les événements de panier du thème, on ne fait que le repeindre.
+{%- endcomment -%}
+<script src="{{ 'cart-icon.js' | asset_url }}" type="module" fetchpriority="low"></script>
+
+<div
+  class="kn-header"
+  data-kn-header
+  data-kn-header-transparent="{{ section.settings.transparent_over_media }}"
+  {{ section.shopify_attributes }}
+>
+  <div class="kn-header__row">
+    <div class="kn-header__lead">
+      <button
+        type="button"
+        class="kn-header__icon kn-tap"
+        data-kn-nav-toggle
+        aria-expanded="false"
+        aria-haspopup="dialog"
+        aria-controls="kn-nav"
+      >
+        <span class="kn-header__glyph kn-header__glyph--open">
+          {%- render 'kn-icon', name: 'burger', size: 20 -%}
+        </span>
+        <span class="kn-header__glyph kn-header__glyph--close">
+          {%- render 'kn-icon', name: 'close', size: 20 -%}
+        </span>
+        <span class="kn-visually-hidden">{{ section.settings.nav_open_label | escape }}</span>
+      </button>
+    </div>
+
+    <div class="kn-header__brand">
+      <a
+        class="kn-header__logo"
+        href="{{ routes.root_url }}"
+        {% if kn_logo != blank and section.settings.logo_light != blank %}
+          data-kn-logo-pair
+        {% endif %}
+      >
+        {%- if kn_logo != blank -%}
+          {{
+            kn_logo
+            | image_url: width: 480
+            | image_tag:
+              class: 'kn-header__logo-img kn-header__logo-img--dark',
+              widths: '120,180,240,360,480',
+              sizes: '(min-width: 1024px) 240px, 180px',
+              alt: shop.name,
+              loading: 'eager',
+              fetchpriority: 'high'
+          }}
+          {%- if section.settings.logo_light != blank -%}
+            {{
+              section.settings.logo_light
+              | image_url: width: 480
+              | image_tag:
+                class: 'kn-header__logo-img kn-header__logo-img--light',
+                widths: '120,180,240,360,480',
+                sizes: '(min-width: 1024px) 240px, 180px',
+                alt: '',
+                loading: 'eager'
+            }}
+          {%- endif -%}
+        {%- else -%}
+          <span class="kn-header__wordmark" translate="no">{{ section.settings.wordmark | escape }}</span>
+        {%- endif -%}
+      </a>
+    </div>
+
+    <div class="kn-header__actions">
+      <button
+        type="button"
+        class="kn-header__icon kn-tap"
+        on:click="#search-modal/showDialog"
+        aria-haspopup="dialog"
+        aria-controls="search-modal"
+      >
+        {%- render 'kn-icon', name: 'search', size: 20 -%}
+        <span class="kn-visually-hidden">{{ section.settings.search_label | escape }}</span>
+      </button>
+
+      {%- if shop.customer_accounts_enabled -%}
+        <a class="kn-header__icon kn-tap" href="{{ routes.account_url }}">
+          {%- render 'kn-icon', name: 'account', size: 20 -%}
+          <span class="kn-visually-hidden">{{ section.settings.account_label | escape }}</span>
+        </a>
+      {%- endif -%}
+
+      {%- capture kn_cart_inner -%}
+        <cart-icon class="kn-header__cart-icon" data-testid="cart-icon">
+          {%- render 'kn-icon', name: 'cart', size: 20 -%}
+          {%- render 'cart-bubble', limit: 100 -%}
+        </cart-icon>
+        <span class="kn-visually-hidden">{{ section.settings.cart_label | escape }}</span>
+      {%- endcapture -%}
+
+      {%- if kn_use_drawer -%}
+        <button
+          type="button"
+          class="kn-header__icon kn-tap"
+          on:click="#cart-drawer/toggle"
+          aria-haspopup="dialog"
+          aria-controls="cart-drawer"
+          aria-describedby="cart-bubble-text"
+        >
+          {{ kn_cart_inner }}
+        </button>
+      {%- else -%}
+        <a
+          class="kn-header__icon kn-tap"
+          href="{{ routes.cart_url }}"
+          aria-describedby="cart-bubble-text"
+        >
+          {{ kn_cart_inner }}
+        </a>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{%- render 'kn-nav-panel', section: section -%}
+
+{% schema %}
+{
+  "name": "KINŪ · Header",
+  "tag": "header",
+  "class": "kn-header-section",
+  "enabled_on": {
+    "groups": ["header"]
+  },
+  "settings": [
+    {
+      "type": "header",
+      "content": "Marque"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo",
+      "info": "Facultatif. Sans logo, le nom de la marque s'affiche en toutes lettres et se recolore automatiquement quand le header passe en vert."
+    },
+    {
+      "type": "image_picker",
+      "id": "logo_light",
+      "label": "Logo version claire",
+      "info": "Utilisé quand le header est vert ou transparent. À fournir si vous chargez un logo image, sinon il deviendra illisible sur fond vert."
+    },
+    {
+      "type": "text",
+      "id": "wordmark",
+      "label": "Nom de la marque",
+      "info": "Affiché si aucun logo n'est chargé.",
+      "default": "KINŪ"
+    },
+    {
+      "type": "header",
+      "content": "Comportement"
+    },
+    {
+      "type": "checkbox",
+      "id": "transparent_over_media",
+      "label": "Header transparent au-dessus d'un média plein cadre",
+      "info": "S'applique uniquement aux pages dont la première section est une bannière image ou vidéo.",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu du panneau",
+      "info": "Les entrées de premier niveau deviennent les grands titres, leurs sous-entrées la liste de catégories.",
+      "default": "main-menu"
+    },
+    {
+      "type": "text",
+      "id": "secondary_label",
+      "label": "Lien secondaire",
+      "default": "Toutes les collections"
+    },
+    {
+      "type": "url",
+      "id": "secondary_link",
+      "label": "Destination du lien secondaire",
+      "info": "Par défaut : la liste de tous les produits."
+    },
+    {
+      "type": "link_list",
+      "id": "utility_menu",
+      "label": "Menu de bas de panneau",
+      "info": "Journal, À propos, Contact…"
+    },
+    {
+      "type": "header",
+      "content": "Libellés d'accessibilité"
+    },
+    {
+      "type": "text",
+      "id": "nav_open_label",
+      "label": "Bouton d'ouverture du menu",
+      "default": "Ouvrir la navigation"
+    },
+    {
+      "type": "text",
+      "id": "nav_close_label",
+      "label": "Bouton de fermeture du menu",
+      "default": "Fermer la navigation"
+    },
+    {
+      "type": "text",
+      "id": "nav_dialog_label",
+      "label": "Nom du panneau de navigation",
+      "default": "Navigation principale"
+    },
+    {
+      "type": "text",
+      "id": "search_label",
+      "label": "Bouton de recherche",
+      "default": "Rechercher"
+    },
+    {
+      "type": "text",
+      "id": "account_label",
+      "label": "Bouton de compte",
+      "default": "Mon compte"
+    },
+    {
+      "type": "text",
+      "id": "cart_label",
+      "label": "Bouton de panier",
+      "default": "Panier"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "kn_universe",
+      "name": "Univers",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Entrée de menu concernée",
+          "info": "Doit reprendre exactement le libellé de l'entrée de premier niveau du menu.",
+          "default": "Femme"
+        },
+        {
+          "type": "text",
+          "id": "overline",
+          "label": "Sur-titre",
+          "info": "Le nom de collection, affiché en petit au-dessus de l'entrée.",
+          "default": "Fluid-Motion"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Destination",
+          "info": "Utilisée uniquement si aucun menu n'est configuré ci-dessus."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KINŪ · Header",
+      "blocks": [
+        {
+          "type": "kn_universe",
+          "settings": {
+            "label": "Femme",
+            "overline": "Fluid-Motion"
+          }
+        },
+        {
+          "type": "kn_universe",
+          "settings": {
+            "label": "Homme",
+            "overline": "CrossOver"
+          }
+        },
+        {
+          "type": "kn_universe",
+          "settings": {
+            "label": "Unisexe",
+            "overline": "Amplitude"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

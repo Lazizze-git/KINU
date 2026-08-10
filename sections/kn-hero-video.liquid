@@ -1,0 +1,144 @@
+{%- liquid
+  assign s = section.settings
+  assign has_media = false
+  if s.video != blank or s.video_url != blank or s.image != blank
+    assign has_media = true
+  endif
+  assign has_text = false
+  if s.title != blank
+    assign has_text = true
+  endif
+  assign link_url = s.link_url
+  assign show_link = false
+  if has_text and link_url != blank and s.link_label != blank
+    assign show_link = true
+  endif
+-%}
+
+{%- if has_media -%}
+  <div
+    class="kn-hero"
+    {% if has_text %}
+      style="--kn-hero-scrim: {{ s.scrim }}%;"
+    {% endif %}
+  >
+    <div class="kn-hero__frame">
+      {%- render 'kn-home-hero-media',
+        video: s.video,
+        video_url: s.video_url,
+        poster: s.image,
+        poster_alt: s.image_alt
+      -%}
+
+      {%- if has_text -%}
+        <div class="kn-hero__scrim"></div>
+        <div class="kn-hero__content">
+          <div class="kn-container">
+            <div class="kn-hero__inner">
+              <h1 class="kn-hero__title">{{ s.title | escape }}</h1>
+              {%- if show_link -%}
+                <a class="kn-label kn-underline" href="{{ link_url }}">{{ s.link_label | escape }}</a>
+              {%- endif -%}
+            </div>
+          </div>
+        </div>
+      {%- else -%}
+        <h1 class="kn-visually-hidden">{{ shop.name | escape }}</h1>
+      {%- endif -%}
+    </div>
+  </div>
+
+  {%- comment -%}
+    Le header ne devient transparent que si la bannière ouvre réellement la page.
+    Exécuté pendant l'analyse du document pour éviter tout clignotement ; la
+    version éditeur de thème est gérée par kn-home.js.
+  {%- endcomment -%}
+  <script>
+    (function () {
+      var current = document.currentScript;
+      if (!current) return;
+      var section = current.closest('.shopify-section');
+      var main = document.getElementById('MainContent');
+      if (!section || !main) return;
+      if (main.querySelector('.shopify-section') === section) {
+        document.body.classList.add('kn-header--over-media');
+      }
+    })();
+  </script>
+{%- elsif request.design_mode -%}
+  <div class="kn-home-placeholder">
+    <p class="kn-label">Ajoutez une vidéo et une image de poster dans les réglages de cette section.</p>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Bannière vidéo",
+  "tag": "section",
+  "class": "kn-hero-section",
+  "settings": [
+    {
+      "type": "video",
+      "id": "video",
+      "label": "Vidéo (téléversée dans Shopify)",
+      "info": "Lecture automatique, en boucle, sans son. À privilégier : la qualité est meilleure et le chargement plus rapide qu'un lien externe."
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "label": "Vidéo externe (repli)",
+      "accept": ["youtube", "vimeo"],
+      "info": "Utilisée uniquement si aucune vidéo n'est téléversée ci-dessus."
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image de poster",
+      "info": "Obligatoire. Affichée pendant le chargement de la vidéo, et à la place de la vidéo pour les visiteurs qui ont réduit les animations."
+    },
+    {
+      "type": "text",
+      "id": "image_alt",
+      "label": "Description de l'image (accessibilité)",
+      "default": "Vêtement technique KINŪ en mouvement"
+    },
+    {
+      "type": "header",
+      "content": "Texte posé sur la vidéo"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "info": "Laissez vide pour une bannière purement visuelle, sans voile."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Libellé du lien",
+      "default": "VOIR TOUTES LES COLLECTIONS"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Destination du lien"
+    },
+    {
+      "type": "range",
+      "id": "scrim",
+      "label": "Voile sur la vidéo",
+      "min": 0,
+      "max": 35,
+      "step": 5,
+      "unit": "%",
+      "default": 30,
+      "info": "Appliqué uniquement lorsqu'un titre est posé sur la vidéo."
+    }
+  ],
+  "presets": [
+    {
+      "name": "KINŪ — Bannière vidéo"
+    }
+  ]
+}
+{% endschema %}

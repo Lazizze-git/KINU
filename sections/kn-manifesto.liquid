@@ -1,0 +1,130 @@
+{%- liquid
+  assign s = section.settings
+  assign show_cta = false
+  if s.link_label != blank and s.link_url != blank
+    assign show_cta = true
+  endif
+-%}
+
+<div class="kn-section" data-kn-surface="flood">
+  <div class="kn-container">
+    <div class="kn-manifesto__head">
+      <div class="kn-reveal">
+        {%- if s.eyebrow != blank -%}
+          <span class="kn-label kn-manifesto__eyebrow">{{ s.eyebrow | escape }}</span>
+        {%- endif -%}
+        <h2 class="kn-manifesto__title">{{ s.title | escape }}</h2>
+      </div>
+
+      <div class="kn-manifesto__aside kn-reveal">
+        {%- if s.text != blank -%}
+          <p class="kn-lead">{{ s.text | escape }}</p>
+        {%- endif -%}
+        {%- if show_cta -%}
+          <a class="kn-btn kn-btn--primary" href="{{ s.link_url }}">{{ s.link_label | escape }}</a>
+        {%- endif -%}
+      </div>
+    </div>
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="kn-manifesto__pillars" style="--kn-pillar-count: {{ section.blocks.size }};">
+        {%- for block in section.blocks -%}
+          <div class="kn-manifesto__pillar kn-reveal" {{ block.shopify_attributes }}>
+            <span class="kn-manifesto__key">{{ block.settings.key | escape }}</span>
+            {%- if block.settings.text != blank -%}
+              <p class="kn-sm">{{ block.settings.text | escape }}</p>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Manifeste",
+  "tag": "section",
+  "class": "kn-manifesto-section",
+  "max_blocks": 3,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Sur-titre",
+      "default": "La promesse"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Titre",
+      "default": "Peu de pièces, pensées pour durer une décennie."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Paragraphe",
+      "default": "Chaque vêtement KINŪ est développé en Suisse, testé en conditions réelles pendant une saison complète, puis produit en petites séries dans des ateliers européens. Nous préférons une coupe juste à une nouveauté de plus."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Libellé du bouton",
+      "default": "NOTRE FABRICATION"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Destination du bouton"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "pillar",
+      "name": "Pilier",
+      "settings": [
+        {
+          "type": "text",
+          "id": "key",
+          "label": "Chiffre ou mot-clé",
+          "default": "Suisse"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Ligne d'explication",
+          "default": "Conception et prototypage à Lausanne."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KINŪ — Manifeste",
+      "blocks": [
+        {
+          "type": "pillar",
+          "settings": {
+            "key": "Suisse",
+            "text": "Conception et prototypage à Lausanne."
+          }
+        },
+        {
+          "type": "pillar",
+          "settings": {
+            "key": "1 saison",
+            "text": "De test en conditions réelles avant toute mise en production."
+          }
+        },
+        {
+          "type": "pillar",
+          "settings": {
+            "key": "5 ans",
+            "text": "De réparation gratuite sur les coutures et les fermetures."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

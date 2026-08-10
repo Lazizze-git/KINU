@@ -1,0 +1,75 @@
+{%- doc -%}
+  Lightbox plein écran, fond encre (DA §6). Ouverte au clic sur un visuel.
+  Piste calée horizontalement : la souris utilise les flèches, le doigt balaie.
+
+  @param {object} product
+  @param {object} opts
+  @param {string} section_id
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_media = product.media
+  assign kn_count = kn_media.size
+-%}
+
+{%- if kn_count > 0 -%}
+  <div
+    class="kn-lb"
+    data-kn-lightbox
+    data-kn-surface="dark"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="KnLightboxTitle-{{ section_id }}"
+    hidden
+  >
+    <h2 id="KnLightboxTitle-{{ section_id }}" class="kn-visually-hidden">{{ product.title }}</h2>
+
+    <div class="kn-lb__bar">
+      <span class="kn-label kn-lb__count" data-kn-lb-count aria-hidden="true">1 / {{ kn_count }}</span>
+      <button
+        type="button"
+        class="kn-lb__btn"
+        data-kn-lb-close
+        aria-label="{{ opts.label_close | escape }}"
+      >
+        <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4 4l12 12M16 4L4 16"/></svg>
+      </button>
+    </div>
+
+    <div class="kn-lb__track" data-kn-lb-track>
+      {%- for media in kn_media -%}
+        <div class="kn-lb__slide" data-kn-lb-slide data-kn-index="{{ forloop.index0 }}">
+          {%- render 'kn-product-media',
+            media: media,
+            product: product,
+            opts: opts,
+            sizes: '100vw',
+            widths: '640, 900, 1200, 1600, 2000',
+            loading: 'lazy'
+          -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    {%- if kn_count > 1 -%}
+      <div class="kn-lb__nav">
+        <button
+          type="button"
+          class="kn-lb__btn"
+          data-kn-lb-prev
+          aria-label="{{ opts.label_prev | escape }}"
+        >
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M13 3L6 10l7 7"/></svg>
+        </button>
+        <button
+          type="button"
+          class="kn-lb__btn"
+          data-kn-lb-next
+          aria-label="{{ opts.label_next | escape }}"
+        >
+          <svg viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M7 3l7 7-7 7"/></svg>
+        </button>
+      </div>
+    {%- endif -%}
+  </div>
+{%- endif -%}

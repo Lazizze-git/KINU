@@ -136,10 +136,17 @@ body :where(*) {
   max-width: var(--kn-measure);
 }
 
-/* Fait sortir un bloc de son conteneur pour aller bord à bord (DA §3.4 R1). */
+/* Fait sortir un bloc des marges de son conteneur (DA §3.4 R1).
+   N'utilise volontairement PAS `100vw` : au-delà de 990 px, Horizon fait
+   défiler `.page-wrapper` et non la fenêtre. `100vw` y vaut la largeur du
+   conteneur PLUS la barre de défilement, ce qui crée un débordement horizontal
+   que `body { overflow-x: clip }` ne rattrape pas.
+   Une section qui doit aller bord à bord n'a rien à faire : elle est enfant
+   direct de <main>, qui est déjà pleine largeur. C'est son CONTENU qu'on
+   contraint, avec `.kn-container`. */
 .kn-bleed {
-  width: 100vw;
-  margin-inline: calc(50% - 50vw);
+  width: auto;
+  margin-inline: calc(-1 * var(--kn-gutter));
 }
 
 .kn-section {
@@ -150,6 +157,12 @@ body :where(*) {
 [data-kn-surface="flood"].kn-section,
 [data-kn-surface="dark"].kn-section {
   padding-block: var(--kn-section-y-flood);
+}
+
+/* Compense la barre de défilement escamotée pendant qu'un panneau est ouvert,
+   pour que la page ne se décale pas latéralement (cf. KN.lockScroll). */
+html[scroll-lock] .page-wrapper {
+  padding-right: var(--kn-scrollbar-gap, 0px);
 }
 
 /* --------------------------------------------------------------------------
@@ -293,6 +306,15 @@ a {
 
 .kn-input::placeholder {
   color: var(--kn-surface-muted);
+}
+
+/* Sur un aplat vert ou encre, le filet inversé standard (22 % d'ivoire) tombe à
+   1,8:1 — sous le seuil de 3:1 exigé pour la bordure d'un champ de saisie.
+   On passe à la valeur atténuée (70 %, soit 5,2:1) : le champ se voit sans
+   alourdir la surface. */
+[data-kn-surface="flood"] .kn-input,
+[data-kn-surface="dark"] .kn-input {
+  border-bottom-color: var(--kn-surface-muted);
 }
 
 .kn-input:hover {

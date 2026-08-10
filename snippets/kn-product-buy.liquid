@@ -1,0 +1,152 @@
+{%- doc -%}
+  Bloc d'achat KINŪ. Le formulaire, l'Ajax, l'ouverture du tiroir panier et le
+  compteur d'en-tête restent ceux d'Horizon (`product-form.js`, `cart-drawer.js`) :
+  `kn-product.js` se contente d'écrire l'identifiant de variante dans le champ `id`.
+
+  @param {object} product
+  @param {object} variant
+  @param {object} opts
+  @param {string} form_id
+  @param {boolean} can_add
+  @param {string} button_label
+  @param {string} section_id
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_pickups = variant.store_availabilities | where: 'pick_up_enabled', true
+  assign kn_show_pickup = false
+  if opts.show_pickup and kn_pickups.size > 0
+    assign kn_show_pickup = true
+  endif
+-%}
+
+<product-form-component
+  id="KnProductFormComponent-{{ section_id }}"
+  class="kn-buy"
+  data-section-id="{{ section_id }}"
+  data-product-id="{{ product.id }}"
+  data-product-url="{{ product.url }}"
+  data-quantity-default="1"
+  on:submit="/handleSubmit"
+>
+  <div class="kn-visually-hidden" aria-live="assertive" aria-atomic="true" ref="liveRegion"></div>
+  <div class="kn-visually-hidden" aria-live="polite" data-kn-live></div>
+
+  {%- form 'product', product, id: form_id, data-type: 'add-to-cart-form' -%}
+    <input type="hidden" name="id" ref="variantId" value="{{ variant.id }}">
+
+    <div class="kn-buy__row">
+      <div class="kn-qty">
+        <label class="kn-visually-hidden" for="KnQty-{{ section_id }}">{{ opts.label_quantity }}</label>
+        <button
+          type="button"
+          class="kn-qty__step"
+          data-kn-qty-step="-1"
+          aria-label="{{ opts.label_decrease | escape }}"
+        >
+          <span aria-hidden="true">–</span>
+        </button>
+        <input
+          id="KnQty-{{ section_id }}"
+          class="kn-qty__input"
+          type="number"
+          name="quantity"
+          value="1"
+          min="1"
+          step="1"
+          inputmode="numeric"
+          autocomplete="off"
+          data-kn-qty-input
+        >
+        <button
+          type="button"
+          class="kn-qty__step"
+          data-kn-qty-step="1"
+          aria-label="{{ opts.label_increase | escape }}"
+        >
+          <span aria-hidden="true">+</span>
+        </button>
+      </div>
+
+      <add-to-cart-component
+        class="kn-buy__atc"
+        data-kn-atc-anchor
+        ref="addToCartButtonContainer"
+        data-add-to-cart-animation="false"
+      >
+        <button
+          type="submit"
+          name="add"
+          class="kn-btn kn-btn--primary kn-buy__button"
+          ref="addToCartButton"
+          on:click="/handleClick"
+          data-kn-atc
+          {% unless can_add %}
+            disabled
+          {% endunless %}
+        >
+          <span data-kn-btn-label>{{ button_label }}</span>
+        </button>
+      </add-to-cart-component>
+    </div>
+
+    {%- comment -%}
+      Structure calquée sur Horizon : `product-form.js` écrit le message dans le
+      nœud texte qui suit l'icône. Ne pas reformater ce bloc.
+    {%- endcomment -%}
+    <span class="kn-buy__error hidden" ref="addToCartTextError">
+      <span class="kn-buy__error-mark" aria-hidden="true">!</span>
+    </span>
+  {%- endform -%}
+
+  <dl class="kn-buy__meta">
+    {%- if opts.show_availability -%}
+      <div class="kn-buy__meta-row">
+        <dt class="kn-label kn-buy__meta-key">{{ opts.label_availability }}</dt>
+        <dd class="kn-buy__meta-val">
+          <span
+            class="kn-buy__dot"
+            data-kn-availability-dot
+            data-kn-in-stock="{% if variant.available %}true{% else %}false{% endif %}"
+            aria-hidden="true"
+          ></span>
+          <span class="kn-sm" data-kn-availability>
+            {%- if variant.available -%}
+              {{ opts.label_in_stock }}
+            {%- else -%}
+              {{ opts.label_sold_out }}
+            {%- endif -%}
+          </span>
+        </dd>
+      </div>
+    {%- endif -%}
+
+    {%- if opts.show_sku -%}
+      <div
+        class="kn-buy__meta-row"
+        data-kn-sku-row
+        {% if variant.sku == blank %}
+          hidden
+        {% endif %}
+      >
+        <dt class="kn-label kn-buy__meta-key">{{ opts.label_sku }}</dt>
+        <dd class="kn-buy__meta-val"><span class="kn-sm" data-kn-sku>{{ variant.sku }}</span></dd>
+      </div>
+    {%- endif -%}
+  </dl>
+
+  {%- if kn_show_pickup -%}
+    <div class="kn-buy__pickup" data-kn-pickup>
+      {%- assign kn_pickup = kn_pickups.first -%}
+      <p class="kn-sm kn-buy__pickup-text">
+        {%- if kn_pickup.available -%}
+          <strong class="kn-buy__pickup-title">{{ opts.label_pickup_available }}</strong>
+          — {{ kn_pickup.location.name }}, {{ kn_pickup.pick_up_time }}
+        {%- else -%}
+          <strong class="kn-buy__pickup-title">{{ opts.label_pickup_unavailable }}</strong>
+          — {{ kn_pickup.location.name }}
+        {%- endif -%}
+      </p>
+    </div>
+  {%- endif -%}
+</product-form-component>

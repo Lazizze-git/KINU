@@ -1,1 +1,905 @@
-/* KINŪ — kn-product : feuille de domaine (à écrire). */
+/* ==========================================================================
+   KINŪ — Page produit
+   --------------------------------------------------------------------------
+   Surface toujours claire (DA §3.4 R4) : l'image produit prime, la page ne
+   s'inonde jamais. Un seul signe de territoire, le filet de 3 px.
+   Mobile-first strict : base mobile, puis @media (min-width: …).
+   Voir DIRECTION-ARTISTIQUE.md §5, §6, §7.4, §7.7, §8.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   0. Jetons locaux — dérivés des jetons globaux, jamais de valeur libre
+   -------------------------------------------------------------------------- */
+
+/* Confort tactile : pas de délai de 300 ms, pas de flash bleu système. */
+.kn-pdp button,
+.kn-pdp label,
+.kn-pdp summary,
+.kn-pdp a {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.kn-pdp {
+  --kn-opt-swatch: 2rem;                                              /* 32 px */
+  --kn-opt-inset: calc((var(--kn-tap) - var(--kn-opt-swatch)) / 2);   /*  6 px */
+  --kn-thumb-w: 4rem;                                                 /* 64 px */
+  --kn-ctrl-h: 52px;
+  --kn-gal-ratio: var(--kn-ratio-portrait);
+}
+
+@media (min-width: 640px) {
+  .kn-pdp { --kn-ctrl-h: 56px; }
+}
+
+@media (min-width: 1024px) {
+  .kn-pdp { --kn-gal-ratio: var(--kn-ratio-card); }
+}
+
+/* --------------------------------------------------------------------------
+   1. Ossature
+   -------------------------------------------------------------------------- */
+
+/* R4, garantie de bout en bout : quel que soit l'univers du produit, le <main>
+   d'une fiche reste clair. Sans cette règle, un produit rattaché à CrossOver
+   ou Amplitude hériterait de la surface sombre posée pour les collections. */
+body:has(.kn-pdp) .kn-territory-surface {
+  --kn-surface-bg: var(--kn-ivory);
+  --kn-surface-fg: var(--kn-ink);
+  --kn-surface-line: var(--kn-line);
+  --kn-surface-muted: var(--kn-grey);
+  --kn-surface-accent: var(--kn-forest);
+}
+
+.kn-pdp__inner {
+  padding-block: var(--kn-space-md) var(--kn-section-y);
+}
+
+.kn-pdp__breadcrumb {
+  margin-bottom: var(--kn-space-2xs);
+}
+
+/* Le seul signe de territoire de la page (DA §3.4 R4). */
+.kn-pdp__territory {
+  height: var(--kn-territory-bar);
+  margin: 0 0 var(--kn-space-lg);
+  border: 0;
+  background-color: var(--kn-territory-color, var(--kn-forest));
+}
+
+.kn-pdp__layout {
+  display: grid;
+  gap: var(--kn-space-lg);
+}
+
+@media (min-width: 1024px) {
+  .kn-pdp__layout {
+    grid-template-columns: 7fr 5fr;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. Galerie
+   -------------------------------------------------------------------------- */
+
+/* Mobile : plein cadre, bord à bord.
+   On escamote la gouttière du conteneur plutôt que d'utiliser `100vw` : entre
+   990 et 1023 px, Horizon fait déjà défiler `.page-wrapper` et non la fenêtre,
+   où `100vw` déborde de la largeur de la barre de défilement. */
+.kn-pdp__gallery {
+  width: auto;
+  margin-inline: calc(-1 * var(--kn-gutter));
+}
+
+@media (min-width: 1024px) {
+  .kn-pdp__gallery {
+    width: auto;
+    margin-inline: 0;
+    position: sticky;
+    top: calc(var(--kn-header-h) + var(--kn-space-md));
+    align-self: start;
+  }
+}
+
+.kn-gal__thumbs {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .kn-gal {
+    display: grid;
+    grid-template-columns: var(--kn-thumb-w) 1fr;
+    gap: var(--kn-space-xs);
+    align-items: start;
+  }
+
+  .kn-gal__thumbs {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kn-space-2xs);
+  }
+}
+
+.kn-gal__thumb {
+  display: block;
+  width: var(--kn-thumb-w);
+  aspect-ratio: var(--kn-ratio-card);
+  padding: 0;
+  border: 0;
+  background-color: var(--kn-sage);
+  cursor: pointer;
+  outline: var(--kn-stroke) solid transparent;
+  outline-offset: calc(var(--kn-stroke) * -1);
+  transition: outline-color var(--kn-dur-1) var(--kn-ease-state);
+}
+
+.kn-gal__thumb.is-active {
+  outline-color: var(--kn-ink);
+}
+
+/* Piste : défilement calé sur mobile, un seul visuel affiché sur desktop. */
+.kn-gal__track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.kn-gal__track::-webkit-scrollbar {
+  display: none;
+}
+
+.kn-gal__slide {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
+@media (min-width: 1024px) {
+  .kn-gal__track {
+    display: block;
+    overflow: visible;
+  }
+
+  .kn-gal__slide {
+    display: none;
+  }
+
+  .kn-gal__slide.is-active {
+    display: block;
+  }
+}
+
+.kn-gal__frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  aspect-ratio: var(--kn-gal-ratio);
+  overflow: hidden;
+  background-color: var(--kn-sage);
+}
+
+.kn-gal__frame > * {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.kn-gal__frame--zoom {
+  cursor: zoom-in;
+}
+
+.kn-gal__video,
+.kn-gal__embed iframe,
+.kn-gal__iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border: 0;
+}
+
+/* Étiquette « Modèle 3D » : pas d'aplat coloré, un simple filet. */
+.kn-gal__tag {
+  position: absolute;
+  inset: auto auto var(--kn-space-2xs) var(--kn-space-2xs);
+  width: auto;
+  height: auto;
+  padding: var(--kn-space-3xs) var(--kn-space-2xs);
+  background-color: var(--kn-ivory);
+  color: var(--kn-ink);
+}
+
+/* Indicateurs mobiles : des filets, comme partout ailleurs. */
+.kn-gal__dots {
+  display: flex;
+  gap: var(--kn-space-3xs);
+  padding: var(--kn-space-2xs) var(--kn-gutter) 0;
+}
+
+.kn-gal__dot {
+  flex: 1 1 0;
+  height: var(--kn-stroke);
+  background-color: var(--kn-line);
+  transition: background-color var(--kn-dur-1) var(--kn-ease-state);
+}
+
+.kn-gal__dot.is-active {
+  background-color: var(--kn-ink);
+}
+
+@media (min-width: 1024px) {
+  .kn-gal__dots {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. Colonne d'informations
+   -------------------------------------------------------------------------- */
+
+.kn-pdp__info {
+  display: flex;
+  flex-direction: column;
+}
+
+.kn-pdp__eyebrow {
+  margin: 0 0 var(--kn-space-2xs);
+  color: var(--kn-grey);
+}
+
+/* Échelle H2 : la colonne fait ~410 px, l'échelle H1 y casserait chaque ligne. */
+.kn-pdp__title {
+  margin: 0;
+  font-size: var(--kn-fs-h2);
+}
+
+.kn-pdp__prices {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--kn-space-2xs);
+  margin-top: var(--kn-space-xs);
+}
+
+.kn-pdp__price {
+  font-size: var(--kn-fs-h4);
+}
+
+/* Prix barré en gris — jamais de rouge (DA §7.3). */
+.kn-pdp__compare {
+  color: var(--kn-grey);
+}
+
+.kn-pdp__tax {
+  margin: var(--kn-space-3xs) 0 0;
+  max-width: var(--kn-measure);
+  color: var(--kn-grey);
+}
+
+.kn-pdp__tax p {
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+/* --------------------------------------------------------------------------
+   4. Sélecteurs de variantes
+   -------------------------------------------------------------------------- */
+
+.kn-opt {
+  margin-top: var(--kn-space-lg);
+}
+
+.kn-opt__group {
+  margin: 0 0 var(--kn-space-md);
+  padding: 0;
+  border: 0;
+}
+
+.kn-opt__group:last-child {
+  margin-bottom: 0;
+}
+
+.kn-opt__group--locked {
+  display: flex;
+  align-items: baseline;
+  gap: var(--kn-space-2xs);
+}
+
+.kn-opt__legend {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin-bottom: var(--kn-space-2xs);
+}
+
+.kn-opt__name {
+  color: var(--kn-grey);
+  margin-right: var(--kn-space-2xs);
+}
+
+.kn-opt__value {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-sm);
+}
+
+.kn-opt__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--kn-space-2xs);
+}
+
+/* Les pastilles portent leur zone tactile de 44 px en marge intérieure :
+   on garde le carré de 32 px demandé sans descendre sous la cible minimale. */
+.kn-opt__list--swatch {
+  gap: 0;
+  margin-inline-start: calc(var(--kn-opt-inset) * -1);
+}
+
+.kn-opt__item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.kn-opt__item--swatch {
+  width: var(--kn-tap);
+  height: var(--kn-tap);
+  padding: var(--kn-opt-inset);
+}
+
+.kn-opt__swatch {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border: var(--kn-stroke) solid var(--kn-line);
+  background: var(--kn-swatch, var(--kn-sage)) center / cover no-repeat;
+  transition: opacity var(--kn-dur-1) var(--kn-ease-state);
+}
+
+.kn-opt__input:checked ~ .kn-opt__swatch {
+  outline: var(--kn-stroke-strong) solid var(--kn-ink);
+  outline-offset: var(--kn-space-3xs);
+}
+
+.kn-opt__box {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--kn-tap);
+  height: var(--kn-tap);
+  padding-inline: var(--kn-space-xs);
+  overflow: hidden;
+  border: var(--kn-stroke) solid var(--kn-line);
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-sm);
+  font-variant-numeric: tabular-nums;
+  transition: background-color var(--kn-dur-2) var(--kn-ease-state),
+              color var(--kn-dur-2) var(--kn-ease-state),
+              border-color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-opt__item:hover .kn-opt__box {
+  border-color: var(--kn-ink);
+}
+
+.kn-opt__input:checked ~ .kn-opt__box {
+  background-color: var(--kn-ink);
+  border-color: var(--kn-ink);
+  color: var(--kn-ivory);
+}
+
+.kn-opt__input:focus-visible ~ .kn-opt__box,
+.kn-opt__input:focus-visible ~ .kn-opt__swatch {
+  outline: var(--kn-stroke-strong) solid var(--kn-surface-accent);
+  outline-offset: var(--kn-space-3xs);
+}
+
+/* Indisponible : barré, mais toujours cliquable — on informe, on ne bloque pas. */
+.kn-opt__item[data-kn-unavailable="true"] .kn-opt__box {
+  color: var(--kn-grey);
+}
+
+.kn-opt__item[data-kn-unavailable="true"] .kn-opt__swatch {
+  opacity: 0.35;
+}
+
+.kn-opt__item[data-kn-unavailable="true"] .kn-opt__box::after,
+.kn-opt__item[data-kn-unavailable="true"] .kn-opt__swatch::after {
+  content: "";
+  position: absolute;
+  inset-inline: -21%;
+  top: 50%;
+  height: var(--kn-stroke);
+  background-color: currentColor;
+  transform: rotate(-45deg);
+}
+
+.kn-opt__item[data-kn-unavailable="true"] .kn-opt__swatch::after {
+  background-color: var(--kn-ink);
+}
+
+/* --------------------------------------------------------------------------
+   5. Bloc d'achat
+   -------------------------------------------------------------------------- */
+
+.kn-buy {
+  display: block;
+  margin-top: var(--kn-space-md);
+}
+
+.kn-buy__row {
+  display: grid;
+  gap: var(--kn-space-xs);
+}
+
+@media (min-width: 640px) {
+  .kn-buy__row {
+    grid-template-columns: auto 1fr;
+    align-items: stretch;
+  }
+}
+
+.kn-qty {
+  display: inline-grid;
+  grid-template-columns: var(--kn-tap) var(--kn-tap) var(--kn-tap);
+  height: var(--kn-ctrl-h);
+  border: var(--kn-stroke) solid var(--kn-line);
+  width: fit-content;
+}
+
+.kn-qty__step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  color: inherit;
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-h4);
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color var(--kn-dur-2) var(--kn-ease-state),
+              color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-qty__step:hover {
+  background-color: var(--kn-ink);
+  color: var(--kn-ivory);
+}
+
+.kn-qty__input {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  border-inline: var(--kn-stroke) solid var(--kn-line);
+  background-color: transparent;
+  color: inherit;
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-sm);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  appearance: textfield;
+}
+
+.kn-qty__input::-webkit-outer-spin-button,
+.kn-qty__input::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.kn-buy__atc {
+  display: block;
+}
+
+.kn-buy__button {
+  min-height: var(--kn-ctrl-h);
+  width: 100%;
+}
+
+.kn-buy__button[disabled] {
+  background-color: transparent;
+  border-color: var(--kn-line);
+  color: var(--kn-grey);
+  cursor: not-allowed;
+}
+
+.kn-buy__error {
+  display: flex;
+  align-items: center;
+  gap: var(--kn-space-2xs);
+  margin-top: var(--kn-space-2xs);
+  color: var(--kn-error);
+  font-size: var(--kn-fs-sm);
+}
+
+.kn-buy__error.hidden {
+  display: none;
+}
+
+.kn-buy__error-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--kn-space-sm);
+  height: var(--kn-space-sm);
+  border: var(--kn-stroke) solid currentColor;
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-label);
+  line-height: 1;
+}
+
+.kn-buy__meta {
+  display: grid;
+  gap: var(--kn-space-2xs);
+  margin: var(--kn-space-md) 0 0;
+}
+
+.kn-buy__meta-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--kn-space-2xs);
+}
+
+.kn-buy__meta-key {
+  flex: none;
+  min-width: 8rem;
+  margin: 0;
+  color: var(--kn-grey);
+}
+
+.kn-buy__meta-val {
+  display: flex;
+  min-width: 0;
+  align-items: baseline;
+  gap: var(--kn-space-3xs);
+  margin: 0;
+}
+
+.kn-buy__dot {
+  flex: none;
+  width: var(--kn-space-2xs);
+  height: var(--kn-space-2xs);
+  background-color: var(--kn-grey);
+}
+
+.kn-buy__dot[data-kn-in-stock="true"] {
+  background-color: var(--kn-forest);
+}
+
+.kn-buy__pickup {
+  margin-top: var(--kn-space-xs);
+  padding-top: var(--kn-space-xs);
+  border-top: var(--kn-stroke) solid var(--kn-line);
+}
+
+.kn-buy__pickup-text {
+  margin: 0;
+  color: var(--kn-grey);
+}
+
+.kn-buy__pickup-title {
+  font-weight: var(--kn-fw-medium);
+  color: var(--kn-ink);
+}
+
+/* --------------------------------------------------------------------------
+   6. Accordéons
+   -------------------------------------------------------------------------- */
+
+.kn-acc {
+  margin-top: var(--kn-space-lg);
+  border-top: var(--kn-stroke) solid var(--kn-line);
+}
+
+.kn-acc__item {
+  border-bottom: var(--kn-stroke) solid var(--kn-line);
+}
+
+.kn-acc__sum {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kn-space-sm);
+  min-height: var(--kn-tap);
+  padding-block: var(--kn-space-xs);
+  list-style: none;
+  cursor: pointer;
+}
+
+.kn-acc__sum::-webkit-details-marker {
+  display: none;
+}
+
+.kn-acc__sum::after {
+  content: "";
+  flex: none;
+  width: var(--kn-space-2xs);
+  height: var(--kn-space-2xs);
+  border-right: var(--kn-stroke) solid currentColor;
+  border-bottom: var(--kn-stroke) solid currentColor;
+  transform: translateY(calc(var(--kn-space-3xs) / -2)) rotate(45deg);
+  transition: transform var(--kn-dur-1) var(--kn-ease-state);
+}
+
+.kn-acc__item[open] > .kn-acc__sum::after {
+  transform: translateY(calc(var(--kn-space-3xs) / 2)) rotate(-135deg);
+}
+
+.kn-acc__body {
+  padding-bottom: var(--kn-space-md);
+}
+
+.kn-acc__body p,
+.kn-acc__body ul,
+.kn-acc__body ol {
+  margin-block: 0 var(--kn-space-sm);
+}
+
+.kn-acc__body ul,
+.kn-acc__body ol {
+  padding-inline-start: var(--kn-space-sm);
+}
+
+.kn-acc__body a {
+  text-decoration: underline;
+  text-underline-offset: var(--kn-space-3xs);
+}
+
+.kn-acc__body > :first-child {
+  margin-top: 0;
+}
+
+.kn-acc__body > :last-child {
+  margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   7. Bandeau d'achat collant — mobile uniquement (DA §9)
+   -------------------------------------------------------------------------- */
+
+.kn-sticky {
+  --kn-sticky-h: 4.5rem;
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 30;
+  background-color: var(--kn-ivory);
+  color: var(--kn-ink);
+  border-top: var(--kn-stroke) solid var(--kn-line);
+  transform: translateY(100%);
+  transition: transform var(--kn-dur-3) var(--kn-ease-inout);
+}
+
+.kn-sticky[hidden] {
+  display: none;
+}
+
+.kn-sticky.is-visible {
+  transform: none;
+  transition-timing-function: var(--kn-ease-out);
+}
+
+.kn-sticky__inner {
+  display: flex;
+  align-items: center;
+  gap: var(--kn-space-sm);
+  padding: var(--kn-space-2xs) var(--kn-gutter);
+  padding-bottom: calc(var(--kn-space-2xs) + env(safe-area-inset-bottom, 0px));
+}
+
+.kn-sticky__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kn-space-3xs);
+  min-width: 0;
+}
+
+.kn-sticky__name {
+  overflow: hidden;
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-sm);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.kn-sticky__button {
+  flex: none;
+  width: auto;
+  min-height: var(--kn-ctrl-h);
+}
+
+.kn-sticky__button[disabled] {
+  background-color: transparent;
+  border-color: var(--kn-line);
+  color: var(--kn-grey);
+  cursor: not-allowed;
+}
+
+/* Le bandeau ne doit jamais recouvrir la fin de page. */
+body:has(.kn-sticky.is-visible) {
+  padding-bottom: var(--kn-space-3xl);
+}
+
+@media (min-width: 1024px) {
+  .kn-sticky {
+    display: none;
+  }
+
+  body:has(.kn-sticky.is-visible) {
+    padding-bottom: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8. Lightbox
+   -------------------------------------------------------------------------- */
+
+.kn-lb {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overscroll-behavior: contain;
+}
+
+.kn-lb[hidden] {
+  display: none;
+}
+
+.kn-lb__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kn-space-sm);
+  padding: var(--kn-space-2xs) var(--kn-gutter);
+  border-bottom: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-lb__count {
+  color: var(--kn-surface-muted);
+}
+
+.kn-lb__track {
+  display: flex;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.kn-lb__track::-webkit-scrollbar {
+  display: none;
+}
+
+.kn-lb__slide {
+  display: grid;
+  flex: 0 0 100%;
+  place-items: center;
+  min-width: 0;
+  padding: var(--kn-space-sm);
+  scroll-snap-align: center;
+}
+
+.kn-lb__slide > * {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.kn-lb__slide .kn-img,
+.kn-lb__slide .kn-gal__video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: transparent;
+}
+
+.kn-lb__slide .kn-gal__embed {
+  width: 100%;
+  aspect-ratio: var(--kn-ratio-hero);
+}
+
+.kn-lb__nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--kn-space-2xs) var(--kn-gutter);
+  padding-bottom: calc(var(--kn-space-2xs) + env(safe-area-inset-bottom, 0px));
+  border-top: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-lb__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--kn-tap);
+  height: var(--kn-tap);
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-lb__btn:hover {
+  color: var(--kn-surface-muted);
+}
+
+.kn-lb__btn svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--kn-stroke-icon);
+  stroke-linecap: square;
+}
+
+/* --------------------------------------------------------------------------
+   9. Recommandations
+   -------------------------------------------------------------------------- */
+
+/* La section ne réserve aucune place tant que les recommandations ne sont pas
+   revenues : sans contenu, pas de grand vide au bas de la page. */
+.kn-recos__inner {
+  padding-block: var(--kn-section-y);
+}
+
+.kn-recos__head {
+  padding-top: var(--kn-space-sm);
+  margin-bottom: var(--kn-space-lg);
+  border-top: var(--kn-stroke) solid var(--kn-line);
+}
+
+.kn-recos__title {
+  margin: 0;
+  color: var(--kn-grey);
+}
+
+.kn-recos__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--kn-grid-gap);
+  row-gap: var(--kn-grid-row-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Quatre produits : on saute l'étape à trois colonnes, qui laisserait
+   toujours une carte seule sur sa ligne. */
+@media (min-width: 900px) {
+  .kn-recos__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   10. Mouvement réduit
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .kn-gal__track,
+  .kn-lb__track {
+    scroll-behavior: auto;
+  }
+
+  .kn-sticky {
+    transition: none;
+  }
+}

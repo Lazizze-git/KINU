@@ -1,0 +1,90 @@
+{%- doc -%}
+  KINŪ — Jeu d'icônes
+
+  SVG inline, monoline, dessinées pour ce thème. Trait piloté par
+  `--kn-stroke-icon` (1,5 px réel grâce à `vector-effect` posé dans
+  kn-chrome.css), couleur héritée via `currentColor` : l'icône suit donc
+  toujours la gamme de la surface qui l'accueille.
+
+  @param {string} name - burger, close, search, account, cart, chevron,
+    arrow-right, plus, minus, instagram, tiktok, facebook, pinterest, youtube
+  @param {number} [size] - Côté en pixels. 20 par défaut.
+  @param {string} [class] - Classes supplémentaires.
+
+  @example
+  {% render 'kn-icon', name: 'cart', size: 20 %}
+{%- enddoc -%}
+
+{%- assign kn_icon_size = size | default: 20 -%}
+
+<svg
+  class="kn-icon{% if class != blank %} {{ class }}{% endif %}"
+  width="{{ kn_icon_size }}"
+  height="{{ kn_icon_size }}"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  {%- case name -%}
+    {%- when 'burger' -%}
+      <path d="M3 9h18" />
+      <path d="M3 15h18" />
+
+    {%- when 'close' -%}
+      <path d="M5.5 5.5 18.5 18.5" />
+      <path d="M18.5 5.5 5.5 18.5" />
+
+    {%- when 'search' -%}
+      <circle cx="11" cy="11" r="6.5" />
+      <path d="m15.9 15.9 5.1 5.1" />
+
+    {%- when 'account' -%}
+      <circle cx="12" cy="8" r="3.75" />
+      <path d="M4.5 20.5c0-3.87 3.36-6.75 7.5-6.75s7.5 2.88 7.5 6.75" />
+
+    {%- when 'cart' -%}
+      <path d="M4.75 7.75h14.5l-1.05 12.5H5.8z" />
+      <path d="M9 10.25V7a3 3 0 0 1 6 0v3.25" />
+
+    {%- when 'chevron' -%}
+      <path d="m7.5 10 4.5 4.5L16.5 10" />
+
+    {%- when 'arrow-right' -%}
+      <path d="M3.5 12h17" />
+      <path d="m14 5.5 6.5 6.5-6.5 6.5" />
+
+    {%- when 'plus' -%}
+      <path d="M12 5v14" />
+      <path d="M5 12h14" />
+
+    {%- when 'minus' -%}
+      <path d="M5 12h14" />
+
+    {%- when 'instagram' -%}
+      <rect x="3.5" y="3.5" width="17" height="17" rx="4.75" />
+      <circle cx="12" cy="12" r="4" />
+      <circle cx="16.9" cy="7.1" r="1" fill="currentColor" stroke="none" />
+
+    {%- when 'tiktok' -%}
+      <path d="M13.75 3.5v11.75a4 4 0 1 1-3.4-3.96" />
+      <path d="M13.75 3.5c.35 2.7 2.1 4.35 4.75 4.6" />
+
+    {%- when 'facebook' -%}
+      <path d="M15.5 4.5h-1.75A2.75 2.75 0 0 0 11 7.25V20.5" />
+      <path d="M8 11.25h6.75" />
+
+    {%- when 'pinterest' -%}
+      <circle cx="12" cy="12" r="8.75" />
+      <path d="M10.3 20.4 12.5 9.6" />
+      <path d="M9.6 14.1c1.85 1.9 5.35.9 6.2-2.05.85-2.95-1.3-5.35-4.05-5-2.7.35-4.3 2.75-3.7 5.35" />
+
+    {%- when 'youtube' -%}
+      <rect x="2.75" y="5.5" width="18.5" height="13" rx="3.75" />
+      <path d="m10.5 9.25 5.25 2.75-5.25 2.75z" />
+  {%- endcase -%}
+</svg>

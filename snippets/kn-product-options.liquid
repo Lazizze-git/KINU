@@ -1,0 +1,109 @@
+{%- doc -%}
+  Sélecteurs de variantes KINŪ (DA §7.7).
+  Chaque option est rendue séparément — jamais un menu de titres combinés.
+  Couleur : pastilles carrées 32 px. Autres options : carrés de 44 px.
+  Les combinaisons indisponibles sont barrées mais restent cliquables.
+
+  @param {object} product
+  @param {object} opts
+  @param {string} section_id
+{%- enddoc -%}
+
+{%- unless product.has_only_default_variant -%}
+  <div class="kn-opt">
+    {%- for kn_option in product.options_with_values -%}
+      {%- liquid
+        assign kn_index = forloop.index0
+        assign kn_name = 'kn-opt-' | append: section_id | append: '-' | append: kn_option.position
+        assign kn_is_swatch = false
+        for kn_value in kn_option.values
+          if kn_value.swatch.color != blank or kn_value.swatch.image != blank
+            assign kn_is_swatch = true
+            break
+          endif
+        endfor
+        assign kn_style = 'button'
+        if kn_is_swatch
+          assign kn_style = 'swatch'
+        endif
+      -%}
+
+      {%- if kn_option.values.size == 1 -%}
+        <div
+          class="kn-opt__group kn-opt__group--locked"
+          data-kn-option-group
+          data-kn-option-index="{{ kn_index }}"
+          data-kn-value="{{ kn_option.selected_value | escape }}"
+        >
+          <span class="kn-label kn-opt__name">{{ kn_option.name }}</span>
+          <span class="kn-opt__value">{{ kn_option.selected_value }}</span>
+        </div>
+      {%- else -%}
+        <fieldset
+          class="kn-opt__group"
+          data-kn-option-group
+          data-kn-option-index="{{ kn_index }}"
+        >
+          <legend class="kn-opt__legend">
+            <span class="kn-label kn-opt__name">{{ kn_option.name }}</span>
+            <span class="kn-opt__value" data-kn-option-value>{{ kn_option.selected_value }}</span>
+          </legend>
+
+          <div class="kn-opt__list kn-opt__list--{{ kn_style }}">
+            {%- for kn_value in kn_option.values -%}
+              {%- liquid
+                assign kn_swatch_bg = ''
+                if kn_value.swatch.image != blank
+                  assign kn_swatch_url = kn_value.swatch.image | image_url: width: 96
+                  assign kn_swatch_bg = 'url(' | append: kn_swatch_url | append: ')'
+                elsif kn_value.swatch.color != blank
+                  assign kn_swatch_bg = 'rgb(' | append: kn_value.swatch.color.rgb | append: ')'
+                endif
+              -%}
+              <label
+                class="kn-opt__item kn-opt__item--{{ kn_style }}"
+                data-kn-option-item
+                {% unless kn_value.available %}
+                  data-kn-unavailable="true"
+                {% endunless %}
+              >
+                <input
+                  class="kn-opt__input kn-visually-hidden"
+                  type="radio"
+                  name="{{ kn_name }}"
+                  value="{{ kn_value.name | escape }}"
+                  data-kn-option-input
+                  data-kn-option-index="{{ kn_index }}"
+                  {% if kn_value.selected %}
+                    checked
+                  {% endif %}
+                >
+                {%- if kn_style == 'swatch' -%}
+                  <span
+                    class="kn-opt__swatch"
+                    aria-hidden="true"
+                    {% if kn_swatch_bg != blank %}
+                      style="--kn-swatch: {{ kn_swatch_bg }};"
+                    {% endif %}
+                  ></span>
+                  <span class="kn-visually-hidden">{{ kn_value.name }}</span>
+                {%- else -%}
+                  <span class="kn-opt__box">{{ kn_value.name }}</span>
+                {%- endif -%}
+                <span
+                  class="kn-visually-hidden"
+                  data-kn-option-oos
+                  {% if kn_value.available %}
+                    hidden
+                  {% endif %}
+                >
+                  — {{ opts.label_option_unavailable }}
+                </span>
+              </label>
+            {%- endfor -%}
+          </div>
+        </fieldset>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+{%- endunless -%}

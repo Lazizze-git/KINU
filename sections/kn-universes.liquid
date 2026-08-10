@@ -1,0 +1,182 @@
+{%- liquid
+  assign s = section.settings
+  assign img_widths = '400, 600, 800, 1000, 1200, 1600'
+  assign img_sizes = '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw'
+-%}
+
+{%- if section.blocks.size > 0 -%}
+  <div class="kn-section" data-kn-surface="light">
+    <div class="kn-container">
+      {%- if s.eyebrow != blank -%}
+        <div class="kn-home-head">
+          <div class="kn-home-head__text">
+            <h2 class="kn-label kn-home-head__eyebrow">{{ s.eyebrow | escape }}</h2>
+          </div>
+        </div>
+      {%- endif -%}
+
+      <div class="kn-universes__grid kn-home-body">
+      {%- for block in section.blocks -%}
+        {%- liquid
+          assign b = block.settings
+          assign target = b.collection.url | default: b.url
+          assign main_image = b.image | default: b.collection.featured_image
+          assign alt_text = main_image.alt | default: b.category | escape
+        -%}
+
+        {%- capture column -%}
+          <div class="kn-ratio kn-universe__frame">
+            {%- if main_image != blank -%}
+              {{
+                main_image
+                | image_url: width: 1600
+                | image_tag: widths: img_widths, sizes: img_sizes, class: 'kn-img', alt: alt_text, loading: 'lazy'
+              }}
+              {%- if b.image_hover != blank -%}
+                {{
+                  b.image_hover
+                  | image_url: width: 1600
+                  | image_tag:
+                    widths: img_widths,
+                    sizes: img_sizes,
+                    class: 'kn-img kn-universe__img--alt',
+                    alt: '',
+                    loading: 'lazy'
+                }}
+              {%- endif -%}
+            {%- endif -%}
+          </div>
+
+          <div class="kn-universe__text">
+            {%- if b.collection_name != blank -%}
+              <span class="kn-label kn-universe__collection" translate="no">
+                {{- b.collection_name | escape -}}
+              </span>
+            {%- endif -%}
+            <h3 class="kn-universe__cat">{{ b.category | escape }}</h3>
+            {%- if b.description != blank -%}
+              <span class="kn-sm kn-universe__note">{{ b.description | escape }}</span>
+            {%- endif -%}
+          </div>
+        {%- endcapture -%}
+
+        {%- if target != blank -%}
+          <a
+            class="kn-universe kn-reveal"
+            href="{{ target }}"
+            {{ block.shopify_attributes }}
+          >
+            {{ column }}
+          </a>
+        {%- else -%}
+          <div class="kn-universe kn-reveal" {{ block.shopify_attributes }}>
+            {{ column }}
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+      </div>
+    </div>
+  </div>
+{%- elsif request.design_mode -%}
+  <div class="kn-home-placeholder">
+    <p class="kn-label">Ajoutez un univers dans les réglages de cette section.</p>
+  </div>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Les univers",
+  "tag": "section",
+  "class": "kn-universes-section",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Sur-titre de la section",
+      "default": "Trois univers"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "universe",
+      "name": "Univers",
+      "settings": [
+        {
+          "type": "text",
+          "id": "category",
+          "label": "Catégorie",
+          "default": "Femme",
+          "info": "C'est ce que le visiteur cherche : il domine la colonne."
+        },
+        {
+          "type": "text",
+          "id": "collection_name",
+          "label": "Nom de la collection",
+          "default": "Fluid-Motion",
+          "info": "Signature de marque, affichée en petit au-dessus de la catégorie."
+        },
+        {
+          "type": "text",
+          "id": "description",
+          "label": "Familles de produits",
+          "default": "Brassières, leggings, shorts, t-shirts, vestes"
+        },
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection liée"
+        },
+        {
+          "type": "url",
+          "id": "url",
+          "label": "Lien manuel",
+          "info": "Utilisé uniquement si aucune collection n'est sélectionnée."
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image (4:5)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image_hover",
+          "label": "Image au survol (4:5)",
+          "info": "Fondu croisé au survol. Facultative."
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KINŪ — Les univers",
+      "blocks": [
+        {
+          "type": "universe",
+          "settings": {
+            "category": "Femme",
+            "collection_name": "Fluid-Motion",
+            "description": "Brassières, leggings, shorts, t-shirts, vestes"
+          }
+        },
+        {
+          "type": "universe",
+          "settings": {
+            "category": "Homme",
+            "collection_name": "CrossOver",
+            "description": "T-shirts, shorts"
+          }
+        },
+        {
+          "type": "universe",
+          "settings": {
+            "category": "Unisexe",
+            "collection_name": "Amplitude",
+            "description": "T-shirts, hoodies, joggers"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

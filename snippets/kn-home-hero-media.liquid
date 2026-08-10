@@ -1,0 +1,84 @@
+{%- doc -%}
+  KINŪ — Média de la bannière d'accueil.
+
+  Le poster est un vrai <img> responsive : il est visible pendant le chargement,
+  et il EST la bannière sous `prefers-reduced-motion: reduce` (DA §8). Les
+  sources vidéo ne sont posées dans le DOM que par kn-home.js, donc rien n'est
+  téléchargé quand le mouvement est refusé.
+
+  @param {object} [video] - Vidéo hébergée par Shopify (réglage de type `video`).
+  @param {object} [video_url] - Vidéo externe YouTube/Vimeo (réglage `video_url`).
+  @param {object} [poster] - Image du poster (réglage `image_picker`).
+  @param {string} [poster_alt] - Texte alternatif de repli si l'image n'en porte pas.
+{%- enddoc -%}
+
+{%- liquid
+  assign poster_image = poster | default: video.preview_image
+  assign alt_text = poster_image.alt | default: poster_alt | default: shop.name | escape
+
+  # Un seul MP4, choisi explicitement : le navigateur retient la première
+  # source lisible, et l'ordre renvoyé par Shopify n'est pas garanti.
+  assign mp4_url = ''
+  assign mp4_height = 0
+  if video != blank
+    for source in video.sources
+      if source.format == 'mp4' and source.height > mp4_height and source.height <= 1080
+        assign mp4_url = source.url
+        assign mp4_height = source.height
+      endif
+    endfor
+    if mp4_url == blank
+      for source in video.sources
+        if source.format == 'mp4' and mp4_url == blank
+          assign mp4_url = source.url
+        endif
+      endfor
+    endif
+  endif
+
+  assign embed_url = ''
+  if mp4_url == blank and video_url != blank
+    if video_url.type == 'youtube'
+      assign embed_url = 'https://www.youtube.com/embed/' | append: video_url.id | append: '?autoplay=1&mute=1&loop=1&playlist=' | append: video_url.id | append: '&controls=0&modestbranding=1&rel=0&playsinline=1&disablekb=1'
+    elsif video_url.type == 'vimeo'
+      assign embed_url = 'https://player.vimeo.com/video/' | append: video_url.id | append: '?autoplay=1&muted=1&loop=1&controls=0&background=1'
+    endif
+  endif
+-%}
+
+{%- if poster_image != blank -%}
+  {{
+    poster_image
+    | image_url: width: 3200
+    | image_tag:
+      widths: '480, 640, 828, 1080, 1280, 1600, 1920, 2400, 3200',
+      sizes: '100vw',
+      class: 'kn-img kn-hero__poster',
+      alt: alt_text,
+      loading: 'eager',
+      fetchpriority: 'high'
+  }}
+{%- endif -%}
+
+{%- if mp4_url != blank -%}
+  <video
+    class="kn-hero__video"
+    data-kn-hero-video
+    data-kn-src="{{ mp4_url }}"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="metadata"
+    aria-hidden="true"
+    tabindex="-1"
+  ></video>
+{%- elsif embed_url != blank -%}
+  <div
+    class="kn-hero__embed"
+    data-kn-hero-embed
+    data-kn-src="{{ embed_url }}"
+    data-kn-title="{{ alt_text }}"
+    aria-hidden="true"
+  ></div>
+{%- endif -%}

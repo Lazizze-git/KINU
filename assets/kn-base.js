@@ -51,18 +51,40 @@
   }
 
   /**
-   * Verrouille le défilement de la page sans provoquer de saut de mise en page.
+   * Renvoie l'élément qui défile réellement.
+   * Au-delà de 990 px, Horizon donne `overflow-y: auto` à `.page-wrapper` et
+   * fige `body` : verrouiller `body.overflow` n'y bloque donc rien.
+   * @returns {HTMLElement}
+   */
+  function getScroller() {
+    var wrapper = /** @type {HTMLElement | null} */ (document.querySelector('.page-wrapper'));
+    if (wrapper && wrapper.scrollHeight > wrapper.clientHeight) return wrapper;
+    return /** @type {HTMLElement} */ (document.scrollingElement || document.documentElement);
+  }
+
+  /**
+   * Verrouille le défilement sans provoquer de saut de mise en page.
+   * S'appuie sur l'attribut `scroll-lock` déjà géré par le CSS d'Horizon
+   * (`html[scroll-lock], html[scroll-lock] .page-wrapper { overflow: hidden }`),
+   * et compense la largeur de la barre de défilement qui disparaît.
    * @param {boolean} locked
    */
   function lockScroll(locked) {
-    if (locked) {
-      var scrollbar = window.innerWidth - document.documentElement.clientWidth;
-      document.body.style.paddingRight = scrollbar > 0 ? scrollbar + 'px' : '';
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.paddingRight = '';
-      document.body.style.overflow = '';
+    var root = document.documentElement;
+
+    if (!locked) {
+      root.removeAttribute('scroll-lock');
+      root.style.removeProperty('--kn-scrollbar-gap');
+      return;
     }
+
+    var scroller = getScroller();
+    var gap = scroller === document.scrollingElement || scroller === root
+      ? window.innerWidth - root.clientWidth
+      : scroller.offsetWidth - scroller.clientWidth;
+
+    root.style.setProperty('--kn-scrollbar-gap', (gap > 0 ? gap : 0) + 'px');
+    root.setAttribute('scroll-lock', '');
   }
 
   /**

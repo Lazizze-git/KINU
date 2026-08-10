@@ -1,0 +1,173 @@
+{%- liquid
+  comment
+    Page collection KINŪ (DIRECTION-ARTISTIQUE.md §3.4 R3, §5.2, §7.7).
+    La surface vient du territoire posé sur <body> par layout/theme.liquid :
+    on ne fait que peindre avec les jetons de surface hérités.
+  endcomment
+
+  assign kn_settings = section.settings
+
+  comment
+    Univers de rattachement : la collection elle-même si un bloc la désigne,
+    sinon celle pointée par son métachamp `kn.universe`.
+  endcomment
+  assign kn_universe = collection
+  if collection.metafields.kn.universe != blank
+    assign kn_universe = collection.metafields.kn.universe.value
+  endif
+
+  assign kn_category = ''
+  assign kn_universe_name = ''
+  assign kn_universe_intro = ''
+  for kn_block in section.blocks
+    if kn_block.settings.collection.handle == kn_universe.handle
+      assign kn_category = kn_block.settings.category
+      assign kn_universe_name = kn_block.settings.universe_name | default: kn_block.settings.collection.title
+      assign kn_universe_intro = kn_block.settings.intro
+      break
+    endif
+  endfor
+
+  comment
+    Sur la page de l’univers, le H1 EST la catégorie et le sur-titre le nom de
+    collection. Sur une sous-collection, le H1 est son propre titre et le
+    sur-titre rappelle l’univers.
+  endcomment
+  assign kn_is_universe = false
+  if kn_universe.handle == collection.handle and kn_category != blank
+    assign kn_is_universe = true
+  endif
+
+  if kn_is_universe
+    assign kn_title = kn_category
+    assign kn_eyebrow = kn_universe_name
+    assign kn_intro = collection.description | default: kn_universe_intro
+  else
+    assign kn_title = collection.title
+    assign kn_eyebrow = ''
+    if kn_category != blank
+      assign kn_eyebrow = kn_category | append: ' — ' | append: kn_universe_name
+    endif
+    assign kn_intro = collection.description
+  endif
+
+  comment
+    Nombre de filtres actifs, pour le libellé « FILTRER (2) ».
+  endcomment
+  assign kn_active = 0
+  for kn_filter in collection.filters
+    assign kn_values = kn_filter.active_values | size
+    assign kn_active = kn_active | plus: kn_values
+    if kn_filter.type == 'price_range'
+      if kn_filter.min_value.value != null or kn_filter.max_value.value != null
+        assign kn_active = kn_active | plus: 1
+      endif
+    endif
+  endfor
+
+  assign kn_empty_url = kn_settings.empty_url | default: routes.collections_url
+-%}
+
+<div
+  class="kn-catalog kn-collection"
+  data-kn-collection
+  data-kn-section-id="{{ section.id }}"
+>
+  {%- render 'kn-catalog-header',
+    eyebrow: kn_eyebrow,
+    title: kn_title,
+    intro: kn_intro,
+    show_breadcrumb: kn_settings.show_breadcrumb
+  -%}
+
+  {%- render 'kn-catalog-toolbar',
+    section_id: section.id,
+    results: collection,
+    active_count: kn_active,
+    filter_label: kn_settings.filter_label,
+    sort_label: kn_settings.sort_label,
+    clear_label: kn_settings.clear_label,
+    count_label: kn_settings.count_label
+  -%}
+
+  {%- comment -%}
+    Le panneau de filtres est placé avant la grille : sans JavaScript il reste
+    affiché en ligne, à l’endroit où on l’attend. `kn-catalog.js` en fait
+    ensuite un drawer, et sa position dans le DOM n’a plus d’importance.
+  {%- endcomment -%}
+  {%- render 'kn-catalog-facets',
+    section_id: section.id,
+    results: collection,
+    title: kn_settings.filters_title,
+    apply_label: kn_settings.apply_label,
+    clear_label: kn_settings.clear_label,
+    close_label: kn_settings.close_label,
+    price_min_label: kn_settings.price_min_label,
+    price_max_label: kn_settings.price_max_label
+  -%}
+
+  {%- paginate collection.products by kn_settings.products_per_page -%}
+    {%- render 'kn-catalog-grid',
+      results: collection,
+      paginate: paginate,
+      active_count: kn_active,
+      show_universe: kn_settings.show_universe,
+      empty_filtered_text: kn_settings.empty_filtered_text,
+      empty_filtered_action: kn_settings.empty_filtered_action,
+      empty_text: kn_settings.empty_text,
+      empty_action: kn_settings.empty_action,
+      empty_url: kn_empty_url,
+      prev_label: kn_settings.prev_label,
+      next_label: kn_settings.next_label,
+      pagination_label: kn_settings.pagination_label
+    -%}
+  {%- endpaginate -%}
+</div>
+
+{% schema %}
+{
+  "name": "Collection KINŪ",
+  "class": "kn-section-collection",
+  "enabled_on": { "templates": ["collection"] },
+  "max_blocks": 12,
+  "settings": [
+    { "type": "checkbox", "id": "show_breadcrumb", "label": "Afficher le fil d’Ariane", "default": true },
+    { "type": "checkbox", "id": "show_universe", "label": "Sur-titre d’univers sur les cartes", "default": true, "info": "Masqué automatiquement sur la page de l’univers concerné." },
+    { "type": "range", "id": "products_per_page", "label": "Produits par page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "header", "content": "Barre d’outils" },
+    { "type": "text", "id": "filter_label", "label": "Bouton filtres", "default": "Filtrer" },
+    { "type": "text", "id": "sort_label", "label": "Libellé du tri", "default": "Trier" },
+    { "type": "text", "id": "clear_label", "label": "Tout effacer", "default": "Tout effacer" },
+    { "type": "text", "id": "count_label", "label": "Compte de résultats", "default": "[count] produits", "info": "Lu par les lecteurs d’écran. Le jeton [count] est remplacé par le nombre de produits." },
+    { "type": "header", "content": "Panneau de filtres" },
+    { "type": "text", "id": "filters_title", "label": "Titre du panneau", "default": "Filtres" },
+    { "type": "text", "id": "apply_label", "label": "Bouton de validation", "default": "Voir les résultats" },
+    { "type": "text", "id": "close_label", "label": "Fermer (libellé accessible)", "default": "Fermer les filtres" },
+    { "type": "text", "id": "price_min_label", "label": "Prix minimum", "default": "Minimum" },
+    { "type": "text", "id": "price_max_label", "label": "Prix maximum", "default": "Maximum" },
+    { "type": "header", "content": "État vide" },
+    { "type": "text", "id": "empty_filtered_text", "label": "Aucun résultat filtré", "default": "Aucun produit ne correspond à ces filtres." },
+    { "type": "text", "id": "empty_filtered_action", "label": "Bouton — aucun résultat filtré", "default": "Effacer les filtres" },
+    { "type": "text", "id": "empty_text", "label": "Collection vide", "default": "Cette collection n’a pas encore de pièces." },
+    { "type": "text", "id": "empty_action", "label": "Bouton — collection vide", "default": "Voir toutes les collections" },
+    { "type": "url", "id": "empty_url", "label": "Destination du bouton", "info": "Par défaut, la page « Toutes les collections »." },
+    { "type": "header", "content": "Pagination" },
+    { "type": "text", "id": "prev_label", "label": "Page précédente", "default": "Précédent" },
+    { "type": "text", "id": "next_label", "label": "Page suivante", "default": "Suivant" },
+    { "type": "text", "id": "pagination_label", "label": "Libellé accessible", "default": "Pagination des produits" }
+  ],
+  "blocks": [
+    {
+      "type": "universe",
+      "name": "Univers",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection d’univers" },
+        { "type": "text", "id": "category", "label": "Catégorie (titre H1)", "default": "Femme", "info": "Le besoin auquel répond l’univers : Femme, Homme, Unisexe." },
+        { "type": "text", "id": "universe_name", "label": "Nom affiché de la collection", "info": "Par défaut, le titre de la collection choisie." },
+        { "type": "textarea", "id": "intro", "label": "Phrase de contexte", "info": "Utilisée si la collection n’a pas de description." }
+      ]
+    }
+  ],
+  "presets": []
+}
+{% endschema %}

@@ -1,0 +1,71 @@
+{%- doc -%}
+  Barre d’outils de la page collection (DIRECTION-ARTISTIQUE.md §7.7).
+  `FILTRER (2)` à gauche, tri à droite, filet 1 px dessous. Pas de sidebar.
+
+  @param {string} section_id - Identifiant de la section hôte.
+  @param {object} results - `collection` (ou tout objet exposant filters/sort_options).
+  @param {number} active_count - Nombre de filtres actifs.
+  @param {string} filter_label - Libellé du bouton d’ouverture des filtres.
+  @param {string} sort_label - Libellé accessible du tri.
+  @param {string} clear_label - Libellé du lien « tout effacer ».
+  @param {string} count_label - Gabarit du compte de résultats. Le jeton `[count]` est remplacé.
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_sort = results.sort_by | default: results.default_sort_by
+  assign kn_form_id = 'KnFacetsForm-' | append: section_id
+  assign kn_panel_id = 'KnFacets-' | append: section_id
+-%}
+
+<div class="kn-toolbar">
+  <div class="kn-container kn-toolbar__inner">
+    <div class="kn-toolbar__group">
+      <button
+        type="button"
+        class="kn-label kn-toolbar__trigger"
+        data-kn-facets-open
+        aria-expanded="false"
+        aria-controls="{{ kn_panel_id }}"
+      >
+        {{- filter_label -}}
+        <span data-kn-filter-count>
+          {%- if active_count > 0 %} ({{ active_count }}){% endif -%}
+        </span>
+      </button>
+
+      <a
+        class="kn-label kn-underline kn-toolbar__clear"
+        href="{{ results.url }}"
+        data-kn-clear
+        data-kn-toolbar-clear
+        {% if active_count == 0 %}hidden{% endif %}
+      >
+        {{- clear_label -}}
+      </a>
+    </div>
+
+    <div class="kn-toolbar__sort">
+      <label class="kn-visually-hidden" for="KnSort-{{ section_id }}">{{ sort_label }}</label>
+      <select
+        id="KnSort-{{ section_id }}"
+        class="kn-label kn-toolbar__select"
+        name="sort_by"
+        form="{{ kn_form_id }}"
+        data-kn-sort
+      >
+        {%- for option in results.sort_options -%}
+          <option value="{{ option.value }}" {% if option.value == kn_sort %}selected{% endif %}>
+            {{- option.name -}}
+          </option>
+        {%- endfor -%}
+      </select>
+      <svg class="kn-toolbar__caret" viewBox="0 0 12 8" aria-hidden="true" focusable="false">
+        <path d="M1 1.5 6 6.5 11 1.5" fill="none" stroke="currentColor" stroke-width="1.5" />
+      </svg>
+    </div>
+  </div>
+</div>
+
+<p class="kn-visually-hidden" role="status" data-kn-status>
+  {{- count_label | replace: '[count]', results.products_count -}}
+</p>

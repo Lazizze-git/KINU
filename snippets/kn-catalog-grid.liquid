@@ -1,0 +1,91 @@
+{%- doc -%}
+  Grille produits, état vide et pagination (DIRECTION-ARTISTIQUE.md §5.2, §7.7).
+  2 colonnes mobile, 3 tablette, 4 desktop. Écart vertical ≈ 2,5 × l’horizontal.
+
+  @param {object} results - `collection`.
+  @param {object} paginate - L’objet `paginate` du bloc englobant.
+  @param {number} active_count - Nombre de filtres actifs.
+  @param {boolean} show_universe - Affiche le sur-titre d’univers sur les cartes.
+  @param {string} empty_filtered_text - Phrase affichée quand les filtres ne rendent rien.
+  @param {string} empty_filtered_action - Libellé du bouton de retour.
+  @param {string} empty_text - Phrase affichée quand la collection est vide.
+  @param {string} empty_action - Libellé du bouton de repli.
+  @param {string} empty_url - Destination du bouton de repli.
+  @param {string} prev_label - Libellé du lien de page précédente.
+  @param {string} next_label - Libellé du lien de page suivante.
+  @param {string} pagination_label - Libellé accessible de la pagination.
+{%- enddoc -%}
+
+<div class="kn-collection__results" data-kn-results>
+  {%- if results.products.size > 0 -%}
+    <ul class="kn-grid kn-container" role="list">
+      {%- for kn_product in results.products -%}
+        <li class="kn-grid__item">
+          {%- comment -%}
+            `h2` : la grille suit directement le H1 de la collection, sauter au
+            h3 casserait le plan de titres de la page.
+          {%- endcomment -%}
+          {%- render 'kn-product-card',
+            product: kn_product,
+            index: forloop.index0,
+            show_universe: show_universe,
+            heading_tag: 'h2'
+          -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+
+    {%- if paginate.pages > 1 -%}
+      <nav class="kn-container kn-pagination" aria-label="{{ pagination_label | escape }}">
+        {%- if paginate.previous -%}
+          <a class="kn-label kn-underline kn-pagination__step" href="{{ paginate.previous.url }}" rel="prev">
+            {{- prev_label -}}
+          </a>
+        {%- else -%}
+          <span class="kn-label kn-pagination__step kn-pagination__step--off" aria-hidden="true">
+            {{- prev_label -}}
+          </span>
+        {%- endif -%}
+
+        <ol class="kn-pagination__pages" role="list">
+          {%- for kn_part in paginate.parts -%}
+            <li class="kn-pagination__slot">
+              {%- if kn_part.is_link -%}
+                <a class="kn-label kn-pagination__page" href="{{ kn_part.url }}">{{ kn_part.title }}</a>
+              {%- elsif kn_part.title == '&hellip;' or kn_part.title == '…' -%}
+                <span class="kn-label kn-pagination__gap" aria-hidden="true">…</span>
+              {%- else -%}
+                <span class="kn-label kn-pagination__page kn-pagination__page--current" aria-current="page">
+                  {{- kn_part.title -}}
+                </span>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ol>
+
+        {%- if paginate.next -%}
+          <a class="kn-label kn-underline kn-pagination__step" href="{{ paginate.next.url }}" rel="next">
+            {{- next_label -}}
+          </a>
+        {%- else -%}
+          <span class="kn-label kn-pagination__step kn-pagination__step--off" aria-hidden="true">
+            {{- next_label -}}
+          </span>
+        {%- endif -%}
+      </nav>
+    {%- endif -%}
+
+  {%- else -%}
+    <div class="kn-container kn-empty">
+      {%- if active_count > 0 -%}
+        <p class="kn-lead kn-empty__text">{{ empty_filtered_text }}</p>
+        <a class="kn-btn kn-btn--secondary" href="{{ results.url }}" data-kn-clear>
+          {{- empty_filtered_action -}}
+        </a>
+      {%- else -%}
+        <p class="kn-lead kn-empty__text">{{ empty_text }}</p>
+        <a class="kn-btn kn-btn--secondary" href="{{ empty_url }}">{{ empty_action }}</a>
+      {%- endif -%}
+    </div>
+  {%- endif -%}
+</div>

@@ -1,0 +1,48 @@
+{%- doc -%}
+  Accordéons de la page produit (DA §7.7) : filets 1 px, sans fond, chevron 12 px.
+  Matière et Livraison viennent de métachamps, avec repli sur un texte de section.
+
+  @param {object} product
+  @param {object} opts
+  @param {string} section_id
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_material = product.metafields.custom.matiere_entretien.value
+  if kn_material == blank
+    assign kn_material = opts.text_material
+  endif
+  assign kn_shipping = product.metafields.custom.livraison_retours.value
+  if kn_shipping == blank
+    assign kn_shipping = opts.text_shipping
+  endif
+-%}
+
+<div class="kn-acc">
+  {%- if product.description != blank -%}
+    <details class="kn-acc__item" name="kn-acc-{{ section_id }}" open>
+      <summary class="kn-acc__sum">
+        <span class="kn-label">{{ opts.title_description }}</span>
+      </summary>
+      <div class="kn-acc__body kn-body">{{ product.description }}</div>
+    </details>
+  {%- endif -%}
+
+  {%- if kn_material != blank -%}
+    <details class="kn-acc__item" name="kn-acc-{{ section_id }}">
+      <summary class="kn-acc__sum">
+        <span class="kn-label">{{ opts.title_material }}</span>
+      </summary>
+      <div class="kn-acc__body kn-body">{{ kn_material }}</div>
+    </details>
+  {%- endif -%}
+
+  {%- if kn_shipping != blank -%}
+    <details class="kn-acc__item" name="kn-acc-{{ section_id }}">
+      <summary class="kn-acc__sum">
+        <span class="kn-label">{{ opts.title_shipping }}</span>
+      </summary>
+      <div class="kn-acc__body kn-body">{{ kn_shipping }}</div>
+    </details>
+  {%- endif -%}
+</div>

@@ -1,167 +1,50 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */{
+{
   "sections": {
-    "collection_list_Wfgh3m": {
-      "type": "main-collection-list",
+    "main": {
+      "type": "kn-main-collection-list",
       "blocks": {
-        "group_4FtiAg": {
-          "type": "group",
-          "name": "t:names.header",
+        "universe-fluid-motion": {
+          "type": "universe",
           "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "align_baseline": false,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "toggle_overlay": false,
-            "overlay_color": "#00000026",
-            "overlay_style": "solid",
-            "gradient_direction": "to top",
-            "open_in_new_tab": false,
-            "padding-block-start": 0,
-            "padding-block-end": 48,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "text_fRMQMR": {
-              "type": "text",
-              "name": "t:names.text",
-              "settings": {
-                "text": "<h1>Collections</h1>",
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h2",
-                "font": "var(--font-body--family)",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 16,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "text_fRMQMR"
-          ]
+            "collection": "fluid-motion",
+            "eyebrow": "Fluid-Motion",
+            "title": "Femme",
+            "story": "<p>Fluid-Motion est né d’une observation simple : un corps qui bouge bien ne lutte jamais contre son vêtement. Coupes suivies au millimètre, mailles qui reprennent leur forme, coutures placées là où la peau ne plie pas. C’est notre ligne la plus proche du geste.</p>",
+            "surface": "light",
+            "media_position": "start"
+          }
         },
-        "static-collection-card": {
-          "type": "_collection-card",
-          "name": "t:names.collection_card",
-          "static": true,
+        "universe-crossover": {
+          "type": "universe",
           "settings": {
-            "placement": "below_image",
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "flex-start",
-            "collection_card_gap": 8,
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0
-          },
-          "blocks": {
-            "collection_title_7YgBPU": {
-              "type": "collection-title",
-              "name": "t:names.collection_title",
-              "settings": {
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "collection-card-image": {
-              "type": "_collection-card-image",
-              "name": "t:names.collection_card_image",
-              "static": true,
-              "settings": {
-                "image_ratio": "adapt",
-                "toggle_overlay": false,
-                "overlay_color": "#00000026",
-                "overlay_style": "solid",
-                "gradient_direction": "to top",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "collection_title_7YgBPU"
-          ]
+            "collection": "crossover",
+            "eyebrow": "CrossOver",
+            "title": "Homme",
+            "story": "<p>CrossOver, c’est le passage : de la salle à la rue, de l’effort au reste de la journée. Assez technique pour l’entraînement, assez sobre pour qu’on oublie de se changer. Un seul vestiaire, deux vies.</p>",
+            "surface": "dark",
+            "media_position": "end"
+          }
+        },
+        "universe-amplitude": {
+          "type": "universe",
+          "settings": {
+            "collection": "amplitude",
+            "eyebrow": "Amplitude",
+            "title": "Unisexe",
+            "story": "<p>En mécanique, l’amplitude est l’écart entre deux extrêmes : la plus grande course possible d’un mouvement. Nos pièces mixtes sont taillées pour cet écart-là — larges d’épaules, longues de manches, sans genre assigné et sans compromis de matière.</p>",
+            "surface": "flood",
+            "media_position": "start"
+          }
         }
       },
-      "block_order": [
-        "group_4FtiAg"
-      ],
-      "name": "t:names.collection_list",
+      "block_order": ["universe-fluid-motion", "universe-crossover", "universe-amplitude"],
       "settings": {
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "columns": 3,
-        "mobile_columns": "2",
-        "columns_gap": 12,
-        "bento_gap": 8,
-        "rows_gap": 24,
-        "max_collections": 4,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "gap": 12,
-        "background_color": "{{ settings.color_palette.background }}",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "show_breadcrumb": false,
+        "eyebrow": "Les univers KINŪ",
+        "title": "Toutes les collections",
+        "intro": "Trois noms, trois façons de bouger. Chaque univers porte sa propre couleur : vous la retrouverez en entrant dans sa collection."
       }
     }
   },
-  "order": [
-    "collection_list_Wfgh3m"
-  ]
+  "order": ["main"]
 }

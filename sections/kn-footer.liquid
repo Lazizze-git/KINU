@@ -1,0 +1,211 @@
+{%- comment -%}
+  KINŪ — Pied de page
+  Newsletter en aplat forêt posée directement sur le footer encre : la marche
+  franche est volontaire (DIRECTION-ARTISTIQUE.md §3.4 R12, §7.6).
+{%- endcomment -%}
+
+{%- if section.settings.show_newsletter -%}
+  <section class="kn-news" data-kn-surface="flood" aria-labelledby="kn-news-title">
+    <div class="kn-container kn-news__inner">
+      <h2 class="kn-news__title kn-h3" id="kn-news-title">{{ section.settings.newsletter_title | escape }}</h2>
+
+      {%- if section.settings.newsletter_text != blank -%}
+        <p class="kn-news__text kn-sm">{{ section.settings.newsletter_text | escape }}</p>
+      {%- endif -%}
+
+      {%- form 'customer', id: 'kn-newsletter', class: 'kn-news__form' -%}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+
+        {%- if form.posted_successfully? -%}
+          <p class="kn-news__feedback kn-sm" role="status">{{ section.settings.newsletter_success | escape }}</p>
+        {%- elsif form.errors -%}
+          <p class="kn-news__feedback kn-news__feedback--error kn-sm" role="alert">
+            {{- section.settings.newsletter_error | escape -}}
+          </p>
+        {%- endif -%}
+
+        <div class="kn-news__field">
+          <label class="kn-visually-hidden" for="kn-news-email">
+            {{- section.settings.newsletter_placeholder | escape -}}
+          </label>
+          <input
+            class="kn-input kn-news__input"
+            id="kn-news-email"
+            type="email"
+            name="contact[email]"
+            value="{{ form.email }}"
+            placeholder="{{ section.settings.newsletter_placeholder | escape }}"
+            autocomplete="email"
+            spellcheck="false"
+            autocapitalize="off"
+            required
+          >
+          <button type="submit" class="kn-btn kn-btn--primary kn-news__submit">
+            {{- section.settings.newsletter_cta | escape -}}
+          </button>
+        </div>
+      {%- endform -%}
+    </div>
+  </section>
+{%- endif -%}
+
+<div class="kn-footer" data-kn-surface="dark" {{ section.shopify_attributes }}>
+  <div class="kn-container">
+    {%- liquid
+      assign kn_has_columns = false
+      for block in section.blocks
+        assign kn_column_links = linklists[block.settings.menu].links
+        if kn_column_links.size > 0
+          assign kn_has_columns = true
+          break
+        endif
+      endfor
+    -%}
+
+    {%- if kn_has_columns -%}
+      <div class="kn-footer__cols">
+        {%- for block in section.blocks -%}
+          {%- assign kn_links = linklists[block.settings.menu].links -%}
+          {%- if kn_links.size == 0 -%}
+            {%- continue -%}
+          {%- endif -%}
+          <details class="kn-footer__col" {{ block.shopify_attributes }}>
+            <summary class="kn-footer__summary">
+              <span class="kn-label">{{ block.settings.title | escape }}</span>
+              <span class="kn-footer__chevron">{%- render 'kn-icon', name: 'chevron', size: 16 -%}</span>
+            </summary>
+            <ul class="kn-footer__links" role="list">
+              {%- for kn_link in kn_links -%}
+                <li><a class="kn-footer__link kn-sm" href="{{ kn_link.url }}">{{ kn_link.title | escape }}</a></li>
+              {%- endfor -%}
+            </ul>
+          </details>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="kn-footer__base">
+      {%- liquid
+        assign kn_networks = 'instagram,tiktok,facebook,pinterest,youtube' | split: ','
+        assign kn_network_names = 'Instagram,TikTok,Facebook,Pinterest,YouTube' | split: ','
+      -%}
+
+      <ul class="kn-footer__social" role="list">
+        {%- for kn_name in kn_networks -%}
+          {%- liquid
+            assign kn_key = 'social_' | append: kn_name
+            assign kn_url = section.settings[kn_key]
+          -%}
+          {%- if kn_url == blank -%}
+            {%- continue -%}
+          {%- endif -%}
+          <li>
+            <a class="kn-footer__social-link kn-tap" href="{{ kn_url }}" rel="noopener noreferrer" target="_blank">
+              {%- render 'kn-icon', name: kn_name, size: 18 -%}
+              <span class="kn-visually-hidden" translate="no">{{ kn_network_names[forloop.index0] }}</span>
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+
+      {%- if section.settings.show_language and localization.available_languages.size > 1 -%}
+        {%- form 'localization', id: 'kn-localization', class: 'kn-footer__lang', return_to: request.path -%}
+          <span class="kn-visually-hidden">{{ section.settings.language_label | escape }}</span>
+          {%- for kn_language in localization.available_languages -%}
+            <button
+              type="submit"
+              name="language_code"
+              value="{{ kn_language.iso_code }}"
+              class="kn-footer__lang-btn kn-label"
+              lang="{{ kn_language.iso_code }}"
+              {% if kn_language.iso_code == localization.language.iso_code %}
+                aria-current="true"
+              {% endif %}
+            >
+              <span aria-hidden="true">{{ kn_language.iso_code | upcase }}</span>
+              <span class="kn-visually-hidden">{{ kn_language.endonym_name | capitalize }}</span>
+            </button>
+          {%- endfor -%}
+        {%- endform -%}
+      {%- endif -%}
+
+      <p class="kn-footer__copy kn-label">
+        © {{ section.settings.brand_name | escape }} {{ 'now' | date: '%Y' }}
+      </p>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "KINŪ · Pied de page",
+  "tag": "div",
+  "class": "kn-footer-section",
+  "max_blocks": 4,
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+  "settings": [
+    { "type": "header", "content": "Newsletter" },
+    { "type": "checkbox", "id": "show_newsletter", "label": "Afficher le bloc newsletter", "default": true },
+    { "type": "text", "id": "newsletter_title", "label": "Titre", "default": "Rester informé" },
+    {
+      "type": "text",
+      "id": "newsletter_text",
+      "label": "Texte d'accompagnement",
+      "default": "Nouveautés, réassorts et coulisses. Un message par mois, pas davantage."
+    },
+    { "type": "text", "id": "newsletter_placeholder", "label": "Champ e-mail", "default": "Adresse e-mail" },
+    { "type": "text", "id": "newsletter_cta", "label": "Bouton", "default": "S’inscrire" },
+    {
+      "type": "text",
+      "id": "newsletter_success",
+      "label": "Message de confirmation",
+      "default": "Merci, votre inscription est enregistrée."
+    },
+    {
+      "type": "text",
+      "id": "newsletter_error",
+      "label": "Message d'erreur",
+      "default": "Cette adresse e-mail n’a pas pu être enregistrée."
+    },
+    { "type": "header", "content": "Réseaux sociaux" },
+    { "type": "url", "id": "social_instagram", "label": "Instagram" },
+    { "type": "url", "id": "social_tiktok", "label": "TikTok" },
+    { "type": "url", "id": "social_facebook", "label": "Facebook" },
+    { "type": "url", "id": "social_pinterest", "label": "Pinterest" },
+    { "type": "url", "id": "social_youtube", "label": "YouTube" },
+    { "type": "header", "content": "Bas de page" },
+    { "type": "checkbox", "id": "show_language", "label": "Afficher le sélecteur de langue", "default": true },
+    {
+      "type": "text",
+      "id": "language_label",
+      "label": "Nom du sélecteur de langue",
+      "info": "Lu par les lecteurs d'écran.",
+      "default": "Choisir la langue"
+    },
+    { "type": "text", "id": "brand_name", "label": "Nom de la marque", "default": "KINŪ" }
+  ],
+  "blocks": [
+    {
+      "type": "kn_column",
+      "name": "Colonne de liens",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Titre", "default": "Boutique" },
+        { "type": "link_list", "id": "menu", "label": "Menu" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "KINŪ · Pied de page",
+      "blocks": [
+        { "type": "kn_column", "settings": { "title": "Boutique" } },
+        { "type": "kn_column", "settings": { "title": "Aide" } },
+        { "type": "kn_column", "settings": { "title": "Maison" } },
+        { "type": "kn_column", "settings": { "title": "Légal" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

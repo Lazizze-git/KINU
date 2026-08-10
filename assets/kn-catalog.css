@@ -1,1 +1,876 @@
-/* KINŪ — kn-catalog : feuille de domaine (à écrire). */
+/* ==========================================================================
+   KINŪ — Catalogue
+   --------------------------------------------------------------------------
+   Carte produit, page collection, page « toutes les collections », fil
+   d'Ariane et filtres. Chargé après kn-base.css.
+
+   Principe : rien ici ne connaît sa couleur. Tout demande la gamme de la
+   surface courante (--kn-surface-fg / -muted / -line / -accent), que le
+   territoire posé sur <body> par layout/theme.liquid a déjà redéfinie.
+   Voir DIRECTION-ARTISTIQUE.md §3.4 R3, §5.2, §6, §7.3, §7.7, §8.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   0. Racine de domaine
+   -------------------------------------------------------------------------- */
+
+.kn-catalog {
+  --kn-facets-z: 100;
+
+  background-color: var(--kn-surface-bg);
+  color: var(--kn-surface-fg);
+}
+
+/* Fond du cadre image : dérivé de la surface, donc juste sur ivoire, sur encre
+   comme sur forêt (DA §6). Sauge en repli si `color-mix` manque.
+   Le jeton est déclaré sur les composants eux-mêmes, pas sur la racine : c'est
+   ce qui le fait résoudre dans la gamme de la surface qui les accueille — y
+   compris quand la carte est posée par une autre page que le catalogue. */
+.kn-catalog,
+.kn-card,
+.kn-story {
+  --kn-media-bg: var(--kn-sage);
+}
+
+@supports (color: color-mix(in srgb, red 50%, blue)) {
+  .kn-catalog,
+  .kn-card,
+  .kn-story {
+    --kn-media-bg: color-mix(in srgb, var(--kn-surface-fg) 8%, var(--kn-surface-bg));
+  }
+}
+
+/* La section occupe toute la hauteur restante : l'aplat du territoire ne
+   s'arrête pas au dernier produit. */
+.kn-section-collection {
+  display: flex;
+  flex-direction: column;
+}
+
+.kn-section-collection > .kn-catalog {
+  flex: 1 1 auto;
+}
+
+/* Pas de délai de double-tap, pas de flash bleu système sur les cibles. */
+.kn-catalog :where(a, button, label, summary, select, input),
+.kn-card :where(a, button) {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   1. Fil d'Ariane (DA §7.7)
+   -------------------------------------------------------------------------- */
+
+.kn-breadcrumb {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--kn-space-xs);
+}
+
+.kn-breadcrumb__list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kn-space-2xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kn-breadcrumb__item {
+  display: flex;
+  align-items: center;
+  gap: var(--kn-space-2xs);
+  color: var(--kn-surface-muted);
+}
+
+.kn-breadcrumb__item + .kn-breadcrumb__item::before {
+  content: "/";
+  color: var(--kn-surface-muted);
+}
+
+.kn-breadcrumb__link {
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-breadcrumb__link:hover {
+  color: var(--kn-surface-fg);
+}
+
+.kn-breadcrumb__current {
+  color: var(--kn-surface-fg);
+}
+
+/* Filet de territoire de 3 px, collé sous le fil sur la page produit (R4). */
+.kn-breadcrumb__rule {
+  display: block;
+  width: var(--kn-space-xl);
+  height: var(--kn-territory-bar);
+  background-color: var(--kn-territory-color, var(--kn-surface-accent));
+}
+
+/* --------------------------------------------------------------------------
+   2. Carte produit (DA §7.3)
+   La carte n'est pas un objet : ni cadre, ni fond, ni ombre, ni rayon.
+   -------------------------------------------------------------------------- */
+
+.kn-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.kn-card__link {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  color: inherit;
+}
+
+.kn-card__link:focus-visible {
+  outline: var(--kn-stroke-strong) solid var(--kn-surface-accent);
+  outline-offset: var(--kn-space-3xs);
+}
+
+.kn-card__media {
+  width: 100%;
+  background-color: var(--kn-media-bg);
+  transition: opacity var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-card__img {
+  position: absolute;
+  inset: 0;
+  background-color: transparent;
+}
+
+/* Fondu croisé vers la 2ᵉ image. Pas de zoom, pas de translation (DA §6). */
+.kn-card__img--alt {
+  opacity: 0;
+  transition: opacity var(--kn-dur-3) var(--kn-ease-state);
+}
+
+@media (hover: hover) {
+  .kn-card:hover .kn-card__img--alt {
+    opacity: 1;
+  }
+}
+
+.kn-card:focus-within .kn-card__img--alt {
+  opacity: 1;
+}
+
+/* Rupture de stock : image atténuée, pas de bandeau (DA §7.3). */
+.kn-card--sold-out .kn-card__media {
+  opacity: 0.5;
+}
+
+/* Badge en haut à gauche, en pilule. L'aplat prend l'accent de la surface et
+   le texte son fond : forêt/ivoire sur clair (DA §7.3), et l'inverse sur le
+   territoire Amplitude — un badge forêt sur une page forêt ne signalerait
+   rien, et sur encre il tomberait dans une paire interdite (§3.6). */
+.kn-card__badge {
+  position: absolute;
+  top: var(--kn-space-xs);
+  left: var(--kn-space-xs);
+  z-index: 1;
+  padding: var(--kn-space-3xs) var(--kn-space-2xs);
+  background-color: var(--kn-surface-accent);
+  color: var(--kn-surface-bg);
+}
+
+.kn-card__title {
+  position: relative;
+  align-self: flex-start;
+  margin: var(--kn-space-2xs) 0 0;
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-body);
+  font-weight: var(--kn-fw-medium);
+  line-height: 1.3;
+  letter-spacing: var(--kn-ls-body);
+  color: var(--kn-surface-fg);
+  text-wrap: pretty;
+  overflow-wrap: break-word;
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+/* Soulignement révélé (R8). Sur le territoire Amplitude, l'accent vaut
+   l'ivoire du texte : sans ce filet, le survol ne signalerait rien. */
+.kn-card__title::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -0.1em;
+  height: var(--kn-stroke);
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--kn-dur-3) var(--kn-ease-out);
+}
+
+.kn-card:hover .kn-card__title,
+.kn-card:focus-within .kn-card__title {
+  color: var(--kn-surface-accent);
+}
+
+.kn-card:hover .kn-card__title::after,
+.kn-card:focus-within .kn-card__title::after {
+  transform: scaleX(1);
+}
+
+.kn-card__universe {
+  display: block;
+  margin-top: var(--kn-space-3xs);
+  color: var(--kn-surface-muted);
+}
+
+.kn-card__prices {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--kn-space-2xs);
+  margin-top: var(--kn-space-2xs);
+}
+
+.kn-card__price {
+  color: var(--kn-surface-fg);
+}
+
+/* Prix soldé : jamais de rouge (DA §7.3). */
+.kn-card__price-was {
+  color: var(--kn-surface-muted);
+  text-decoration-thickness: var(--kn-stroke);
+}
+
+.kn-card__from,
+.kn-card__stock {
+  color: var(--kn-surface-muted);
+}
+
+/* Nuancier : pastilles carrées de 12 px, filet 1 px, écart 6 px, 5 maximum. */
+.kn-card__swatches {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: calc(var(--kn-space-xs) / 2);
+  margin: var(--kn-space-2xs) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kn-card__swatch {
+  width: calc(var(--kn-space-2xs) + var(--kn-space-3xs));
+  height: calc(var(--kn-space-2xs) + var(--kn-space-3xs));
+  border: var(--kn-stroke) solid var(--kn-surface-line);
+  border-radius: var(--kn-radius);
+  background-color: var(--kn-media-bg);
+  background-size: cover;
+  background-position: center;
+}
+
+.kn-card__swatch-more {
+  color: var(--kn-surface-muted);
+}
+
+/* --------------------------------------------------------------------------
+   3. En-tête de collection (DA §7.7)
+   -------------------------------------------------------------------------- */
+
+.kn-collection__head {
+  padding-block: var(--kn-space-xl) var(--kn-space-lg);
+}
+
+.kn-collection__head .kn-breadcrumb {
+  margin-bottom: var(--kn-space-lg);
+}
+
+.kn-collection__eyebrow {
+  margin: 0 0 var(--kn-space-2xs);
+  color: var(--kn-surface-muted);
+}
+
+.kn-collection__title {
+  margin: 0;
+}
+
+.kn-collection__intro {
+  margin: var(--kn-space-md) 0 0;
+  max-width: var(--kn-measure);
+  color: var(--kn-surface-muted);
+}
+
+.kn-collection__intro > :first-child {
+  margin-top: 0;
+}
+
+.kn-collection__intro > :last-child {
+  margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------------------
+   4. Barre d'outils (DA §7.7) — filet bord à bord, pas de sidebar
+   -------------------------------------------------------------------------- */
+
+.kn-toolbar {
+  border-bottom: var(--kn-stroke) solid var(--kn-surface-line);
+  scroll-margin-top: var(--header-height, var(--kn-header-h));
+}
+
+.kn-toolbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kn-space-md);
+  min-height: var(--kn-tap);
+}
+
+.kn-toolbar__group {
+  display: flex;
+  align-items: center;
+  gap: var(--kn-space-md);
+}
+
+.kn-toolbar__trigger {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--kn-tap);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--kn-surface-fg);
+  cursor: pointer;
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-toolbar__trigger:hover {
+  color: var(--kn-surface-accent);
+}
+
+.kn-toolbar__clear {
+  color: var(--kn-surface-muted);
+}
+
+/* `.kn-underline` force `display: inline-block` : sans cette ligne l'attribut
+   `hidden` ne masquerait rien. */
+.kn-toolbar__clear[hidden] {
+  display: none;
+}
+
+.kn-toolbar__sort {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+/* Un libellé de tri long ne doit pas pousser la barre hors de l'écran. */
+.kn-toolbar__select {
+  max-width: 100%;
+  min-height: var(--kn-tap);
+  padding: 0 var(--kn-space-md) 0 0;
+  border: 0;
+  border-radius: var(--kn-radius);
+  background: none;
+  color: var(--kn-surface-fg);
+  cursor: pointer;
+  appearance: none;
+  text-align: right;
+  text-align-last: right;
+}
+
+/* La liste déroulante est rendue par le système : sans ces deux lignes elle
+   devient illisible sur les territoires encre et forêt. */
+.kn-toolbar__select option {
+  background-color: var(--kn-ivory);
+  color: var(--kn-ink);
+}
+
+.kn-toolbar__caret {
+  position: absolute;
+  right: 0;
+  width: var(--kn-space-xs);
+  height: var(--kn-space-2xs);
+  pointer-events: none;
+  color: var(--kn-surface-muted);
+}
+
+/* --------------------------------------------------------------------------
+   5. Grille produits (DA §5.2)
+   2 colonnes mobile · 3 tablette · 4 desktop. Écart vertical ≈ 2,5 × l'horizontal.
+   -------------------------------------------------------------------------- */
+
+.kn-collection__results {
+  padding-block: var(--kn-space-lg) var(--kn-space-3xl);
+  transition: opacity var(--kn-dur-2) var(--kn-ease-state);
+}
+
+[data-kn-loading="true"] .kn-collection__results {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.kn-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--kn-grid-gap);
+  row-gap: var(--kn-grid-row-gap);
+  margin-block: 0;
+  list-style: none;
+}
+
+@media (min-width: 640px) {
+  .kn-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .kn-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. Pagination & état vide
+   -------------------------------------------------------------------------- */
+
+.kn-pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--kn-space-md);
+  margin-top: var(--kn-space-3xl);
+  padding-top: var(--kn-space-md);
+  border-top: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-pagination__pages {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--kn-space-2xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kn-pagination__slot {
+  display: flex;
+}
+
+.kn-pagination__page {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--kn-tap);
+  min-height: var(--kn-tap);
+  color: var(--kn-surface-muted);
+  font-variant-numeric: tabular-nums;
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-pagination__page:hover {
+  color: var(--kn-surface-fg);
+}
+
+.kn-pagination__page--current {
+  color: var(--kn-surface-fg);
+  border-bottom: var(--kn-stroke-strong) solid currentColor;
+}
+
+.kn-pagination__gap {
+  color: var(--kn-surface-muted);
+}
+
+/* Sur la première et la dernière page, le lien inutile disparaît mais garde sa
+   place : les numéros ne sautent pas d'une page à l'autre. */
+.kn-pagination__step--off {
+  visibility: hidden;
+}
+
+.kn-pagination__step {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--kn-tap);
+}
+
+.kn-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--kn-space-lg);
+  padding-block: var(--kn-space-3xl);
+  text-align: center;
+}
+
+.kn-empty__text {
+  margin: 0;
+  color: var(--kn-surface-muted);
+}
+
+/* --------------------------------------------------------------------------
+   7. Filtres — panneau statique sans JS, drawer latéral avec (DA §7.7, §9)
+   Le panneau garde la surface CLAIRE quel que soit le territoire : c'est un
+   plan posé au-dessus de la page, comme le panier (§7.5).
+   -------------------------------------------------------------------------- */
+
+.kn-facets {
+  border-bottom: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-facets__form {
+  display: flex;
+  flex-direction: column;
+  max-height: 100%;
+}
+
+.kn-facets__head,
+.kn-facets__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kn-space-md);
+  flex: 0 0 auto;
+  padding-block: var(--kn-space-md);
+  padding-inline: var(--kn-gutter);
+}
+
+.kn-facets__head {
+  border-bottom: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-facets__foot {
+  border-top: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-facets__reset {
+  color: var(--kn-surface-muted);
+  flex: 0 0 auto;
+}
+
+.kn-facets__apply {
+  width: auto;
+  flex: 1 1 auto;
+}
+
+/* Le bouton de fermeture n'existe que si le panneau est devenu un drawer. */
+.kn-facets__close {
+  display: none;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.kn-facets__close svg {
+  width: var(--kn-space-md);
+  height: var(--kn-space-md);
+}
+
+.kn-facets__body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-inline: var(--kn-gutter);
+}
+
+.kn-facets__group {
+  border-bottom: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-facets__group:last-child {
+  border-bottom: 0;
+}
+
+.kn-facets__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kn-space-sm);
+  min-height: var(--kn-tap);
+  cursor: pointer;
+  list-style: none;
+}
+
+.kn-facets__summary::-webkit-details-marker {
+  display: none;
+}
+
+.kn-facets__chevron {
+  flex: 0 0 auto;
+  width: var(--kn-space-xs);
+  height: var(--kn-space-2xs);
+  color: var(--kn-surface-muted);
+  transition: transform var(--kn-dur-1) var(--kn-ease-state);
+}
+
+.kn-facets__group[open] > .kn-facets__summary .kn-facets__chevron {
+  transform: rotate(180deg);
+}
+
+.kn-facets__values {
+  display: grid;
+  gap: var(--kn-space-3xs);
+  margin: 0 0 var(--kn-space-md);
+  padding: 0;
+  list-style: none;
+}
+
+.kn-facets__option {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--kn-space-2xs);
+  min-height: var(--kn-space-lg);
+  font-size: var(--kn-fs-sm);
+  cursor: pointer;
+}
+
+.kn-facets__option--off {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.kn-facets__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.kn-facets__box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: var(--kn-space-sm);
+  height: var(--kn-space-sm);
+  border: var(--kn-stroke) solid var(--kn-surface-line);
+  border-radius: var(--kn-radius);
+  color: transparent;
+  transition: background-color var(--kn-dur-1) var(--kn-ease-state),
+    border-color var(--kn-dur-1) var(--kn-ease-state);
+}
+
+.kn-facets__box svg {
+  width: var(--kn-space-xs);
+  height: var(--kn-space-xs);
+}
+
+.kn-facets__option:hover .kn-facets__box {
+  border-color: var(--kn-surface-fg);
+}
+
+.kn-facets__input:checked + .kn-facets__box {
+  background-color: var(--kn-surface-fg);
+  border-color: var(--kn-surface-fg);
+  color: var(--kn-surface-bg);
+}
+
+.kn-facets__input:focus-visible + .kn-facets__box {
+  outline: var(--kn-stroke-strong) solid var(--kn-surface-accent);
+  outline-offset: 2px;
+}
+
+.kn-facets__swatch {
+  flex: 0 0 auto;
+  width: var(--kn-space-sm);
+  height: var(--kn-space-sm);
+  border: var(--kn-stroke) solid var(--kn-surface-line);
+  border-radius: var(--kn-radius);
+  background-size: cover;
+  background-position: center;
+}
+
+.kn-facets__name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.kn-facets__count {
+  flex: 0 0 auto;
+  color: var(--kn-surface-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.kn-facets__price {
+  display: flex;
+  gap: var(--kn-space-md);
+  padding-bottom: var(--kn-space-md);
+}
+
+.kn-facets__price-field {
+  display: grid;
+  gap: var(--kn-space-3xs);
+  flex: 1 1 0;
+}
+
+.kn-facets__scrim {
+  display: none;
+}
+
+/* ---- Version enrichie : le panneau devient un drawer latéral -------------- */
+
+[data-kn-enhanced] .kn-facets {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-end: 0;
+  z-index: var(--kn-facets-z);
+  width: 100%;
+  max-width: var(--kn-drawer-w);
+  border-bottom: 0;
+  border-inline-start: var(--kn-stroke) solid var(--kn-surface-line);
+  visibility: hidden;
+  transform: translateX(100%);
+  transition: transform var(--kn-dur-4) var(--kn-ease-inout),
+    visibility 0s linear var(--kn-dur-4);
+}
+
+[data-kn-enhanced] .kn-facets[data-kn-open="true"] {
+  visibility: visible;
+  transform: none;
+  transition: transform var(--kn-dur-4) var(--kn-ease-out), visibility 0s;
+}
+
+[data-kn-enhanced] .kn-facets__form {
+  height: 100%;
+  max-height: none;
+}
+
+/* Encoche et barre d'accueil : le bouton de validation doit rester atteignable. */
+[data-kn-enhanced] .kn-facets__foot {
+  padding-bottom: max(var(--kn-space-md), env(safe-area-inset-bottom));
+}
+
+[data-kn-enhanced] .kn-facets__head,
+[data-kn-enhanced] .kn-facets__foot,
+[data-kn-enhanced] .kn-facets__body {
+  padding-right: max(var(--kn-gutter), env(safe-area-inset-right));
+}
+
+[data-kn-enhanced] .kn-facets__close {
+  display: inline-flex;
+}
+
+[data-kn-enhanced] .kn-facets__scrim {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--kn-facets-z) - 1);
+  background-color: var(--kn-scrim);
+  opacity: 0;
+  transition: opacity var(--kn-dur-2) var(--kn-ease-state);
+}
+
+[data-kn-enhanced] .kn-facets__scrim[hidden] {
+  display: none;
+}
+
+[data-kn-enhanced] .kn-facets__scrim[data-kn-open="true"] {
+  opacity: 1;
+}
+
+/* --------------------------------------------------------------------------
+   8. « Toutes les collections » — une bande éditoriale par univers (DA §3.4 R1)
+   -------------------------------------------------------------------------- */
+
+.kn-collections__head {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.kn-collections__head .kn-breadcrumb {
+  margin-bottom: var(--kn-space-lg);
+}
+
+.kn-collections__eyebrow {
+  margin: 0 0 var(--kn-space-2xs);
+  color: var(--kn-surface-muted);
+}
+
+.kn-collections__title {
+  margin: 0;
+}
+
+.kn-collections__intro {
+  margin: var(--kn-space-md) 0 0;
+  max-width: var(--kn-measure);
+  color: var(--kn-surface-muted);
+}
+
+.kn-story__inner {
+  display: grid;
+  gap: var(--kn-space-lg);
+}
+
+.kn-story__frame {
+  --kn-ratio: var(--kn-ratio-portrait);
+
+  display: block;
+  width: 100%;
+  background-color: var(--kn-media-bg);
+}
+
+.kn-story__eyebrow {
+  margin: 0 0 var(--kn-space-2xs);
+  color: var(--kn-surface-muted);
+}
+
+.kn-story__title {
+  margin: 0;
+  font-size: var(--kn-fs-h2);
+}
+
+.kn-story__text {
+  margin-top: var(--kn-space-md);
+  max-width: var(--kn-measure);
+}
+
+.kn-story__text > :first-child {
+  margin-top: 0;
+}
+
+.kn-story__text > :last-child {
+  margin-bottom: 0;
+}
+
+.kn-story__cta {
+  margin-top: var(--kn-space-lg);
+}
+
+@media (min-width: 1024px) {
+  .kn-story__inner {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--kn-grid-gap);
+    align-items: center;
+  }
+
+  .kn-story__media {
+    grid-column: 1 / span 6;
+  }
+
+  .kn-story__body {
+    grid-column: 8 / span 5;
+  }
+
+  .kn-story--media-end .kn-story__media {
+    grid-column: 7 / span 6;
+  }
+
+  .kn-story--media-end .kn-story__body {
+    grid-column: 1 / span 5;
+  }
+
+  /* Pas de cadre vide : sans image, le texte occupe la place (DA §6). */
+  .kn-story--no-media .kn-story__body {
+    grid-column: 1 / span 8;
+  }
+}

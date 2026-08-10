@@ -1,0 +1,121 @@
+{%- doc -%}
+  KINŪ — Panneau de navigation
+
+  Plan vert plein, bord à bord : drawer latéral plein écran sur mobile,
+  panneau déroulant pleine largeur sous le header sur desktop.
+  Voir DIRECTION-ARTISTIQUE.md §3.4 R6, R7 et §7.2.
+
+  Le contenu vient du menu Shopify choisi dans le schéma du header
+  (niveau 1 = entrées de premier niveau, niveau 2 = leurs enfants).
+  Les sur-titres d'univers viennent des blocs de la section, appariés au
+  libellé de l'entrée de premier niveau. Si aucun menu n'est configuré,
+  on retombe sur les blocs seuls.
+
+  @param {object} section - La section kn-header qui porte les réglages.
+
+  @example
+  {% render 'kn-nav-panel', section: section %}
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_links = linklists[section.settings.menu].links
+  assign kn_utility = linklists[section.settings.utility_menu].links
+  assign kn_all_url = section.settings.secondary_link
+  if kn_all_url == blank
+    assign kn_all_url = routes.all_products_collection_url
+  endif
+-%}
+
+<div class="kn-nav" id="kn-nav" data-kn-nav>
+  <div class="kn-nav__scrim" data-kn-nav-dismiss aria-hidden="true"></div>
+
+  <div class="kn-nav__slot">
+    <div
+      class="kn-nav__panel"
+      data-kn-surface="flood"
+      role="dialog"
+      aria-modal="true"
+      aria-label="{{ section.settings.nav_dialog_label | escape }}"
+      data-kn-nav-panel
+    >
+      <div class="kn-nav__bar">
+        <button
+          type="button"
+          class="kn-nav__close kn-tap"
+          data-kn-nav-dismiss
+        >
+          {%- render 'kn-icon', name: 'close', size: 20 -%}
+          <span class="kn-visually-hidden">{{ section.settings.nav_close_label | escape }}</span>
+        </button>
+      </div>
+
+      <nav class="kn-nav__body">
+        <ul class="kn-nav__list" role="list">
+          {%- if kn_links.size > 0 -%}
+            {%- for kn_link in kn_links -%}
+              {%- liquid
+                assign kn_overline = ''
+                assign kn_key = kn_link.title | downcase | strip
+                for kn_block in section.blocks
+                  assign kn_block_key = kn_block.settings.label | downcase | strip
+                  if kn_block_key == kn_key
+                    assign kn_overline = kn_block.settings.overline
+                    break
+                  endif
+                endfor
+              -%}
+              <li class="kn-nav__entry">
+                {%- if kn_overline != blank -%}
+                  <span class="kn-nav__overline kn-label" translate="no">{{ kn_overline | escape }}</span>
+                {%- endif -%}
+                <a class="kn-nav__level1" href="{{ kn_link.url }}">{{ kn_link.title | escape }}</a>
+                {%- if kn_link.links.size > 0 -%}
+                  <ul class="kn-nav__sub" role="list">
+                    {%- for kn_child in kn_link.links -%}
+                      <li>
+                        <a class="kn-nav__level2" href="{{ kn_child.url }}">{{ kn_child.title | escape }}</a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+              </li>
+            {%- endfor -%}
+          {%- else -%}
+            {%- for kn_block in section.blocks -%}
+              {%- liquid
+                assign kn_url = kn_block.settings.link
+                if kn_url == blank
+                  assign kn_url = routes.all_products_collection_url
+                endif
+              -%}
+              <li class="kn-nav__entry" {{ kn_block.shopify_attributes }}>
+                {%- if kn_block.settings.overline != blank -%}
+                  <span class="kn-nav__overline kn-label" translate="no">{{ kn_block.settings.overline | escape }}</span>
+                {%- endif -%}
+                <a class="kn-nav__level1" href="{{ kn_url }}">{{ kn_block.settings.label | escape }}</a>
+              </li>
+            {%- endfor -%}
+          {%- endif -%}
+        </ul>
+
+        <div class="kn-nav__foot">
+          <a class="kn-nav__secondary kn-label" href="{{ kn_all_url }}">
+            {{- section.settings.secondary_label | escape -}}
+          </a>
+
+          {%- if kn_utility.size > 0 -%}
+            <ul class="kn-nav__utility" role="list">
+              {%- for kn_link in kn_utility -%}
+                <li>
+                  <a class="kn-nav__utility-link kn-label" href="{{ kn_link.url }}">
+                    {{- kn_link.title | escape -}}
+                  </a>
+                </li>
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      </nav>
+    </div>
+  </div>
+</div>

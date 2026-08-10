@@ -1,0 +1,197 @@
+{%- comment -%}
+  KINŪ — Page produit (gabarit unique, tous produits)
+  DIRECTION-ARTISTIQUE.md §3.4 R4, §5, §6, §7.4, §7.7, §8.
+  Surface toujours claire : la page produit ne s'inonde jamais.
+  Le tunnel d'achat s'appuie sur <product-form-component> d'Horizon.
+{%- endcomment -%}
+
+{%- liquid
+  assign kn_product = product
+  if request.visual_preview_mode and kn_product == blank
+    assign kn_product = collections.all.products.first
+  endif
+  assign kn_variant = kn_product.selected_or_first_available_variant
+  assign kn_s = section.settings
+  assign kn_form_id = 'KnProductForm-' | append: section.id
+-%}
+
+{%- liquid
+  assign kn_universes = 'fluid-motion,crossover,amplitude' | split: ','
+  assign kn_universe_handle = ''
+  assign kn_universe_title = ''
+  for kn_collection in kn_product.collections
+    if kn_universes contains kn_collection.handle
+      assign kn_universe_handle = kn_collection.handle
+      assign kn_universe_title = kn_collection.title
+      break
+    endif
+  endfor
+  assign kn_category = ''
+  case kn_universe_handle
+    when 'fluid-motion'
+      assign kn_category = kn_s.label_women
+    when 'crossover'
+      assign kn_category = kn_s.label_men
+    when 'amplitude'
+      assign kn_category = kn_s.label_unisex
+  endcase
+-%}
+
+{%- liquid
+  assign kn_can_add = false
+  assign kn_btn_label = kn_s.label_unavailable
+  if kn_variant != blank and kn_variant.available
+    assign kn_can_add = true
+    assign kn_btn_label = kn_s.label_add_to_cart
+  elsif kn_variant != blank
+    assign kn_btn_label = kn_s.label_sold_out
+  endif
+  assign kn_with_currency = settings.currency_code_enabled_product_pages
+  if kn_with_currency
+    assign kn_price = kn_variant.price | money_with_currency
+    assign kn_compare = kn_variant.compare_at_price | money_with_currency
+  else
+    assign kn_price = kn_variant.price | money
+    assign kn_compare = kn_variant.compare_at_price | money
+  endif
+  assign kn_on_sale = false
+  if kn_variant.compare_at_price > kn_variant.price
+    assign kn_on_sale = true
+  endif
+-%}
+
+<section
+  id="KnProduct-{{ section.id }}"
+  class="kn-pdp"
+  data-kn-surface="light"
+  data-kn-product
+  data-kn-section-id="{{ section.id }}"
+  data-kn-product-url="{{ kn_product.url }}"
+  data-kn-label-add="{{ kn_s.label_add_to_cart | escape }}"
+  data-kn-label-sold-out="{{ kn_s.label_sold_out | escape }}"
+  data-kn-label-unavailable="{{ kn_s.label_unavailable | escape }}"
+  data-kn-label-in-stock="{{ kn_s.label_in_stock | escape }}"
+  data-kn-label-selected="{{ kn_s.label_selected | escape }}"
+  {{ section.shopify_attributes }}
+>
+  <div class="kn-container kn-container--narrow kn-pdp__inner">
+    {%- if kn_s.show_breadcrumb -%}
+      <div class="kn-pdp__breadcrumb">{% render 'kn-breadcrumb' %}</div>
+    {%- endif -%}
+
+    {%- comment -%} Signe de territoire, et un seul (DA §3.4 R4). {%- endcomment -%}
+    <hr class="kn-pdp__territory">
+
+    <div class="kn-pdp__layout">
+      <div class="kn-pdp__gallery">
+        {%- render 'kn-product-gallery', product: kn_product, opts: kn_s -%}
+      </div>
+
+      <div class="kn-pdp__info">
+        {%- if kn_category != blank -%}
+          <p class="kn-label kn-pdp__eyebrow">{{ kn_category }} — {{ kn_universe_title }}</p>
+        {%- endif -%}
+
+        <h1 class="kn-pdp__title">{{ kn_product.title }}</h1>
+
+        <div class="kn-pdp__prices">
+          <span class="kn-price kn-pdp__price" data-kn-price>{{ kn_price }}</span>
+          <s
+            class="kn-price kn-pdp__compare"
+            data-kn-compare
+            {% unless kn_on_sale %}
+              hidden
+            {% endunless %}
+          >{{ kn_compare }}</s>
+        </div>
+
+        {%- if kn_s.tax_note != blank -%}
+          <div class="kn-sm kn-pdp__tax">{{ kn_s.tax_note }}</div>
+        {%- endif -%}
+
+        {%- render 'kn-product-variant-data', product: kn_product -%}
+
+        {%- render 'kn-product-options', product: kn_product, opts: kn_s, section_id: section.id -%}
+
+        {%- render 'kn-product-buy',
+          product: kn_product,
+          variant: kn_variant,
+          opts: kn_s,
+          form_id: kn_form_id,
+          can_add: kn_can_add,
+          button_label: kn_btn_label,
+          section_id: section.id
+        -%}
+
+        {%- render 'kn-product-details', product: kn_product, opts: kn_s, section_id: section.id -%}
+      </div>
+    </div>
+  </div>
+
+  {%- render 'kn-product-lightbox', product: kn_product, opts: kn_s, section_id: section.id -%}
+
+  {%- if kn_s.show_sticky_bar -%}
+    {%- render 'kn-product-sticky-bar',
+      product: kn_product,
+      opts: kn_s,
+      form_id: kn_form_id,
+      can_add: kn_can_add,
+      button_label: kn_btn_label,
+      price: kn_price
+    -%}
+  {%- endif -%}
+
+  {%- render 'kn-product-json-ld', product: kn_product -%}
+</section>
+
+{% schema %}
+{
+  "name": "Produit KINŪ",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Territoire" },
+    { "type": "checkbox", "id": "show_breadcrumb", "label": "Afficher le fil d’Ariane", "default": true },
+    { "type": "text", "id": "label_women", "label": "Libellé Femme", "default": "Femme" },
+    { "type": "text", "id": "label_men", "label": "Libellé Homme", "default": "Homme" },
+    { "type": "text", "id": "label_unisex", "label": "Libellé Unisexe", "default": "Unisexe" },
+
+    { "type": "header", "content": "Achat" },
+    { "type": "text", "id": "label_add_to_cart", "label": "Bouton d’ajout", "default": "Ajouter au panier" },
+    { "type": "text", "id": "label_sold_out", "label": "Rupture de stock", "default": "Épuisé" },
+    { "type": "text", "id": "label_unavailable", "label": "Combinaison inexistante", "default": "Indisponible" },
+    { "type": "text", "id": "label_in_stock", "label": "En stock", "default": "En stock" },
+    { "type": "text", "id": "label_selected", "label": "Annonce de sélection", "default": "sélectionné" },
+    { "type": "text", "id": "label_quantity", "label": "Quantité", "default": "Quantité" },
+    { "type": "text", "id": "label_decrease", "label": "Diminuer la quantité", "default": "Diminuer la quantité" },
+    { "type": "text", "id": "label_increase", "label": "Augmenter la quantité", "default": "Augmenter la quantité" },
+    { "type": "text", "id": "label_option_unavailable", "label": "Suffixe option indisponible", "default": "indisponible" },
+    { "type": "checkbox", "id": "show_sticky_bar", "label": "Bandeau d’achat collant (mobile)", "default": true },
+    { "type": "richtext", "id": "tax_note", "label": "Mention sous le prix", "default": "<p>TVA incluse. Frais de livraison calculés au paiement.</p>" },
+
+    { "type": "header", "content": "Disponibilité" },
+    { "type": "checkbox", "id": "show_availability", "label": "Afficher la disponibilité", "default": true },
+    { "type": "text", "id": "label_availability", "label": "Libellé disponibilité", "default": "Disponibilité" },
+    { "type": "checkbox", "id": "show_sku", "label": "Afficher la référence", "default": true },
+    { "type": "text", "id": "label_sku", "label": "Libellé référence", "default": "Référence" },
+    { "type": "checkbox", "id": "show_pickup", "label": "Afficher le retrait en magasin", "default": true },
+    { "type": "text", "id": "label_pickup_available", "label": "Retrait disponible", "default": "Retrait disponible" },
+    { "type": "text", "id": "label_pickup_unavailable", "label": "Retrait indisponible", "default": "Retrait indisponible pour le moment" },
+
+    { "type": "header", "content": "Galerie" },
+    { "type": "text", "id": "label_zoom", "label": "Agrandir", "default": "Agrandir l’image" },
+    { "type": "text", "id": "label_thumbnail", "label": "Vignette", "default": "Voir le visuel" },
+    { "type": "text", "id": "label_prev", "label": "Visuel précédent", "default": "Visuel précédent" },
+    { "type": "text", "id": "label_next", "label": "Visuel suivant", "default": "Visuel suivant" },
+    { "type": "text", "id": "label_close", "label": "Fermer", "default": "Fermer" },
+    { "type": "text", "id": "label_model", "label": "Étiquette modèle 3D", "default": "Modèle 3D" },
+
+    { "type": "header", "content": "Informations" },
+    { "type": "text", "id": "title_description", "label": "Titre — Description", "default": "Description" },
+    { "type": "text", "id": "title_material", "label": "Titre — Matière", "default": "Matière & entretien" },
+    { "type": "richtext", "id": "text_material", "label": "Texte de repli — Matière" },
+    { "type": "text", "id": "title_shipping", "label": "Titre — Livraison", "default": "Livraison & retours" },
+    { "type": "richtext", "id": "text_shipping", "label": "Texte de repli — Livraison" }
+  ],
+  "presets": [{ "name": "Produit KINŪ" }]
+}
+{% endschema %}

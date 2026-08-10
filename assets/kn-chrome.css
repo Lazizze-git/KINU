@@ -1,1 +1,1041 @@
-/* KINŪ — kn-chrome : feuille de domaine (à écrire). */
+/* ==========================================================================
+   KINŪ — Chrome du site
+   --------------------------------------------------------------------------
+   Barre d'annonce, header, panneau de navigation, pied de page, puis
+   repeinte du panier et de la recherche natifs d'Horizon.
+   Chargé après custom.css et kn-base.css. Mobile-first sans exception.
+   Voir DIRECTION-ARTISTIQUE.md §3.4, §7.1, §7.2, §7.5, §7.6, §8.
+   ========================================================================== */
+
+:root {
+  /* Hauteur réelle de la barre d'annonce, et hauteur réservée dans le flux.
+     La seconde tombe à zéro dès que la barre est absente ou fermée. */
+  --kn-announce-size: 32px;
+  --kn-announce-h: 0px;
+
+  --kn-logo-h: 20px;
+  --kn-icon-size: 20px;
+  --kn-bubble-size: 16px;
+  --kn-fs-bubble: 0.625rem;
+  --kn-btn-h: 52px;
+
+  /* Écart entre le bord de la zone tactile et le tracé de l'icône : sert à
+     aligner optiquement les icônes sur la gouttière. */
+  --kn-icon-inset: calc((var(--kn-tap) - var(--kn-icon-size)) / -2);
+
+  /* Couches locales au groupe d'en-tête. */
+  --kn-z-header: 2;
+  --kn-z-nav: 1;
+  --kn-z-nav-mobile: 3;
+
+  /* Position du bas du header, affinée par kn-chrome.js à l'ouverture. */
+  --kn-nav-top: calc(var(--kn-header-h) + var(--kn-stroke));
+}
+
+@media (min-width: 640px) {
+  :root {
+    --kn-btn-h: 56px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --kn-logo-h: 24px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   1. Armature — sentinelle de scroll et groupe d'en-tête collant
+   La sentinelle occupe la hauteur du seuil de bascule puis annule sa propre
+   hauteur : elle ne déplace rien, et sa sortie du viewport donne le signal.
+   -------------------------------------------------------------------------- */
+
+.kn-scroll-sentinel {
+  display: block;
+  width: var(--kn-stroke);
+  height: var(--kn-header-shift);
+  margin-block-end: calc(var(--kn-header-shift) * -1);
+  pointer-events: none;
+}
+
+#header-group {
+  position: sticky;
+  inset-block-start: calc(var(--kn-announce-h) * -1);
+  z-index: var(--layer-menu-drawer, 18);
+}
+
+#header-group:has(.kn-announce:not([hidden])) {
+  --kn-announce-h: var(--kn-announce-size);
+}
+
+/* Le header passe au-dessus du premier média plein cadre : c'est la section
+   hero qui pose la classe sur <body>. Voir DA §3.4 R5. */
+body.kn-header--over-media .content-for-layout {
+  margin-block-start: calc((var(--kn-header-h) + var(--kn-stroke)) * -1);
+}
+
+/* Verrou de défilement complémentaire : au-delà de 990 px, c'est
+   `.page-wrapper` qui défile, pas le document. La compensation de largeur
+   évite le saut de mise en page à l'ouverture d'un panneau. */
+.page-wrapper.kn-scroll-locked {
+  overflow-y: hidden;
+}
+
+/* Le header colle en haut : sans cette réserve, une ancre interne dépose sa
+   cible juste dessous, c'est-à-dire cachée. */
+.content-for-layout [id] {
+  scroll-margin-block-start: calc(var(--kn-header-h) + var(--kn-space-md));
+}
+
+/* Pas de délai de 300 ms au tapotement, pas de flash bleu système. */
+.kn-header__icon,
+.kn-nav__close,
+.kn-nav__level1,
+.kn-nav__level2,
+.kn-nav__secondary,
+.kn-nav__utility-link,
+.kn-announce__item,
+.kn-announce__close,
+.kn-footer__summary,
+.kn-footer__link,
+.kn-footer__social-link,
+.kn-footer__lang-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   2. Icônes
+   -------------------------------------------------------------------------- */
+
+.kn-icon {
+  display: block;
+  flex: none;
+  stroke-width: var(--kn-stroke-icon);
+}
+
+.kn-icon > * {
+  vector-effect: non-scaling-stroke;
+}
+
+/* --------------------------------------------------------------------------
+   3. Barre d'annonce (DA §7.1)
+   -------------------------------------------------------------------------- */
+
+.kn-announce {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: var(--kn-announce-size);
+  overflow: hidden;
+}
+
+.kn-announce[hidden] {
+  display: none;
+}
+
+.kn-announce__viewport {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.kn-announce__track {
+  display: flex;
+  width: max-content;
+  height: 100%;
+  animation: kn-marquee var(--kn-announce-dur, 40s) linear infinite;
+}
+
+.kn-announce__group {
+  display: flex;
+  flex: none;
+  height: 100%;
+}
+
+/* Toute la hauteur de la barre est cliquable, pas la seule ligne de texte. */
+.kn-announce__item {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-inline-end: var(--kn-space-3xl);
+  white-space: nowrap;
+}
+
+a.kn-announce__item:hover {
+  color: var(--kn-sage);
+}
+
+@keyframes kn-marquee {
+  to {
+    transform: translateX(-25%);
+  }
+}
+
+.kn-announce:focus-within .kn-announce__track {
+  animation-play-state: paused;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .kn-announce:hover .kn-announce__track {
+    animation-play-state: paused;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kn-announce__track {
+    animation: none;
+  }
+}
+
+.kn-announce__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--kn-announce-size);
+  height: var(--kn-announce-size);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: currentcolor;
+  cursor: pointer;
+  transition: color var(--kn-dur-1) var(--kn-ease-state);
+}
+
+.kn-announce__close:hover {
+  color: var(--kn-sage);
+}
+
+/* --------------------------------------------------------------------------
+   4. Header (DA §7.1) — seule la couleur bouge
+   -------------------------------------------------------------------------- */
+
+.kn-header {
+  --kn-surface-bg: var(--kn-ivory);
+  --kn-surface-fg: var(--kn-ink);
+  --kn-surface-line: var(--kn-line);
+  --kn-surface-muted: var(--kn-grey);
+  --kn-surface-accent: var(--kn-forest);
+  --kn-bubble-bg: var(--kn-forest);
+  --kn-bubble-fg: var(--kn-ivory);
+
+  position: relative;
+  z-index: var(--kn-z-header);
+  background-color: var(--kn-surface-bg);
+  color: var(--kn-surface-fg);
+  border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
+  transition: background-color var(--kn-dur-2) var(--kn-ease-state),
+    color var(--kn-dur-2) var(--kn-ease-state),
+    border-color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+/* Bascule au scroll et pendant l'ouverture du panneau : la gamme entière
+   s'inverse, aucun composant n'a besoin de connaître son fond. */
+.kn-header.is-scrolled,
+.kn-header.is-nav-open,
+body.kn-header--over-media .kn-header[data-kn-header-transparent='true'].is-nav-open {
+  --kn-surface-bg: var(--kn-forest);
+  --kn-surface-fg: var(--kn-ivory);
+  --kn-surface-line: var(--kn-line-invert);
+  --kn-surface-muted: var(--kn-muted-invert);
+  --kn-surface-accent: var(--kn-ivory);
+  --kn-bubble-bg: var(--kn-ivory);
+  --kn-bubble-fg: var(--kn-forest);
+}
+
+body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is-scrolled):not(.is-nav-open) {
+  --kn-surface-bg: transparent;
+  --kn-surface-fg: var(--kn-ivory);
+  --kn-surface-line: transparent;
+  --kn-surface-muted: var(--kn-muted-invert);
+  --kn-surface-accent: var(--kn-ivory);
+  --kn-bubble-bg: var(--kn-ivory);
+  --kn-bubble-fg: var(--kn-forest);
+}
+
+.kn-header__row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  width: 100%;
+  max-width: var(--kn-container);
+  min-height: var(--kn-header-h);
+  margin-inline: auto;
+  padding-inline: var(--kn-gutter);
+}
+
+.kn-header__lead {
+  justify-self: start;
+  /* Aligne le tracé de l'icône sur la gouttière, pas sa zone tactile. */
+  margin-inline-start: var(--kn-icon-inset);
+}
+
+.kn-header__brand {
+  justify-self: center;
+  min-width: 0;
+}
+
+.kn-header__actions {
+  display: flex;
+  align-items: center;
+  justify-self: end;
+  margin-inline-end: var(--kn-icon-inset);
+}
+
+@media (min-width: 1024px) {
+  .kn-header__row {
+    grid-template-columns: auto auto 1fr;
+    column-gap: var(--kn-space-md);
+  }
+
+  .kn-header__brand {
+    justify-self: start;
+  }
+}
+
+.kn-header__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: currentcolor;
+  cursor: pointer;
+  transition: color var(--kn-dur-1) var(--kn-ease-state);
+}
+
+.kn-header__icon:hover {
+  color: var(--kn-surface-accent);
+}
+
+.kn-header__glyph--close,
+.kn-header__icon[aria-expanded='true'] .kn-header__glyph--open {
+  display: none;
+}
+
+.kn-header__icon[aria-expanded='true'] .kn-header__glyph--close {
+  display: block;
+}
+
+.kn-header__logo {
+  display: inline-flex;
+  align-items: center;
+  color: currentcolor;
+}
+
+.kn-header__logo-img {
+  width: auto;
+  height: var(--kn-logo-h);
+  object-fit: contain;
+}
+
+.kn-header__logo-img--light {
+  display: none;
+}
+
+/* La permutation n'a lieu que si une version claire a bien été fournie :
+   sinon le logo sombre disparaîtrait purement et simplement sur fond vert. */
+.kn-header.is-scrolled [data-kn-logo-pair] .kn-header__logo-img--dark,
+.kn-header.is-nav-open [data-kn-logo-pair] .kn-header__logo-img--dark,
+body.kn-header--over-media
+  .kn-header[data-kn-header-transparent='true']
+  [data-kn-logo-pair]
+  .kn-header__logo-img--dark {
+  display: none;
+}
+
+.kn-header.is-scrolled [data-kn-logo-pair] .kn-header__logo-img--light,
+.kn-header.is-nav-open [data-kn-logo-pair] .kn-header__logo-img--light,
+body.kn-header--over-media
+  .kn-header[data-kn-header-transparent='true']
+  [data-kn-logo-pair]
+  .kn-header__logo-img--light {
+  display: block;
+}
+
+.kn-header__wordmark {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-logo-h);
+  font-weight: var(--kn-fw-bold);
+  line-height: 1;
+  letter-spacing: var(--kn-ls-btn);
+  white-space: nowrap;
+}
+
+/* Compteur du panier — pastille (DA §7.1). Le composant natif d'Horizon
+   pose `visually-hidden` quand le panier est vide : on ne la contrarie pas. */
+.kn-header__cart-icon {
+  position: relative;
+  display: block;
+}
+
+.kn-header .cart-bubble:not(.visually-hidden) {
+  position: absolute;
+  inset-block-start: calc(var(--kn-space-3xs) * -1);
+  inset-inline-end: calc(var(--kn-space-2xs) * -1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--kn-bubble-size);
+  height: var(--kn-bubble-size);
+  padding: 0;
+  border-radius: var(--kn-radius-pill);
+  color: var(--kn-bubble-fg);
+}
+
+.kn-header .cart-bubble__background {
+  position: absolute;
+  inset: 0;
+  background-color: var(--kn-bubble-bg);
+  border-radius: var(--kn-radius-pill);
+  transition: background-color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-header .cart-bubble__text {
+  position: relative;
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-bubble);
+  font-weight: var(--kn-fw-medium);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   5. Panneau de navigation (DA §3.4 R6, R7 et §7.2)
+   -------------------------------------------------------------------------- */
+
+.kn-nav {
+  position: fixed;
+  inset: 0;
+  z-index: var(--kn-z-nav-mobile);
+  visibility: hidden;
+  transition: visibility 0s linear var(--kn-dur-4);
+}
+
+.kn-nav.is-open {
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.kn-nav__scrim {
+  position: absolute;
+  inset: 0;
+  background-color: var(--kn-scrim);
+  opacity: 0;
+  transition: opacity var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-nav.is-open .kn-nav__scrim {
+  opacity: 1;
+}
+
+/* Le sas découpe le panneau pendant sa translation : sans lui, le plan vert
+   resterait visible au-dessus du header sur desktop. */
+.kn-nav__slot {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+.kn-nav__panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transform: translateX(-100%);
+  transition: transform var(--kn-dur-4) var(--kn-ease-inout);
+}
+
+.kn-nav.is-open .kn-nav__panel {
+  transform: none;
+  transition-timing-function: var(--kn-ease-out);
+}
+
+.kn-nav__bar {
+  display: flex;
+  align-items: center;
+  min-height: var(--kn-header-h);
+  padding-inline: var(--kn-gutter);
+}
+
+.kn-nav__close {
+  margin-inline-start: var(--kn-icon-inset);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: currentcolor;
+  cursor: pointer;
+}
+
+.kn-nav__body {
+  padding: var(--kn-space-lg) var(--kn-gutter) var(--kn-space-2xl);
+}
+
+.kn-nav__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kn-space-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kn-nav__overline {
+  display: block;
+  margin-block-end: var(--kn-space-3xs);
+  color: var(--kn-muted-invert);
+}
+
+.kn-nav__level1 {
+  display: inline-block;
+  font-family: var(--kn-font-display);
+  font-size: var(--kn-fs-h2);
+  font-weight: var(--kn-fw-bold);
+  line-height: var(--kn-lh-title);
+  letter-spacing: var(--kn-ls-title);
+  color: var(--kn-ivory);
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+/* R7 — l'item visé reste net, tous les autres s'effacent. */
+.kn-nav__list:focus-within .kn-nav__level1 {
+  color: var(--kn-faint-invert);
+}
+
+.kn-nav__entry:focus-within .kn-nav__level1 {
+  color: var(--kn-ivory);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .kn-nav__list:hover .kn-nav__level1 {
+    color: var(--kn-faint-invert);
+  }
+
+  .kn-nav__entry:hover .kn-nav__level1 {
+    color: var(--kn-ivory);
+  }
+}
+
+.kn-nav__sub {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--kn-space-2xs);
+  row-gap: var(--kn-space-3xs);
+  margin: var(--kn-space-2xs) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kn-nav__sub li,
+.kn-nav__utility li {
+  display: inline-flex;
+  align-items: center;
+}
+
+.kn-nav__sub li + li::before {
+  content: '·';
+  margin-inline-end: var(--kn-space-2xs);
+  color: var(--kn-faint-invert);
+}
+
+.kn-nav__level2 {
+  display: inline-block;
+  padding-block: var(--kn-space-2xs);
+  font-size: var(--kn-fs-sm);
+  color: var(--kn-muted-invert);
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-nav__level2:hover,
+.kn-nav__level2:focus-visible {
+  color: var(--kn-ivory);
+}
+
+.kn-nav__foot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kn-space-md);
+  margin-block-start: var(--kn-space-xl);
+  padding-block-start: var(--kn-space-md);
+  border-block-start: var(--kn-stroke) solid var(--kn-line-invert);
+}
+
+.kn-nav__secondary,
+.kn-nav__utility-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--kn-tap);
+  color: var(--kn-ivory);
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-nav__utility-link {
+  color: var(--kn-muted-invert);
+}
+
+.kn-nav__secondary:hover,
+.kn-nav__utility-link:hover {
+  color: var(--kn-forest-soft);
+}
+
+.kn-nav__utility {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--kn-space-2xs);
+  row-gap: var(--kn-space-3xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kn-nav__utility li + li::before {
+  content: '·';
+  margin-inline-end: var(--kn-space-2xs);
+  color: var(--kn-faint-invert);
+}
+
+@media (min-width: 1024px) {
+  .kn-nav {
+    z-index: var(--kn-z-nav);
+  }
+
+  /* Le panneau se déroule sous le header, qui reste au-dessus. */
+  .kn-nav__slot {
+    inset-block: var(--kn-nav-top) auto;
+    max-height: calc(100dvh - var(--kn-nav-top));
+  }
+
+  .kn-nav__panel {
+    height: auto;
+    transform: translateY(-100%);
+  }
+
+  .kn-nav__bar {
+    display: none;
+  }
+
+  .kn-nav__body {
+    padding-block: var(--kn-space-xl) var(--kn-space-2xl);
+  }
+
+  .kn-nav__list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--kn-space-3xl);
+  }
+
+  .kn-nav__sub {
+    flex-direction: column;
+    row-gap: 0;
+  }
+
+  .kn-nav__level2 {
+    padding-block: var(--kn-space-3xs);
+  }
+
+  .kn-nav__sub li + li::before {
+    content: none;
+  }
+
+  .kn-nav__foot {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. Newsletter — aplat forêt posé sur le footer encre (DA §3.4 R12)
+   -------------------------------------------------------------------------- */
+
+.kn-news {
+  padding-block: var(--kn-section-y-flood);
+}
+
+.kn-news__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--kn-space-md);
+  text-align: center;
+}
+
+.kn-news__text {
+  max-width: var(--kn-measure);
+  color: var(--kn-muted-invert);
+}
+
+.kn-news__form {
+  width: 100%;
+}
+
+.kn-news__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kn-space-md);
+  width: 100%;
+  max-width: var(--kn-measure);
+  margin-inline: auto;
+}
+
+/* Le contraste du filet sur aplat vert est traité au socle (kn-base.css §8). */
+.kn-news__input {
+  text-align: center;
+}
+
+.kn-news__feedback {
+  margin-block-end: var(--kn-space-md);
+  color: var(--kn-ivory);
+}
+
+.kn-news__feedback--error {
+  color: var(--kn-sage);
+}
+
+@media (min-width: 640px) {
+  .kn-news__field {
+    flex-direction: row;
+    align-items: end;
+  }
+
+  .kn-news__input {
+    flex: 1;
+    text-align: start;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   7. Pied de page (DA §7.6)
+   -------------------------------------------------------------------------- */
+
+.kn-footer {
+  padding-block: var(--kn-section-y) var(--kn-space-xl);
+}
+
+.kn-footer__cols {
+  display: grid;
+}
+
+.kn-footer__col {
+  border-block-end: var(--kn-stroke) solid var(--kn-line-invert);
+}
+
+.kn-footer__col:first-child {
+  border-block-start: var(--kn-stroke) solid var(--kn-line-invert);
+}
+
+.kn-footer__summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--kn-tap);
+  cursor: pointer;
+  list-style: none;
+}
+
+.kn-footer__summary::-webkit-details-marker {
+  display: none;
+}
+
+.kn-footer__chevron {
+  display: flex;
+  transition: transform var(--kn-dur-1) var(--kn-ease-state);
+}
+
+.kn-footer__col[open] .kn-footer__chevron {
+  transform: rotate(180deg);
+}
+
+.kn-footer__links {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kn-space-2xs);
+  margin: 0;
+  padding: 0 0 var(--kn-space-md);
+  list-style: none;
+}
+
+.kn-footer__link {
+  display: inline-block;
+  padding-block: var(--kn-space-3xs);
+}
+
+.kn-footer__link,
+.kn-footer__social-link {
+  color: var(--kn-muted-invert);
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-footer__link:hover,
+.kn-footer__social-link:hover {
+  color: var(--kn-forest-soft);
+}
+
+.kn-footer__base {
+  display: flex;
+  flex-direction: column;
+  gap: var(--kn-space-md);
+  margin-block-start: var(--kn-space-xl);
+  padding-block-start: var(--kn-space-md);
+  border-block-start: var(--kn-stroke) solid var(--kn-line-invert);
+}
+
+.kn-footer__social {
+  display: flex;
+  align-items: center;
+  margin: 0 0 0 var(--kn-icon-inset);
+  padding: 0;
+  list-style: none;
+}
+
+.kn-footer__lang {
+  display: flex;
+  align-items: center;
+}
+
+.kn-footer__lang-btn {
+  min-height: var(--kn-tap);
+  padding-inline: var(--kn-space-sm);
+  border: 0;
+  background: none;
+  color: var(--kn-muted-invert);
+  cursor: pointer;
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-footer__lang-btn:first-of-type {
+  padding-inline-start: 0;
+}
+
+.kn-footer__lang-btn:hover {
+  color: var(--kn-forest-soft);
+}
+
+.kn-footer__lang-btn[aria-current='true'] {
+  color: var(--kn-ivory);
+}
+
+.kn-footer__lang-btn + .kn-footer__lang-btn {
+  border-inline-start: var(--kn-stroke) solid var(--kn-line-invert);
+}
+
+.kn-footer__copy {
+  margin: 0;
+  color: var(--kn-muted-invert);
+}
+
+@media (min-width: 768px) {
+  .kn-footer__cols {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--kn-grid-gap);
+  }
+
+  /* Sur desktop, les colonnes ne sont plus des accordéons. */
+  .kn-footer__col,
+  .kn-footer__col:first-child {
+    border: 0;
+  }
+
+  .kn-footer__links {
+    padding-block-end: 0;
+  }
+
+  @supports selector(::details-content) {
+    .kn-footer__col::details-content {
+      content-visibility: visible;
+      block-size: auto;
+    }
+
+    .kn-footer__summary {
+      min-height: 0;
+      margin-block-end: var(--kn-space-md);
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .kn-footer__chevron {
+      display: none;
+    }
+  }
+
+  .kn-footer__base {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-block-start: var(--kn-space-3xl);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   8. Panier natif repeint (DA §7.5)
+   On ne réécrit pas le drawer d'Horizon : il gère l'Ajax, les remises et le
+   passage en caisse. On lui change sa peau.
+   -------------------------------------------------------------------------- */
+
+#cart-drawer .theme-drawer__dialog {
+  --theme-drawer-width: 100vw;
+  --theme-drawer-padding: var(--kn-gutter);
+
+  background-color: var(--kn-ivory);
+  color: var(--kn-ink);
+  border-radius: var(--kn-radius);
+  border-inline-start: var(--kn-stroke) solid var(--kn-line);
+}
+
+#cart-drawer .theme-drawer__dialog::backdrop {
+  background: var(--kn-scrim);
+}
+
+#cart-drawer .theme-drawer__header {
+  border-block-end: var(--kn-stroke) solid var(--kn-line);
+}
+
+#cart-drawer .theme-drawer__title {
+  gap: var(--kn-space-3xs);
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-label);
+  font-weight: var(--kn-fw-medium);
+  line-height: var(--kn-lh-tight);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
+}
+
+/* La pastille redevient un simple nombre entre parenthèses : PANIER (2). */
+#cart-drawer .theme-drawer__badge {
+  min-width: 0;
+  height: auto;
+  padding-inline: 0;
+  aspect-ratio: auto;
+  border-radius: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+}
+
+#cart-drawer .theme-drawer__badge::before {
+  content: '(';
+}
+
+#cart-drawer .theme-drawer__badge::after {
+  content: ')';
+}
+
+/* La croix d'Horizon arrive en pastille ronde bordée : angles vifs, rien
+   d'autre que le trait (DA §5.4). */
+#cart-drawer .theme-drawer__close-button {
+  width: var(--kn-tap);
+  height: var(--kn-tap);
+  border: 0;
+  border-radius: var(--kn-radius);
+  background: none;
+  color: var(--kn-ink);
+}
+
+#cart-drawer .cart-drawer__summary {
+  border-block-start: var(--kn-stroke) solid var(--kn-line);
+  mask-image: none;
+}
+
+#cart-drawer .cart__ctas .cart__checkout-button,
+#cart-drawer .cart__checkout-button {
+  width: 100%;
+  height: auto;
+  min-height: var(--kn-btn-h);
+  border: var(--kn-stroke) solid var(--kn-forest);
+  border-radius: var(--kn-radius);
+  background-color: var(--kn-forest);
+  color: var(--kn-ivory);
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-btn);
+  font-weight: var(--kn-fw-medium);
+  letter-spacing: var(--kn-ls-btn);
+  text-transform: uppercase;
+  transition: background-color var(--kn-dur-2) var(--kn-ease-state),
+    border-color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+#cart-drawer .cart__ctas .cart__checkout-button:hover {
+  background-color: var(--kn-forest-deep);
+  border-color: var(--kn-forest-deep);
+}
+
+@media (min-width: 750px) {
+  #cart-drawer .theme-drawer__dialog {
+    --theme-drawer-width: var(--kn-drawer-w);
+  }
+
+}
+
+/* --------------------------------------------------------------------------
+   9. Recherche native repeinte
+   -------------------------------------------------------------------------- */
+
+.search-modal {
+  --search-border-radius: var(--kn-radius);
+}
+
+.search-modal__content,
+.dialog-modal.search-modal__content {
+  background-color: var(--kn-ivory);
+  color: var(--kn-ink);
+  border-radius: var(--kn-radius);
+}
+
+.search-modal__content::backdrop {
+  background: var(--kn-scrim);
+}
+
+.search-modal .predictive-search-form__header-inner {
+  background: transparent;
+  border: var(--kn-stroke) solid var(--kn-line);
+  border-radius: var(--kn-radius);
+  transition: border-color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+/* Un contour plutôt qu'un filet plus épais : le champ ne bouge pas d'un pixel
+   quand il prend le focus. */
+.search-modal .predictive-search-form__header-inner:focus-within {
+  border-color: var(--kn-forest);
+  outline: var(--kn-stroke-strong) solid var(--kn-forest);
+  outline-offset: calc(var(--kn-stroke) * -1);
+}
+
+.search-modal .search-input {
+  font-family: var(--kn-font-text);
+  font-size: var(--kn-fs-body);
+  color: var(--kn-ink);
+  border-radius: var(--kn-radius);
+}
+
+/* C'est le cadre du champ qui porte l'anneau de focus : un seul, pas deux. */
+.search-modal .search-input:focus-visible {
+  outline: none;
+}
+
+.search-modal .search-input::placeholder {
+  color: var(--kn-grey);
+}
+
+.search-modal .predictive-search__reset-button {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-label);
+  font-weight: var(--kn-fw-medium);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
+  color: var(--kn-grey);
+}
+
+.search-modal .predictive-search-form__content,
+.search-modal .predictive-search-form__content-wrapper {
+  background-color: var(--kn-ivory);
+  border-radius: var(--kn-radius);
+}

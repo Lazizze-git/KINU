@@ -1,0 +1,56 @@
+{%- doc -%}
+  Rend un média produit KINŪ. Gère image, vidéo hébergée, vidéo externe et
+  modèle 3D sans jamais casser la galerie (DA §6 : aucun filtre, aucun voile).
+
+  @param {object} media - Le média Shopify.
+  @param {object} product - Le produit, pour le texte alternatif de repli.
+  @param {object} opts - Les réglages de la section (libellés).
+  @param {string} sizes - Attribut `sizes` de l'image.
+  @param {string} widths - Largeurs du `srcset`.
+  @param {string} loading - `eager` ou `lazy`.
+  @param {string} [priority] - `high` sur le premier visuel, sinon `auto`.
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_alt = media.alt | default: product.title | escape
+  assign kn_priority = priority | default: 'auto'
+-%}
+
+{%- case media.media_type -%}
+  {%- when 'video' -%}
+    {{
+      media
+      | video_tag:
+        image_size: '1200x',
+        controls: true,
+        preload: 'none',
+        muted: false,
+        class: 'kn-gal__video'
+    }}
+
+  {%- when 'external_video' -%}
+    <div class="kn-gal__embed">
+      {{ media | external_video_tag: loading: 'lazy', class: 'kn-gal__iframe' }}
+    </div>
+
+  {%- when 'model' -%}
+    {{
+      media.preview_image
+      | image_url: width: 1600
+      | image_tag: widths: widths, sizes: sizes, loading: loading, alt: kn_alt, class: 'kn-img'
+    }}
+    <span class="kn-label kn-gal__tag">{{ opts.label_model }}</span>
+
+  {%- else -%}
+    {{
+      media.preview_image
+      | image_url: width: 1600
+      | image_tag:
+        widths: widths,
+        sizes: sizes,
+        loading: loading,
+        fetchpriority: kn_priority,
+        alt: kn_alt,
+        class: 'kn-img'
+    }}
+{%- endcase -%}

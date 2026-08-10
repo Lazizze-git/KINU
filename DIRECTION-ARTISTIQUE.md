@@ -173,8 +173,15 @@ Implémentation Liquid : ajouter `data-kn-territory="fluid-motion|crossover|ampl
 - `#6E6B62` sur `#1E4D3B`
 - `#FFFFFF` comme fond de page ou de section (le brief l'exclut explicitement)
 - `#000000` pur, n'importe où
-- Deux verts côte à côte (`--kn-forest` + `--kn-sage` adjacents)
 - Toute couleur hors de la liste du §3.2, y compris dans les visuels de campagne : les images doivent être castées dans cette palette.
+
+> **Correction du 10/08/2026 (implémentation).** Cette liste interdisait « deux verts
+> côte à côte (`--kn-forest` + `--kn-sage` adjacents) », ce qui contredisait le rythme
+> de la page d'accueil imposé au §3.4 R2 (bandeau journal sauge suivi de l'inondation
+> verte). C'est le §3.3 qui tranche : **la sauge est une variante de la surface claire,
+> pas une quatrième surface** — l'enchaînement sauge → forêt n'est donc pas « deux
+> surfaces colorées adjacentes » au sens de R12. Interdiction levée, R12 (forêt jamais
+> collée à encre) reste en vigueur. Vérifié à l'écran : la marche fonctionne.
 
 ---
 
@@ -231,7 +238,21 @@ Les deux sont dans le brief et disponibles nativement dans Shopify → à défin
 | `--kn-measure` | `68ch` | Largeur max d'un bloc de texte |
 | `--kn-gutter` | `clamp(1rem, 4vw, 2.5rem)` | Marge latérale : 16 px mobile → 40 px desktop |
 
-Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-width: 1560px` et `--page-margin: var(--kn-gutter)` depuis `custom.css`. Les sections inondées et les visuels hero passent en **full-bleed** (technique `margin-inline: calc(50% - 50vw)`).
+Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-width: 1560px` et `--page-margin: var(--kn-gutter)` depuis `custom.css`.
+
+> **Correction du 10/08/2026 (implémentation) — piège technique à connaître.**
+> La technique full-bleed habituelle `width: 100vw; margin-inline: calc(50% - 50vw)`
+> **est inutilisable dans Horizon**. Au-delà de 990 px, le thème donne
+> `height: 100dvh; overflow-y: auto` à `.page-wrapper` : c'est ce conteneur qui
+> défile, pas la fenêtre. `100vw` y vaut donc la largeur du conteneur **plus** la
+> barre de défilement, ce qui provoque un débordement horizontal que
+> `body { overflow-x: clip }` ne rattrape pas.
+> **La bonne approche :** une section qui doit aller bord à bord n'a rien à faire —
+> elle est enfant direct de `<main>`, qui est déjà pleine largeur. C'est son
+> *contenu* qu'on contraint, avec `.kn-container`. Pour escamoter seulement la
+> gouttière d'un conteneur, utiliser `.kn-bleed`
+> (`margin-inline: calc(-1 * var(--kn-gutter))`). `100vw` reste légitime pour les
+> éléments en `position: fixed` (tiroirs, lightbox), qui sont hors du flux.
 
 ### 5.2 Grille
 
@@ -307,7 +328,15 @@ TOUTES LES COLLECTIONS
 JOURNAL · À PROPOS
 ```
 
-Niveau 1 en `--kn-fs-h2` DM Sans 700 ivoire ; niveau 2 en `--kn-fs-sm` `rgba(247,245,240,.7)`. Le nom de collection est un sur-titre `--kn-fs-label` en `rgba(247,245,240,.5)` : **présent comme signature de marque, jamais comme repère de navigation** (exigence explicite du brief).
+Niveau 1 en `--kn-fs-h2` DM Sans 700 ivoire ; niveau 2 en `--kn-fs-sm` `--kn-muted-invert`. Le nom de collection est un sur-titre `--kn-fs-label` en `--kn-muted-invert` : **présent comme signature de marque, jamais comme repère de navigation** (exigence explicite du brief).
+
+> **Correction du 10/08/2026 (implémentation).** Ce sur-titre était prévu en
+> `--kn-faint-invert` (45 % d'ivoire). À 11 px sur l'aplat vert, cela donne 3,1:1 —
+> sous le seuil AA de 4,5:1 annoncé au §3.2. Il passe à `--kn-muted-invert` (70 %,
+> soit 5,2:1). **Règle générale qui en découle : `--kn-faint-invert` ne sert qu'à
+> l'atténuation transitoire (les items de menu non survolés), jamais à du texte
+> statique.** La hiérarchie du sur-titre tient par la taille et les capitales, pas
+> par la transparence.
 
 ### 7.3 Carte produit
 
@@ -356,7 +385,7 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 
 ### 7.7 Page collection & page produit
 
-- **Collection** : en-tête sur la surface du territoire (R3) avec `H1` = la catégorie (`FEMME`), sur-titre = la collection (`FLUID-MOTION`), une phrase de contexte max 68ch. Filtres dans un drawer latéral (pas de sidebar permanente), déclenché par `FILTRER (2)` en `--kn-fs-label`. Tri à droite. Filet 1 px sous la barre.
+- **Collection** : en-tête sur la surface du territoire (R3) avec `H1` = la catégorie (`Femme`, en casse normale — le §4.2 et le §9 interdisent les titres éditoriaux en capitales, et c'est cette règle-là qui prime ; le libellé reste éditable si le client préfère les majuscules), sur-titre = la collection (`FLUID-MOTION`), une phrase de contexte max 68ch. Filtres dans un drawer latéral (pas de sidebar permanente), déclenché par `FILTRER (2)` en `--kn-fs-label`. Tri à droite. Filet 1 px sous la barre.
 - **Fil d'Ariane** : `Accueil / Femme / T-shirts` en `--kn-fs-label` `--kn-grey`, séparateur `/`, présent sur collection et produit (exigence du brief).
 - **Produit** : deux colonnes desktop (galerie 7/12 collante, informations 5/12), une colonne mobile (galerie plein cadre puis informations). Sélecteurs de taille en carrés de 44 px, filet 1 px, sélection = remplissage encre. Accordéons (Description / Matière & entretien / Livraison) en filets 1 px, sans fond, chevrons 12 px.
 
