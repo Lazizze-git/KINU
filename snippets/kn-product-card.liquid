@@ -1,20 +1,25 @@
 {%- doc -%}
-  Carte produit KINŪ (DIRECTION-ARTISTIQUE.md §7.3).
+  Carte produit KINŪ (DIRECTION-ARTISTIQUE.md §7.3, amendement du 11/08/2026).
 
-  La carte n’est pas un objet : ni cadre, ni fond, ni ombre, ni rayon.
+  La carte n’est pas un objet : ni cadre, ni fond, ni ombre, ni rayon.
   C’est une colonne alignée à gauche qui hérite de la surface courante
   (`--kn-surface-fg` / `--kn-surface-muted`) : lisible sur ivoire, sur encre
   et sur vert forêt sans réglage supplémentaire.
 
+  Le nuancier est actif (transposition de Mover) : survoler une pastille
+  prévisualise le coloris dans le cadre image, cliquer le retient et fait
+  pointer la carte vers la variante correspondante. Sans JavaScript, les
+  pastilles restent une information de couleur — la carte fonctionne.
+
   @param {object} product - Le produit à afficher. Si vide, rien n’est rendu.
-  @param {boolean} [show_universe] - Affiche le sur-titre « Femme — Fluid-Motion ».
+  @param {boolean} [show_universe] - Affiche le sur-titre « Femme — Fluid-Motion ».
     Vrai par défaut. Toujours masqué sur la page de la collection concernée.
   @param {number} [index] - Rang dans la vue (0-based). Les deux premières
     cartes chargent leur image en `eager`, les suivantes en `lazy`.
   @param {string} [sizes] - Surcharge de l’attribut `sizes` des images.
   @param {boolean} [show_swatches] - Affiche le nuancier de couleurs. Vrai par défaut.
   @param {string} [badge] - Libellé de badge forcé (sinon `product.metafields.kn.badge`).
-  @param {string} [from_label] - Préfixe des prix variables. Défaut « Dès ».
+  @param {string} [from_label] - Préfixe des prix variables. Défaut « Dès ».
   @param {string} [heading_tag] - Balise du nom de produit. Défaut `h3`.
 
   @example
@@ -22,7 +27,12 @@
 {%- enddoc -%}
 
 {%- liquid
-  assign kn_sizes = sizes | default: '(min-width: 1560px) 352px, (min-width: 1024px) calc((100vw - 152px) / 4), (min-width: 640px) calc((100vw - 96px) / 3), calc((100vw - 48px) / 2)'
+  comment
+    La cellule fait 1/2, 1/3 puis 1/4 de la largeur du champ, moins ses deux
+    marges intérieures (--kn-cell-pad : 16 px mobile, 24 px desktop). Le champ
+    est plafonné à --kn-container (1560 px), d’où la valeur fixe la plus large.
+  endcomment
+  assign kn_sizes = sizes | default: '(min-width: 1560px) 342px, (min-width: 1024px) calc(25vw - 48px), (min-width: 640px) calc(33.333vw - 48px), calc(50vw - 32px)'
   assign kn_widths = '240,320,400,500,640,760,900,1100'
   assign kn_heading = heading_tag | default: 'h3'
 
@@ -51,7 +61,7 @@
   endunless
 
   comment
-    Sur-titre d’univers. On coupe la recherche dès qu’elle ne sert à rien : sur
+    Sur-titre d’univers. On coupe la recherche dès qu’elle ne sert à rien : sur
     la page d’un univers le sur-titre serait du bruit, et la boucle sur
     `product.collections` coûte cher répétée sur 48 cartes.
   endcomment
@@ -87,12 +97,15 @@
   endif
 
   comment
-    Nuancier : première option qui porte au moins deux pastilles. Une seule
+    Nuancier : première option qui porte au moins deux pastilles. Une seule
     couleur n’apprend rien, on ne l’affiche pas.
   endcomment
   assign kn_swatch_values = ''
   assign kn_swatch_extra = 0
   assign kn_swatch_label = ''
+  assign kn_swatch_index = 0
+  assign kn_swatch_prop = ''
+  assign kn_colour_name = ''
   unless show_swatches == false
     for kn_option in product.options_with_values
       assign kn_candidates = kn_option.values | where: 'swatch'
@@ -101,10 +114,17 @@
         assign kn_swatch_values = kn_candidates
         assign kn_swatch_extra = kn_candidate_count | minus: 5
         assign kn_swatch_label = kn_option.name
+        assign kn_swatch_index = kn_option.position | minus: 1
+        assign kn_swatch_prop = kn_option.position | prepend: 'option'
         break
       endif
     endfor
   endunless
+
+  if kn_swatch_values != blank
+    assign kn_current = product.selected_or_first_available_variant
+    assign kn_colour_name = kn_current.options[kn_swatch_index]
+  endif
 
   assign kn_sold_out_label = 'products.product.sold_out' | t
   assign kn_aria = product.title | append: ', ' | append: kn_price
@@ -114,8 +134,13 @@
 -%}
 
 {%- if product != blank and product.id != blank -%}
-  <article class="kn-card{% unless kn_available %} kn-card--sold-out{% endunless %}">
-    <a class="kn-card__link" href="{{ product.url }}" aria-label="{{ kn_aria | escape }}">
+  <article class="kn-card{% unless kn_available %} kn-card--sold-out{% endunless %}" data-kn-card>
+    <a
+      class="kn-card__link"
+      href="{{ product.url }}"
+      data-kn-card-link
+      aria-label="{{ kn_aria | escape }}"
+    >
       <span class="kn-ratio kn-card__media">
         {%- if kn_image != blank -%}
           {{
@@ -148,10 +173,14 @@
         {%- endif -%}
       </span>
 
-      <{{ kn_heading }} class="kn-card__title">{{ product.title }}</{{ kn_heading }}>
-
       {%- if kn_universe_line != blank -%}
         <span class="kn-label kn-card__universe">{{ kn_universe_line }}</span>
+      {%- endif -%}
+
+      <{{ kn_heading }} class="kn-card__title">{{ product.title }}</{{ kn_heading }}>
+
+      {%- if kn_colour_name != blank -%}
+        <span class="kn-card__colour" data-kn-card-colour>{{ kn_colour_name }}</span>
       {%- endif -%}
 
       <span class="kn-card__prices">
@@ -169,17 +198,50 @@
     </a>
 
     {%- if kn_swatch_values != blank -%}
-      <ul class="kn-card__swatches" role="list" aria-label="{{ kn_swatch_label | escape }}">
+      <ul
+        class="kn-card__swatches"
+        role="list"
+        aria-label="{{ kn_swatch_label | escape }}"
+        data-kn-card-swatches
+      >
         {%- for kn_value in kn_swatch_values limit: 5 -%}
-          <li
-            class="kn-card__swatch"
-            {% if kn_value.swatch.image %}
-              style="background-image: url({{ kn_value.swatch.image | image_url: width: 48 }});"
-            {% elsif kn_value.swatch.color %}
-              style="background-color: rgb({{ kn_value.swatch.color.rgb }});"
-            {% endif %}
-          >
-            <span class="kn-visually-hidden">{{ kn_value.name }}</span>
+          {%- liquid
+            assign kn_pool = product.variants | where: kn_swatch_prop, kn_value.name
+            assign kn_pick = kn_pool | first
+            assign kn_preview = kn_pick.featured_media.preview_image
+            if kn_preview == blank
+              assign kn_preview = product.featured_image
+            endif
+            assign kn_preview_src = ''
+            if kn_preview != blank
+              assign kn_preview_src = kn_preview | image_url: width: 800
+            endif
+            assign kn_pressed = 'false'
+            if kn_value.name == kn_colour_name
+              assign kn_pressed = 'true'
+            endif
+          -%}
+          <li class="kn-card__swatch-slot">
+            <button
+              type="button"
+              class="kn-card__swatch"
+              data-kn-card-swatch
+              data-kn-name="{{ kn_value.name | escape }}"
+              {% if kn_preview_src != blank %}
+                data-kn-src="{{ kn_preview_src }}"
+              {% endif %}
+              {% if kn_pick.url != blank %}
+                data-kn-url="{{ kn_pick.url }}"
+              {% endif %}
+              aria-pressed="{{ kn_pressed }}"
+              {% if kn_value.swatch.image %}
+                style="--kn-swatch: url({{ kn_value.swatch.image | image_url: width: 48 }});"
+              {% elsif kn_value.swatch.color %}
+                style="--kn-swatch: rgb({{ kn_value.swatch.color.rgb }});"
+              {% endif %}
+            >
+              <span class="kn-visually-hidden">{{ kn_value.name }}</span>
+            </button>
           </li>
         {%- endfor -%}
         {%- if kn_swatch_extra > 0 -%}

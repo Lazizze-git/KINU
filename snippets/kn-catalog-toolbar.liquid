@@ -1,13 +1,19 @@
 {%- doc -%}
-  Barre d’outils de la page collection (DIRECTION-ARTISTIQUE.md §7.7).
-  `FILTRER (2)` à gauche, tri à droite, filet 1 px dessous. Pas de sidebar.
+  Barre d’outils de la page collection (DIRECTION-ARTISTIQUE.md §7.7,
+  amendement du 11/08/2026).
+
+  `FILTRER (2)` et le nombre de résultats à gauche, tri à droite, filet 1 px
+  dessous — et ce filet est aussi le bord haut du champ de la grille : une
+  seule ligne, pas deux. La barre colle sous l’en-tête et repeint son fond avec
+  la gamme de la surface courante : sur ivoire, sur encre comme sur forêt, elle
+  ne pose jamais un rectangle étranger au territoire.
 
   @param {string} section_id - Identifiant de la section hôte.
   @param {object} results - `collection` (ou tout objet exposant filters/sort_options).
   @param {number} active_count - Nombre de filtres actifs.
   @param {string} filter_label - Libellé du bouton d’ouverture des filtres.
   @param {string} sort_label - Libellé accessible du tri.
-  @param {string} clear_label - Libellé du lien « tout effacer ».
+  @param {string} clear_label - Libellé du lien « tout effacer ».
   @param {string} count_label - Gabarit du compte de résultats. Le jeton `[count]` est remplacé.
 {%- enddoc -%}
 
@@ -15,6 +21,7 @@
   assign kn_sort = results.sort_by | default: results.default_sort_by
   assign kn_form_id = 'KnFacetsForm-' | append: section_id
   assign kn_panel_id = 'KnFacets-' | append: section_id
+  assign kn_count = count_label | replace: '[count]', results.products_count
 -%}
 
 <div class="kn-toolbar">
@@ -32,6 +39,12 @@
           {%- if active_count > 0 %} ({{ active_count }}){% endif -%}
         </span>
       </button>
+
+      {%- comment -%}
+        Densité assumée : le nombre de pièces est une information, pas un
+        ornement. Masqué sous 420 px, où il volerait la place du tri.
+      {%- endcomment -%}
+      <span class="kn-label kn-toolbar__count" data-kn-count aria-hidden="true">{{ kn_count }}</span>
 
       <a
         class="kn-label kn-underline kn-toolbar__clear"
@@ -67,5 +80,5 @@
 </div>
 
 <p class="kn-visually-hidden" role="status" data-kn-status>
-  {{- count_label | replace: '[count]', results.products_count -}}
+  {{- kn_count -}}
 </p>

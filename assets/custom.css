@@ -92,6 +92,12 @@
   --kn-grid-row-gap:     var(--kn-space-2xl);
   --kn-grid-cols:        4;
 
+  /* Marge intérieure d'une cellule de champ réglé (grille produits, mosaïque
+     de galerie). Elle sert AUSSI de gouttière de page au catalogue, pour que
+     le filet vertical d'une colonne tombe exactement sur la marge du titre.
+     Une seule valeur, un seul alignement. */
+  --kn-cell-pad:         clamp(1rem, 2vw, 1.5rem);
+
   /* ---- Traits, rayons, cibles ------------------------------------------ */
   --kn-radius:        0;
   --kn-radius-pill:   999px;

@@ -1,6 +1,14 @@
 {%- doc -%}
-  Grille produits, état vide et pagination (DIRECTION-ARTISTIQUE.md §5.2, §7.7).
-  2 colonnes mobile, 3 tablette, 4 desktop. Écart vertical ≈ 2,5 × l’horizontal.
+  Grille produits, état vide, chargement progressif et pagination
+  (DIRECTION-ARTISTIQUE.md §5.2, §7.7, amendement du 11/08/2026).
+
+  La grille est un CHAMP RÉGLÉ : pas d’écart entre les cellules, un filet 1 px
+  les sépare, chaque cellule porte sa propre marge intérieure. Le champ va bord
+  à bord jusqu’à `--kn-container`. 2 colonnes mobile, 3 tablette, 4 desktop.
+
+  Avec JavaScript, la pagination devient un bouton « Voir plus » qui ajoute la
+  page suivante à la suite. Sans JavaScript, la pagination numérotée reste
+  affichée et fonctionne : c’est elle le socle, le bouton n’est qu’un confort.
 
   @param {object} results - `collection`.
   @param {object} paginate - L’objet `paginate` du bloc englobant.
@@ -11,14 +19,22 @@
   @param {string} empty_text - Phrase affichée quand la collection est vide.
   @param {string} empty_action - Libellé du bouton de repli.
   @param {string} empty_url - Destination du bouton de repli.
+  @param {string} more_label - Libellé du bouton « Voir plus ».
+  @param {string} progress_label - Gabarit du compteur. Jetons `[shown]` et `[total]`.
   @param {string} prev_label - Libellé du lien de page précédente.
   @param {string} next_label - Libellé du lien de page suivante.
   @param {string} pagination_label - Libellé accessible de la pagination.
 {%- enddoc -%}
 
+{%- liquid
+  assign kn_shown = paginate.current_offset | plus: results.products.size
+  assign kn_total = paginate.items
+  assign kn_progress = progress_label | replace: '[shown]', kn_shown | replace: '[total]', kn_total
+-%}
+
 <div class="kn-collection__results" data-kn-results>
   {%- if results.products.size > 0 -%}
-    <ul class="kn-grid kn-container" role="list">
+    <ul class="kn-grid" role="list" data-kn-grid>
       {%- for kn_product in results.products -%}
         <li class="kn-grid__item">
           {%- comment -%}
@@ -36,6 +52,25 @@
     </ul>
 
     {%- if paginate.pages > 1 -%}
+      {%- comment -%}
+        Chargement progressif. Le bloc porte lui-même l’adresse de la page
+        suivante et son compteur : le script n’a qu’à le remplacer par celui
+        qui revient du serveur, sans recalculer quoi que ce soit.
+      {%- endcomment -%}
+      <div class="kn-more" data-kn-more>
+        <p class="kn-label kn-more__count">{{ kn_progress }}</p>
+        {%- if paginate.next -%}
+          <button
+            type="button"
+            class="kn-btn kn-btn--secondary kn-more__btn"
+            data-kn-load-more
+            data-kn-next-url="{{ paginate.next.url }}"
+          >
+            {{- more_label -}}
+          </button>
+        {%- endif -%}
+      </div>
+
       <nav class="kn-container kn-pagination" aria-label="{{ pagination_label | escape }}">
         {%- if paginate.previous -%}
           <a class="kn-label kn-underline kn-pagination__step" href="{{ paginate.previous.url }}" rel="prev">

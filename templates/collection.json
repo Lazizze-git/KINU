@@ -49,6 +49,8 @@
         "empty_filtered_action": "Effacer les filtres",
         "empty_text": "Cette collection n’a pas encore de pièces.",
         "empty_action": "Voir toutes les collections",
+        "more_label": "Voir plus de pièces",
+        "progress_label": "[shown] sur [total]",
         "prev_label": "Précédent",
         "next_label": "Suivant",
         "pagination_label": "Pagination des produits"

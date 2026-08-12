@@ -16,6 +16,14 @@
 
 .kn-catalog {
   --kn-facets-z: 100;
+  --kn-toolbar-z: 4;
+
+  /* Le catalogue adopte la marge intérieure de cellule comme gouttière de
+     page. C'est ce qui fait tomber le bord gauche de la première image sur le
+     bord gauche du H1, et le filet vertical d'une colonne exactement au milieu
+     de l'écart entre deux images. Ces deux marges doivent rester égales : une
+     seule source, pas deux valeurs voisines à tenir synchronisées à la main. */
+  --kn-gutter: var(--kn-cell-pad);
 
   background-color: var(--kn-surface-bg);
   color: var(--kn-surface-fg);
@@ -137,6 +145,7 @@
 
 .kn-card__media {
   width: 100%;
+  margin-bottom: var(--kn-space-xs);
   background-color: var(--kn-media-bg);
   transition: opacity var(--kn-dur-2) var(--kn-ease-state);
 }
@@ -185,7 +194,7 @@
 .kn-card__title {
   position: relative;
   align-self: flex-start;
-  margin: var(--kn-space-2xs) 0 0;
+  margin: 0;
   font-family: var(--kn-font-ui);
   font-size: var(--kn-fs-body);
   font-weight: var(--kn-fw-medium);
@@ -221,9 +230,21 @@
   transform: scaleX(1);
 }
 
+/* Sur-titre d'univers : au-dessus du nom (l'ordre est celui du balisage),
+   jamais en dessous. Sous le nom, la place revient au coloris — c'est
+   l'information qui décide d'un clic. */
 .kn-card__universe {
   display: block;
+  margin-bottom: var(--kn-space-3xs);
+  color: var(--kn-surface-muted);
+}
+
+/* Le nom du coloris courant, réécrit par le nuancier actif. */
+.kn-card__colour {
+  display: block;
   margin-top: var(--kn-space-3xs);
+  font-size: var(--kn-fs-sm);
+  line-height: 1.35;
   color: var(--kn-surface-muted);
 }
 
@@ -250,29 +271,75 @@
   color: var(--kn-surface-muted);
 }
 
-/* Nuancier : pastilles carrées de 12 px, filet 1 px, écart 6 px, 5 maximum. */
+/* Nuancier actif (transposition de Mover) : la pastille reste le carré de
+   12 px de la DA, mais elle est devenue un bouton — il lui faut donc une cible
+   de 24 px (WCAG 2.2, cible minimale). C'est la marge intérieure qui la porte,
+   ce qui porte du même coup l'écart visuel de 6 à 12 px : les deux valeurs se
+   règlent ensemble, sinon les carrés se touchent. */
 .kn-card__swatches {
+  --kn-swatch-size: var(--kn-space-xs);   /* 12 px, le carré visible */
+  --kn-swatch-hit: var(--kn-space-md);    /* 24 px, la cible */
+
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: calc(var(--kn-space-xs) / 2);
-  margin: var(--kn-space-2xs) 0 0;
+  gap: 0;
+  /* La cible déborde le carré de 6 px : on récupère ce débord à gauche pour
+     que la première pastille s'aligne sur le nom et le prix. */
+  margin: var(--kn-space-2xs) 0 0
+    calc((var(--kn-swatch-hit) - var(--kn-swatch-size)) / -2);
   padding: 0;
   list-style: none;
 }
 
+.kn-card__swatch-slot {
+  display: flex;
+}
+
 .kn-card__swatch {
-  width: calc(var(--kn-space-2xs) + var(--kn-space-3xs));
-  height: calc(var(--kn-space-2xs) + var(--kn-space-3xs));
+  display: inline-flex;
+  width: var(--kn-swatch-hit);
+  height: var(--kn-swatch-hit);
+  padding: calc((var(--kn-swatch-hit) - var(--kn-swatch-size)) / 2);
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+
+/* Le carré peint : c'est lui qui porte le filet, jamais le bouton. */
+.kn-card__swatch::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
   border: var(--kn-stroke) solid var(--kn-surface-line);
-  border-radius: var(--kn-radius);
-  background-color: var(--kn-media-bg);
-  background-size: cover;
-  background-position: center;
+  background: var(--kn-swatch, var(--kn-media-bg)) center / cover no-repeat;
+  transition: outline-color var(--kn-dur-1) var(--kn-ease-state);
+  outline: var(--kn-stroke) solid transparent;
+  outline-offset: var(--kn-space-3xs);
+}
+
+.kn-card__swatch:hover::before,
+.kn-card__swatch[aria-pressed="true"]::before {
+  outline-color: var(--kn-surface-fg);
+}
+
+.kn-card__swatch:focus-visible {
+  outline: var(--kn-stroke-strong) solid var(--kn-surface-accent);
+  outline-offset: calc(var(--kn-stroke) * -1);
 }
 
 .kn-card__swatch-more {
+  margin-inline-start: var(--kn-space-2xs);
   color: var(--kn-surface-muted);
+}
+
+/* Un coloris retenu fige le cadre : le fondu croisé vers la 2ᵉ image du
+   produit montrerait une autre couleur que celle demandée. */
+.kn-card[data-kn-swapped="true"] .kn-card__img--alt,
+.kn-card[data-kn-swapped="true"]:hover .kn-card__img--alt,
+.kn-card[data-kn-swapped="true"]:focus-within .kn-card__img--alt {
+  opacity: 0;
 }
 
 /* --------------------------------------------------------------------------
@@ -314,7 +381,15 @@
    4. Barre d'outils (DA §7.7) — filet bord à bord, pas de sidebar
    -------------------------------------------------------------------------- */
 
+/* La barre colle sous l'en-tête et repeint son fond avec la gamme de la
+   surface courante : elle traverse les trois territoires sans jamais poser un
+   rectangle d'une autre couleur que la page qu'elle surplombe. Son filet bas
+   sert aussi de bord haut au champ de la grille — une seule ligne, pas deux. */
 .kn-toolbar {
+  position: sticky;
+  top: calc(var(--kn-header-h) + var(--kn-stroke));
+  z-index: var(--kn-toolbar-z);
+  background-color: var(--kn-surface-bg);
   border-bottom: var(--kn-stroke) solid var(--kn-surface-line);
   scroll-margin-top: var(--header-height, var(--kn-header-h));
 }
@@ -347,6 +422,20 @@
 
 .kn-toolbar__trigger:hover {
   color: var(--kn-surface-accent);
+}
+
+/* Le compte de pièces : une donnée, pas un ornement. Sous 420 px il volerait
+   la place du tri, qui lui est une action — c'est l'action qui reste. */
+.kn-toolbar__count {
+  display: none;
+  color: var(--kn-surface-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 420px) {
+  .kn-toolbar__count {
+    display: inline;
+  }
 }
 
 .kn-toolbar__clear {
@@ -398,12 +487,27 @@
 }
 
 /* --------------------------------------------------------------------------
-   5. Grille produits (DA §5.2)
-   2 colonnes mobile · 3 tablette · 4 desktop. Écart vertical ≈ 2,5 × l'horizontal.
+   5. Grille produits — le champ réglé (DA §5.2, amendement du 11/08/2026)
+   2 colonnes mobile · 3 tablette · 4 desktop.
+
+   Transposition de Mover : la grille n'est pas une série de cartes posées sur
+   un fond avec de l'air entre elles, c'est un CHAMP continu que des filets
+   découpent. Donc aucun écart : les cellules se touchent, séparées par un
+   trait d'1 px, et c'est la marge intérieure de chaque cellule qui fait
+   respirer l'image. Le filet est obtenu par le fond du champ vu à travers
+   l'écart d'1 px — une seule déclaration, aucun bord à désactiver au bout
+   des rangées, et une dernière rangée incomplète ne laisse aucun trait
+   orphelin.
+
+   Le champ va bord à bord jusqu'à --kn-container et n'a pas de marge de page :
+   ce sont les cellules qui la portent (--kn-cell-pad = --kn-gutter). C'est ce
+   qui aligne le bord gauche de la première image sur celui du titre.
    -------------------------------------------------------------------------- */
 
+/* Le bord haut du champ, c'est le filet bas de la barre d'outils : on ne
+   remet pas d'espace au-dessus, sinon la ligne se dédouble visuellement. */
 .kn-collection__results {
-  padding-block: var(--kn-space-lg) var(--kn-space-3xl);
+  padding-block: 0 var(--kn-space-3xl);
   transition: opacity var(--kn-dur-2) var(--kn-ease-state);
 }
 
@@ -415,10 +519,26 @@
 .kn-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: var(--kn-grid-gap);
-  row-gap: var(--kn-grid-row-gap);
-  margin-block: 0;
+  gap: var(--kn-stroke);
+  width: 100%;
+  max-width: var(--kn-container);
+  margin: 0 auto;
+  padding: 0;
+  background-color: var(--kn-surface-line);
   list-style: none;
+}
+
+/* La cellule repeint le fond de la surface courante par-dessus le champ : ce
+   qui reste visible du champ, ce sont les 1 px des écarts. */
+.kn-grid__item {
+  display: flex;
+  padding: var(--kn-cell-pad) var(--kn-cell-pad) var(--kn-space-xl);
+  background-color: var(--kn-surface-bg);
+}
+
+.kn-grid__item > * {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 @media (min-width: 640px) {
@@ -431,6 +551,49 @@
   .kn-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
+}
+
+/* --------------------------------------------------------------------------
+   5 bis. Chargement progressif
+   Le compteur d'abord, l'action ensuite : on annonce où l'on en est avant de
+   proposer d'aller plus loin. Le bloc est centré — c'est le seul élément
+   centré de la page, ce qui suffit à le désigner comme une fin de champ.
+   -------------------------------------------------------------------------- */
+
+/* Sans JavaScript le bouton ne mènerait nulle part : le bloc reste masqué
+   tant que la section n'est pas équipée, et c'est la pagination numérotée qui
+   sert. Une fois équipée, l'inverse — la pagination sort de l'affichage mais
+   demeure dans le document, où les moteurs de recherche suivent ses liens
+   pour atteindre les pages suivantes de la collection. */
+.kn-more {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--kn-space-sm);
+  padding-block: var(--kn-space-2xl);
+}
+
+[data-kn-enhanced] .kn-more {
+  display: flex;
+}
+
+[data-kn-enhanced] .kn-pagination {
+  display: none;
+}
+
+.kn-more__count {
+  margin: 0;
+  color: var(--kn-surface-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.kn-more__btn {
+  min-width: min(20rem, 100%);
+}
+
+.kn-more__btn[aria-busy="true"] {
+  opacity: 0.55;
+  pointer-events: none;
 }
 
 /* --------------------------------------------------------------------------
