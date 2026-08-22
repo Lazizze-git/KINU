@@ -283,12 +283,6 @@
   }
 }
 
-.kn-manifesto__eyebrow {
-  display: block;
-  margin-block-end: var(--kn-space-md);
-  color: var(--kn-surface-muted);
-}
-
 .kn-manifesto__title {
   font-size: var(--kn-fs-h1);
 }

@@ -1,0 +1,77 @@
+{%- doc -%}
+  KINŪ — Bande de télémétrie
+
+  Les coordonnées de l’atelier, son altitude et son heure locale, affichées
+  comme une ligne d’instruments. C’est la signature « donnée vivante » du
+  site : elle remplace l’objet décoratif par de la typographie mesurée
+  (voir assets/kn-signature.css §6 et §7).
+
+  Deux variantes :
+    · `fixed`  — bande fine collée en bas de l’écran, ordinateur uniquement.
+                 Purement informative, donc masquée aux lecteurs d’écran.
+    · `inline` — quatre champs étiquetés, posés dans le pied de page.
+
+  Les valeurs viennent des réglages du thème, groupe « KINŪ · Signature ».
+  L’heure est calculée dans le navigateur du visiteur, dans le fuseau réglé.
+
+  @param {string} [variant] - `fixed` (défaut) ou `inline`.
+
+  @example
+  {% render 'kn-hud', variant: 'inline' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_variant = variant | default: 'fixed'
+  assign kn_place = settings.kn_hud_place | default: 'Lausanne · CH'
+  assign kn_lat = settings.kn_hud_lat | default: '46.5197° N'
+  assign kn_lon = settings.kn_hud_lon | default: '6.6323° E'
+  assign kn_alt = settings.kn_hud_alt | default: '495 m'
+-%}
+
+{%- if settings.kn_hud_enabled -%}
+  {%- if kn_variant == 'inline' -%}
+    <div class="kn-hud kn-hud--inline">
+      <div class="kn-hud__field">
+        <span class="kn-label kn-brk kn-hud__key">Atelier</span>
+        <span class="kn-hud__value">{{ kn_place }}</span>
+      </div>
+      <div class="kn-hud__field">
+        <span class="kn-label kn-brk kn-hud__key">Latitude</span>
+        <span class="kn-hud__value" translate="no">{{ kn_lat }}</span>
+      </div>
+      <div class="kn-hud__field">
+        <span class="kn-label kn-brk kn-hud__key">Longitude</span>
+        <span class="kn-hud__value" translate="no">{{ kn_lon }}</span>
+      </div>
+      <div class="kn-hud__field">
+        <span class="kn-label kn-brk kn-hud__key">Heure locale</span>
+        <span class="kn-hud__value" translate="no">
+          <span data-kn-clock>{{ 'now' | date: '%H:%M:%S' }}</span>
+          <span data-kn-zone></span>
+        </span>
+      </div>
+    </div>
+  {%- else -%}
+    <div class="kn-hud kn-hud--fixed" data-kn-hud="fixed" data-kn-surface="light" aria-hidden="true">
+      <div class="kn-hud__row">
+        <span class="kn-label kn-hud__cell kn-hud__cell--strong" translate="no">KINŪ</span>
+        <span class="kn-label kn-hud__cell">{{ kn_place }}</span>
+        <span class="kn-label kn-hud__cell" translate="no">{{ kn_lat }} / {{ kn_lon }}</span>
+        <span class="kn-label kn-hud__cell" translate="no">{{ kn_alt }}</span>
+        <span class="kn-label kn-hud__cell" translate="no">
+          <span data-kn-clock>{{ 'now' | date: '%H:%M:%S' }}</span>
+          <span data-kn-zone></span>
+        </span>
+
+        <span class="kn-hud__gap"></span>
+
+        <span class="kn-label kn-hud__cell kn-brk" translate="no">
+          <span data-kn-hud-index>01</span> / <span data-kn-hud-total>01</span>
+        </span>
+        <span class="kn-hud__gauge">
+          <span class="kn-hud__gauge-fill" data-kn-hud-gauge></span>
+        </span>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endif -%}

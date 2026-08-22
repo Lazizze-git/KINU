@@ -29,9 +29,7 @@
   <div class="kn-section" data-kn-surface="sage">
     <div class="kn-container">
       <div class="kn-home-head">
-        <div class="kn-home-head__text">
-          <h2 class="kn-label kn-home-head__eyebrow">{{ s.eyebrow | escape }}</h2>
-        </div>
+        {%- render 'kn-datarow', label: s.eyebrow, count: article_count, label_tag: 'h2' -%}
         {%- if show_head_link -%}
           <a class="kn-label kn-underline kn-home-head__link" href="{{ head_link_url }}">
             {{- s.link_label | escape -}}

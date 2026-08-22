@@ -2116,5 +2116,64 @@
         "default": "equal-width-buttons"
       }
     ]
+  },
+  {
+    "name": "KINŪ · Signature",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "La bande de télémétrie : les coordonnées de l’atelier et l’heure locale, affichées en pied d’écran sur ordinateur et en pied de page partout."
+      },
+      {
+        "type": "checkbox",
+        "id": "kn_hud_enabled",
+        "label": "Afficher la bande de télémétrie",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "kn_hud_place",
+        "label": "Lieu",
+        "default": "Lausanne · CH"
+      },
+      {
+        "type": "text",
+        "id": "kn_hud_lat",
+        "label": "Latitude",
+        "default": "46.5197° N"
+      },
+      {
+        "type": "text",
+        "id": "kn_hud_lon",
+        "label": "Longitude",
+        "default": "6.6323° E"
+      },
+      {
+        "type": "text",
+        "id": "kn_hud_alt",
+        "label": "Altitude",
+        "default": "495 m"
+      },
+      {
+        "type": "text",
+        "id": "kn_hud_timezone",
+        "label": "Fuseau horaire",
+        "info": "Identifiant IANA, par exemple Europe/Zurich. L’heure s’affiche en direct dans le navigateur du visiteur.",
+        "default": "Europe/Zurich"
+      },
+      {
+        "type": "checkbox",
+        "id": "kn_section_index",
+        "label": "Afficher les index [01], [02]…",
+        "default": true,
+        "info": "Numérote les sections de la page et les cellules de la grille produits."
+      },
+      {
+        "type": "checkbox",
+        "id": "kn_crop_marks",
+        "label": "Afficher les repères de coupe",
+        "default": true
+      }
+    ]
   }
 ]

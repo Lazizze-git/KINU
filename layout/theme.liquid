@@ -4,6 +4,7 @@
     class="shopify-design-mode"
   {% endif %}
   lang="{{ request.locale.iso_code }}"
+  data-kn-timezone="{{ settings.kn_hud_timezone | default: 'Europe/Zurich' | escape }}"
 >
   <head>
     {%- if settings.favicon != blank -%}
@@ -53,12 +54,14 @@
     {{ 'kn-home.css' | asset_url | stylesheet_tag }}
     {{ 'kn-catalog.css' | asset_url | stylesheet_tag }}
     {{ 'kn-product.css' | asset_url | stylesheet_tag }}
+    {{ 'kn-signature.css' | asset_url | stylesheet_tag }}
 
     <script src="{{ 'kn-base.js' | asset_url }}" defer></script>
     <script src="{{ 'kn-chrome.js' | asset_url }}" defer></script>
     <script src="{{ 'kn-home.js' | asset_url }}" defer></script>
     <script src="{{ 'kn-catalog.js' | asset_url }}" defer></script>
     <script src="{{ 'kn-product.js' | asset_url }}" defer></script>
+    <script src="{{ 'kn-signature.js' | asset_url }}" defer></script>
 
     {% if request.design_mode %}
       {%- render 'theme-editor' -%}
@@ -92,6 +95,8 @@
   <body
     class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}"
     {% if kn_territory != blank %}data-kn-territory="{{ kn_territory }}"{% endif %}
+    data-kn-marks="{{ settings.kn_crop_marks }}"
+    data-kn-cell-index="{{ settings.kn_section_index }}"
   >
     {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
 
@@ -185,6 +190,12 @@
         {% sections 'footer-group' %}
       </footer>
     </div>
+
+    {%- comment -%}
+      Bande de télémétrie KINŪ : posée hors du conteneur de défilement pour
+      rester fixée au bas de la fenêtre (voir snippets/kn-hud.liquid).
+    {%- endcomment -%}
+    {% render 'kn-hud', variant: 'fixed' %}
 
     {% render 'cart-drawer', render_wrapper: true %}
     {% render 'theme-drawer' %}

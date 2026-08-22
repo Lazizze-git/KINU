@@ -54,6 +54,15 @@
           {%- if kn_links.size > 0 -%}
             {%- for kn_link in kn_links -%}
               {%- liquid
+                comment
+                  Profondeur du rayon. Le compteur ne remplace jamais le
+                  libellé : il le suit, en exposant, atténué.
+                endcomment
+                assign kn_count = 0
+                if kn_link.type == 'collection_link' and kn_link.object != blank
+                  assign kn_count = kn_link.object.all_products_count
+                endif
+
                 assign kn_overline = ''
                 assign kn_key = kn_link.title | downcase | strip
                 for kn_block in section.blocks
@@ -68,7 +77,12 @@
                 {%- if kn_overline != blank -%}
                   <span class="kn-nav__overline kn-label" translate="no">{{ kn_overline | escape }}</span>
                 {%- endif -%}
-                <a class="kn-nav__level1" href="{{ kn_link.url }}">{{ kn_link.title | escape }}</a>
+                <a class="kn-nav__level1" href="{{ kn_link.url }}">
+                  {{- kn_link.title | escape -}}
+                  {%- if kn_count > 0 -%}
+                    <span class="kn-brk kn-nav__count" translate="no">{% if kn_count < 10 %}0{% endif %}{{ kn_count }}</span>
+                  {%- endif -%}
+                </a>
                 {%- if kn_link.links.size > 0 -%}
                   <ul class="kn-nav__sub" role="list">
                     {%- for kn_child in kn_link.links -%}

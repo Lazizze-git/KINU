@@ -703,6 +703,85 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 
 ---
 
+## 11. Couche signature — amendement du 22 août 2026
+
+**Référence ajoutée : [noartmusic.com](https://www.noartmusic.com) (studio Boring).**
+On en reprend la *grammaire*, jamais l'identité : ni son globe en rotation, ni sa
+palette, ni sa mise en page. Ce qui est transposé, c'est sa manière de traiter
+l'interface comme un **instrument de mesure** plutôt que comme une vitrine.
+
+Cinq gestes, et pas un de plus. Ils vivent dans `assets/kn-signature.css`,
+`assets/kn-signature.js`, `snippets/kn-datarow.liquid` et `snippets/kn-hud.liquid`.
+
+### 11.1 Le crochet comme ponctuation système
+
+Classe `.kn-brk`. Un libellé entre crochets signale qu'il s'agit d'une **donnée**,
+pas d'une phrase : sur-titres, colonnes de pied de page, compteurs, index.
+Les crochets sont tracés en `--kn-surface-muted` — le mot reste le sujet.
+
+### 11.2 L'en-tête de section en ligne de données
+
+Snippet `kn-datarow`. Remplace le sur-titre isolé :
+
+```
+[02]  TROIS UNIVERS ·············································· [03]
+```
+
+Index à gauche, sur-titre, pointillé de conduite, compteur à droite. Le vide
+devient une mesure. **L'index est écrit par JavaScript**, à partir de la position
+réelle de la section dans la page : déplacer une section dans l'éditeur de thème
+renumérote tout, sans intervention.
+
+### 11.3 Les repères de coupe
+
+Classe `.kn-marks`. Quatre angles tracés en filet 1 px, comme sur une planche
+d'imprimeur. Permanents sur la bannière, révélés au survol sur les cellules du
+champ réglé et sur les cadres d'univers. Sur une photographie ils sont tracés en
+`mix-blend-mode: difference` : lisibles sur une image claire comme sur une image
+sombre, sans jamais poser d'aplat ni d'ombre.
+
+### 11.4 La numérotation du champ réglé
+
+Un compteur CSS sur `.kn-grid` : chaque cellule porte son rang `[01]`, `[02]`…
+dans sa marge basse. Il se renumérote seul quand « Voir plus » ajoute une page.
+Le numéro ne monte jamais sur l'image : le badge garde son angle.
+
+### 11.5 La bande de télémétrie
+
+Snippet `kn-hud`, deux variantes :
+
+| Variante | Où | Contenu |
+|---|---|---|
+| `fixed` | Bas de fenêtre, **ordinateur uniquement** | Lieu, coordonnées, altitude, heure locale vivante, index de section, jauge de lecture |
+| `inline` | Pied de page, **partout** | Quatre champs étiquetés : atelier, latitude, longitude, heure locale |
+
+L'heure est calculée dans le navigateur du visiteur, dans le fuseau réglé en
+admin (`Europe/Zurich` par défaut), et s'arrête quand l'onglet passe en arrière-plan.
+La bande fixe **adopte la surface qu'elle recouvre** : ivoire sur ivoire, encre sur
+encre, ivoire sur forêt. Elle est `pointer-events: none` et `aria-hidden` : elle
+n'intercepte aucun clic et n'ajoute aucun bruit pour les lecteurs d'écran.
+
+> **Amendement au §9.** Le §9 interdit « tout bandeau sticky supplémentaire en bas
+> d'écran sur desktop ». Cette interdiction visait les barres d'**action** — le
+> « Ajouter au panier » collant qui vole la place du contenu. La bande de
+> télémétrie est une barre d'**état** : 30 px, aucun bouton, aucun lien, aucun
+> événement de pointeur. Elle est autorisée à ce titre, et à ce titre seulement.
+> Le pied de page compense sa hauteur par 30 px de marge basse supplémentaire.
+
+### 11.6 Les compteurs de navigation
+
+`Femme [12]` dans le panneau de navigation. Le chiffre dit la profondeur du
+rayon — ce que le menu ne dit pas. Il ne remplace jamais le libellé : il le suit,
+en exposant, atténué, et suit son entrée quand les autres s'estompent au survol.
+
+### 11.7 Réglages
+
+Groupe **« KINŪ · Signature »** dans les réglages du thème : activation de la
+bande, lieu, coordonnées, altitude, fuseau horaire, index, repères de coupe.
+Tout est désactivable sans casser la mise en page.
+
+---
+
 ## En une phrase
 
 > **Un fond ivoire, une seule couleur — le vert forêt — mais appliquée en aplats pleine largeur qui inondent des pages entières et font basculer le header au scroll : angles vifs, zéro ombre, l'image produit au centre.**

@@ -8,11 +8,10 @@
 
 <div class="kn-section" data-kn-surface="flood">
   <div class="kn-container">
+    {%- render 'kn-datarow', label: s.eyebrow, count: section.blocks.size -%}
+
     <div class="kn-manifesto__head">
       <div class="kn-reveal">
-        {%- if s.eyebrow != blank -%}
-          <span class="kn-label kn-manifesto__eyebrow">{{ s.eyebrow | escape }}</span>
-        {%- endif -%}
         <h2 class="kn-manifesto__title">{{ s.title | escape }}</h2>
       </div>
 
@@ -30,6 +29,7 @@
       <div class="kn-manifesto__pillars" style="--kn-pillar-count: {{ section.blocks.size }};">
         {%- for block in section.blocks -%}
           <div class="kn-manifesto__pillar kn-reveal" {{ block.shopify_attributes }}>
+            <span class="kn-label kn-brk kn-manifesto__index" translate="no">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
             <span class="kn-manifesto__key">{{ block.settings.key | escape }}</span>
             {%- if block.settings.text != blank -%}
               <p class="kn-sm">{{ block.settings.text | escape }}</p>

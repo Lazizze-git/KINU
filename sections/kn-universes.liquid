@@ -9,9 +9,7 @@
     <div class="kn-container">
       {%- if s.eyebrow != blank -%}
         <div class="kn-home-head">
-          <div class="kn-home-head__text">
-            <h2 class="kn-label kn-home-head__eyebrow">{{ s.eyebrow | escape }}</h2>
-          </div>
+          {%- render 'kn-datarow', label: s.eyebrow, count: section.blocks.size, label_tag: 'h2' -%}
         </div>
       {%- endif -%}
 
@@ -25,7 +23,7 @@
         -%}
 
         {%- capture column -%}
-          <div class="kn-ratio kn-universe__frame">
+          <div class="kn-ratio kn-marks kn-universe__frame">
             {%- if main_image != blank -%}
               {{
                 main_image
@@ -48,6 +46,7 @@
           </div>
 
           <div class="kn-universe__text">
+            <span class="kn-label kn-brk kn-universe__index" translate="no">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }} / {% if section.blocks.size < 10 %}0{% endif %}{{ section.blocks.size }}</span>
             {%- if b.collection_name != blank -%}
               <span class="kn-label kn-universe__collection" translate="no">
                 {{- b.collection_name | escape -}}

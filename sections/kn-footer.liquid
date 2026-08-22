@@ -71,7 +71,7 @@
           {%- endif -%}
           <details class="kn-footer__col" {{ block.shopify_attributes }}>
             <summary class="kn-footer__summary">
-              <span class="kn-label">{{ block.settings.title | escape }}</span>
+              <span class="kn-label kn-brk">{{ block.settings.title | escape }}</span>
               <span class="kn-footer__chevron">{%- render 'kn-icon', name: 'chevron', size: 16 -%}</span>
             </summary>
             <ul class="kn-footer__links" role="list">
@@ -83,6 +83,12 @@
         {%- endfor -%}
       </div>
     {%- endif -%}
+
+    {%- comment -%}
+      Les coordonnées de l'atelier : la signature « donnée vivante » du site,
+      posée entre les colonnes de liens et la ligne légale.
+    {%- endcomment -%}
+    {% render 'kn-hud', variant: 'inline' %}
 
     <div class="kn-footer__base">
       {%- liquid

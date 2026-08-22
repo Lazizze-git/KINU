@@ -1,0 +1,45 @@
+{%- doc -%}
+  KINŪ — Ligne de données (en-tête de section)
+
+      [01]  DERNIÈRES PIÈCES ····································· [08]
+
+  Un index à gauche — écrit par kn-signature.js, parce que l’ordre des
+  sections appartient à l’éditeur de thème, pas au gabarit —, le sur-titre,
+  un pointillé de conduite, un compteur à droite.
+
+  C’est le remplaçant du sur-titre isolé : le même mot, mais tenu par une
+  ligne et cadré par deux mesures. Voir assets/kn-signature.css §2.
+
+  @param {string} label - Le sur-titre. Sans lui, rien n’est rendu.
+  @param {number} [count] - Ce que la section contient (produits, blocs…).
+    Omis ou nul, le compteur disparaît.
+  @param {string} [label_tag] - Balise du sur-titre. Défaut `span`. Passer
+    `h2` quand le sur-titre est le vrai titre de la section.
+
+  @example
+  {% render 'kn-datarow', label: s.eyebrow, count: section.blocks.size, label_tag: 'h2' %}
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_tag = label_tag | default: 'span'
+  assign kn_count = count | default: 0
+  assign kn_count_text = ''
+  if kn_count > 0
+    if kn_count < 10
+      assign kn_count_text = kn_count | prepend: '0'
+    else
+      assign kn_count_text = kn_count | append: ''
+    endif
+  endif
+-%}
+
+{%- if label != blank -%}
+  <div class="kn-datarow kn-label">
+    <span class="kn-brk kn-datarow__idx" data-kn-index></span>
+    <{{ kn_tag }} class="kn-label kn-datarow__label kn-home-head__eyebrow">{{ label | escape }}</{{ kn_tag }}>
+    <span class="kn-datarow__leader" aria-hidden="true"></span>
+    {%- if kn_count_text != blank -%}
+      <span class="kn-brk kn-datarow__count" translate="no">{{ kn_count_text }}</span>
+    {%- endif -%}
+  </div>
+{%- endif -%}
