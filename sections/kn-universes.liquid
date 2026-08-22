@@ -24,6 +24,19 @@
 
         {%- capture column -%}
           <div class="kn-ratio kn-marks kn-universe__frame">
+            {%- if main_image == blank -%}
+              {%- comment -%} Maquette : voir snippets/kn-demo-grid.liquid {%- endcomment -%}
+              {%- assign kn_demo_files = 'kn-demo-04.jpg,kn-demo-02.jpg,kn-demo-07.jpg' | split: ',' -%}
+              {%- assign kn_demo_slot = forloop.index0 | modulo: 3 -%}
+              <img
+                class="kn-img"
+                src="{{ kn_demo_files[kn_demo_slot] | asset_url }}"
+                alt=""
+                width="1000"
+                height="1600"
+                loading="lazy"
+              >
+            {%- endif -%}
             {%- if main_image != blank -%}
               {{
                 main_image

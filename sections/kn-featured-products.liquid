@@ -43,14 +43,12 @@
         {%- endfor -%}
       </div>
     {%- else -%}
-      <div class="kn-home-empty">
-        <p class="kn-lead">{{ s.empty_text | escape }}</p>
-        {%- if s.empty_link_label != blank -%}
-          <a class="kn-btn kn-btn--secondary" href="{{ routes.all_products_collection_url }}">
-            {{- s.empty_link_label | escape -}}
-          </a>
-        {%- endif -%}
-      </div>
+      {%- comment -%}
+        Catalogue vide : plutot qu'une phrase, on montre la mise en page.
+        Voir snippets/kn-demo-grid.liquid — contenu de maquette a retirer.
+        Le jour ou la demo saute, l'etat vide d'origine reprend sa place.
+      {%- endcomment -%}
+      {%- render 'kn-demo-grid', limit: 8 -%}
     {%- endif -%}
   </div>
 </div>

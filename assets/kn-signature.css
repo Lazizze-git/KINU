@@ -435,3 +435,18 @@ body.kn-header--over-media .kn-hero__frame {
 .kn-footer__summary .kn-brk::after {
   color: var(--kn-faint-invert);
 }
+
+/* --------------------------------------------------------------------------
+   10. Maquette — note de démonstration
+   ⚠️ À retirer avec snippets/kn-demo-grid.liquid le jour où le catalogue est
+   rempli. La note dit franchement que ces pièces n'existent pas : une grille
+   de démonstration muette se ferait prendre pour le vrai catalogue.
+   -------------------------------------------------------------------------- */
+
+.kn-demo-note {
+  margin: var(--kn-space-lg) auto 0;
+  padding-inline: var(--kn-gutter);
+  max-width: var(--kn-container);
+  color: var(--kn-surface-muted);
+  text-align: center;
+}

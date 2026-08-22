@@ -122,5 +122,14 @@
         <a class="kn-btn kn-btn--secondary" href="{{ empty_url }}">{{ empty_action }}</a>
       {%- endif -%}
     </div>
+
+    {%- comment -%}
+      Aucun filtre actif et aucun produit : la collection n'est pas encore
+      remplie. On montre le champ regle peuple plutot qu'une page nue.
+      Voir snippets/kn-demo-grid.liquid — contenu de maquette a retirer.
+    {%- endcomment -%}
+    {%- if active_count == 0 -%}
+      {%- render 'kn-demo-grid', limit: 8, grid_class: 'kn-grid', heading_tag: 'h2' -%}
+    {%- endif -%}
   {%- endif -%}
 </div>
