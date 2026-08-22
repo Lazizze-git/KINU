@@ -150,7 +150,10 @@
 .kn-marks::after {
   content: "";
   position: absolute;
-  inset: var(--kn-mark-inset, 0);
+  /* Trois valeurs : haut, horizontal, bas. Le retrait du haut se règle à part,
+     parce qu'un header flottant vient parfois occuper cette bande. */
+  inset: var(--kn-mark-inset-top, var(--kn-mark-inset, 0)) var(--kn-mark-inset, 0)
+    var(--kn-mark-inset, 0);
   z-index: 2;
   pointer-events: none;
   opacity: var(--kn-mark-opacity, 1);
@@ -188,6 +191,14 @@
   --kn-mark-inset: clamp(0.75rem, 2vw, 1.5rem);
   --kn-mark-len: clamp(12px, 2vw, 20px);
   --kn-mark-opacity: 0.75;
+}
+
+/* Quand la bannière ouvre la page, le header devient transparent et flotte
+   par-dessus : les deux repères du haut tomberaient derrière le burger et les
+   icônes du panier. On les descend sous la barre — la bande du header lui
+   appartient, les repères commencent en dessous. */
+body.kn-header--over-media .kn-hero__frame {
+  --kn-mark-inset-top: calc(var(--kn-header-h) + var(--kn-space-sm));
 }
 
 /* Cellule du champ réglé : repères révélés au survol, dans la marge de la
