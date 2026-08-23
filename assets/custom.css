@@ -123,6 +123,11 @@
   /* 5:8 — le format des planches studio de reference : la silhouette tient
      en pied sans etre serree (mesure sur les visuels du 22/08/2026). */
   --kn-ratio-card:     5 / 8;
+
+  /* Fond d'attente des medias. Reference par .kn-ratio, .kn-img et
+     .kn-card__media, il n'etait defini nulle part : la declaration tombait et
+     le sauge codé en dur reprenait la main. Il suit desormais la surface. */
+  --kn-media-bg:       var(--kn-surface-bg, var(--kn-ivory));
   --kn-ratio-portrait: 4 / 5;
   --kn-ratio-square:   1 / 1;
   --kn-ratio-wide:     21 / 9;

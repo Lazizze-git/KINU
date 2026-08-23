@@ -7,11 +7,17 @@
 {%- if section.settings.show_newsletter -%}
   <section class="kn-news" data-kn-surface="flood" aria-labelledby="kn-news-title">
     <div class="kn-container kn-news__inner">
-      <h2 class="kn-news__title kn-h3" id="kn-news-title">{{ section.settings.newsletter_title | escape }}</h2>
+      <div class="kn-news__intro">
+        {%- if section.settings.newsletter_tag != blank -%}
+          <span class="kn-label kn-brk kn-news__tag">{{ section.settings.newsletter_tag | escape }}</span>
+        {%- endif -%}
 
-      {%- if section.settings.newsletter_text != blank -%}
-        <p class="kn-news__text kn-sm">{{ section.settings.newsletter_text | escape }}</p>
-      {%- endif -%}
+        <h2 class="kn-news__title kn-h3" id="kn-news-title">{{ section.settings.newsletter_title | escape }}</h2>
+
+        {%- if section.settings.newsletter_text != blank -%}
+          <p class="kn-news__text kn-sm">{{ section.settings.newsletter_text | escape }}</p>
+        {%- endif -%}
+      </div>
 
       {%- form 'customer', id: 'kn-newsletter', class: 'kn-news__form' -%}
         <input type="hidden" name="contact[tags]" value="newsletter">
@@ -177,6 +183,13 @@
   "settings": [
     { "type": "header", "content": "Newsletter" },
     { "type": "checkbox", "id": "show_newsletter", "label": "Afficher le bloc newsletter", "default": true },
+    {
+      "type": "text",
+      "id": "newsletter_tag",
+      "label": "Libellé",
+      "info": "Affiché entre crochets au-dessus du titre. Laisser vide pour le masquer.",
+      "default": "Lettre"
+    },
     { "type": "text", "id": "newsletter_title", "label": "Titre", "default": "Rester informé" },
     {
       "type": "text",

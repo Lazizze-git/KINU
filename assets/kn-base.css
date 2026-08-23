@@ -386,13 +386,16 @@ a {
    11. Images
    -------------------------------------------------------------------------- */
 
+/* Le fond d'attente suit la surface courante. En sauge fixe, le moindre
+   arrondi de calcul entre `aspect-ratio` et `object-fit` laissait paraitre une
+   bande claire en bas des photographies — un bord qui semblait coupe. */
 .kn-img {
   display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: var(--kn-radius);
-  background-color: var(--kn-sage);
+  background-color: var(--kn-media-bg);
 }
 
 .kn-ratio {
@@ -400,5 +403,5 @@ a {
   display: block;
   aspect-ratio: var(--kn-ratio, var(--kn-ratio-card));
   overflow: hidden;
-  background-color: var(--kn-sage);
+  background-color: var(--kn-media-bg);
 }

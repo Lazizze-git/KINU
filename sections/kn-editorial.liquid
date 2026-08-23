@@ -40,8 +40,14 @@
     </div>
 
     {%- capture feature_content -%}
-      <div class="kn-ratio kn-editorial__frame">
-        {%- if feature_image != blank -%}
+      {%- comment -%}
+        Le cadre n'existe que s'il a une image. Rendu a vide il gardait son
+        ratio large sur toute la largeur : une section entiere de vide, ce que
+        l'on voyait tant que le blog n'avait aucun article et qu'aucune image
+        de repli n'etait reglee.
+      {%- endcomment -%}
+      {%- if feature_image != blank -%}
+        <div class="kn-ratio kn-editorial__frame">
           {{
             feature_image
             | image_url: width: 3200
@@ -52,8 +58,8 @@
               alt: alt_text,
               loading: 'lazy'
           }}
-        {%- endif -%}
-      </div>
+        </div>
+      {%- endif -%}
 
       <div class="kn-container">
         <div class="kn-editorial__body">

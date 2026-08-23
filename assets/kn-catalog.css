@@ -507,24 +507,38 @@
   pointer-events: none;
 }
 
+/* Les filets sont portes par les cellules, pas par un fond du champ.
+   L'ancienne methode peignait le champ en couleur-filet et laissait les
+   cellules le recouvrir : sur une derniere rangee incomplete, aucune cellule
+   ne venait recouvrir, et le fond nu s'affichait en grande case grise.
+   Une cellule absente ne dessine plus rien. */
 .kn-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--kn-stroke);
+  gap: 0;
   width: 100%;
   max-width: var(--kn-container);
   margin: 0 auto;
   padding: 0;
-  background-color: var(--kn-surface-line);
   list-style: none;
 }
 
-/* La cellule repeint le fond de la surface courante par-dessus le champ : ce
-   qui reste visible du champ, ce sont les 1 px des écarts. */
 .kn-grid__item {
   display: flex;
   padding: var(--kn-cell-pad) var(--kn-cell-pad) var(--kn-space-xl);
-  background-color: var(--kn-surface-bg);
+  border-inline-start: var(--kn-stroke) solid var(--kn-surface-line);
+  border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+/* Le bord gauche de la premiere colonne et le bord haut de la premiere rangee
+   appartiennent a la page, pas au champ : le filet de la barre d'outils tient
+   deja le haut, et la marge tient le cote. */
+.kn-grid__item:nth-child(2n + 1) {
+  border-inline-start: 0;
+}
+
+.kn-grid__item:nth-child(-n + 2) {
+  border-block-start: 0;
 }
 
 .kn-grid__item > * {
@@ -536,11 +550,37 @@
   .kn-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .kn-grid__item:nth-child(n) {
+    border-inline-start: var(--kn-stroke) solid var(--kn-surface-line);
+    border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
+  }
+
+  .kn-grid__item:nth-child(3n + 1) {
+    border-inline-start: 0;
+  }
+
+  .kn-grid__item:nth-child(-n + 3) {
+    border-block-start: 0;
+  }
 }
 
 @media (min-width: 1024px) {
   .kn-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .kn-grid__item:nth-child(n) {
+    border-inline-start: var(--kn-stroke) solid var(--kn-surface-line);
+    border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
+  }
+
+  .kn-grid__item:nth-child(4n + 1) {
+    border-inline-start: 0;
+  }
+
+  .kn-grid__item:nth-child(-n + 4) {
+    border-block-start: 0;
   }
 }
 

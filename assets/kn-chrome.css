@@ -664,16 +664,25 @@ body.kn-header--over-media
   padding-block: var(--kn-section-y-flood);
 }
 
+/* Alignee a gauche, sur les memes rails que le reste de la page. Centree, la
+   section n'avait ni bord ni hierarchie : un titre flottant, un filet, un pave
+   beige au milieu du vert. Le libelle entre crochets l'ancre dans la grammaire
+   du site, et le formulaire prend sa propre colonne. */
 .kn-news__inner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--kn-space-md);
-  text-align: center;
+  display: grid;
+  gap: var(--kn-space-xl);
+  text-align: start;
+}
+
+.kn-news__tag {
+  display: block;
+  margin-block-end: var(--kn-space-sm);
+  color: var(--kn-muted-invert);
 }
 
 .kn-news__text {
   max-width: var(--kn-measure);
+  margin-block-start: var(--kn-space-sm);
   color: var(--kn-muted-invert);
 }
 
@@ -686,13 +695,21 @@ body.kn-header--over-media
   flex-direction: column;
   gap: var(--kn-space-md);
   width: 100%;
-  max-width: var(--kn-measure);
-  margin-inline: auto;
 }
 
 /* Le contraste du filet sur aplat vert est traité au socle (kn-base.css §8). */
 .kn-news__input {
-  text-align: center;
+  text-align: start;
+}
+
+@media (min-width: 900px) {
+  /* Le propos a gauche, l'action a droite — et le formulaire aligne son filet
+     sur la ligne de base du titre plutot que de flotter sous lui. */
+  .kn-news__inner {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: var(--kn-space-3xl);
+    align-items: end;
+  }
 }
 
 .kn-news__feedback {
