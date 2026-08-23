@@ -351,10 +351,6 @@
       paintCard(card, src);
       card.dataset.knSwapped = src ? 'true' : 'false';
 
-      var name = card.querySelector('[data-kn-card-colour]');
-      var label = swatch.getAttribute('data-kn-name') || '';
-      if (name && label) name.textContent = label;
-
       var link = card.querySelector('[data-kn-card-link]');
       var url = swatch.getAttribute('data-kn-url');
       if (link instanceof HTMLAnchorElement && url) link.setAttribute('href', url);

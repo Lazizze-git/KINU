@@ -2164,9 +2164,16 @@
       {
         "type": "checkbox",
         "id": "kn_section_index",
-        "label": "Afficher les index [01], [02]…",
+        "label": "Numéroter les sections de la page",
         "default": true,
-        "info": "Numérote les sections de la page et les cellules de la grille produits."
+        "info": "Affiche l’index [01], [02]… en tête de chaque section. La séquence aide à se situer dans une page longue."
+      },
+      {
+        "type": "checkbox",
+        "id": "kn_grid_index",
+        "label": "Numéroter les cellules de la grille produits",
+        "default": false,
+        "info": "Ajoute [01], [02]… sous chaque produit. Désactivé par défaut : le rang d’un produit dans une grille filtrée n’apprend rien à l’acheteur, et le chiffre concurrence le prix."
       },
       {
         "type": "checkbox",

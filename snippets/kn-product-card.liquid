@@ -179,10 +179,6 @@
 
       <{{ kn_heading }} class="kn-card__title">{{ product.title }}</{{ kn_heading }}>
 
-      {%- if kn_colour_name != blank -%}
-        <span class="kn-card__colour" data-kn-card-colour>{{ kn_colour_name }}</span>
-      {%- endif -%}
-
       <span class="kn-card__prices">
         {%- if product.price_varies -%}
           <span class="kn-label kn-card__from">{{ from_label | default: 'Dès' }}</span>

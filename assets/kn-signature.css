@@ -96,7 +96,7 @@
 
 /* L'interrupteur d'admin coupe l'index, jamais le compteur : le compteur est
    une information, l'index n'est qu'un repère. */
-[data-kn-cell-index="false"] .kn-datarow__idx {
+[data-kn-section-index="false"] .kn-datarow__idx {
   display: none;
 }
 
@@ -268,7 +268,7 @@ body.kn-header--over-media .kn-hero__frame {
   pointer-events: none;
 }
 
-[data-kn-cell-index="false"] .kn-grid__item::before {
+[data-kn-grid-index="false"] .kn-grid__item::before {
   content: none;
 }
 
