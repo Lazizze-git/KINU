@@ -181,8 +181,14 @@
   max-width: var(--kn-measure);
 }
 
+/* L'echelle `display` de la DA §4.2 — clamp(2.75rem, 11vw, 7rem), soit
+   jusqu'a 112 px — etait definie et utilisee nulle part. La banniere tournait
+   en `h1`, plafonne a 60 px : le geste typographique le plus fort du document
+   dormait. C'est lui qui porte l'ouverture. */
 .kn-hero__title {
-  font-size: var(--kn-fs-h1);
+  font-size: var(--kn-fs-display);
+  line-height: var(--kn-lh-display);
+  letter-spacing: var(--kn-ls-display);
 }
 
 /* Sous mouvement réduit, la bannière EST son poster : rien ne joue, et

@@ -13,6 +13,19 @@
   if has_text and link_url != blank and s.link_label != blank
     assign show_link = true
   endif
+
+  comment
+    Maquette : voir snippets/kn-demo-grid.liquid. Sans media reglee, la
+    banniere ne s'affichait pas du tout — la page d'accueil s'ouvrait donc sur
+    sa deuxieme section, et le header ne pouvait pas basculer (DA R5), faute
+    de media a survoler. A retirer avec les autres kn-demo-*.jpg le jour ou la
+    vraie video est en place.
+  endcomment
+  assign kn_demo_poster = ''
+  unless has_media
+    assign kn_demo_poster = 'kn-demo-05.jpg'
+    assign has_media = true
+  endunless
 -%}
 
 {%- if has_media -%}
@@ -23,12 +36,23 @@
     {% endif %}
   >
     <div class="kn-hero__frame kn-marks">
-      {%- render 'kn-home-hero-media',
-        video: s.video,
-        video_url: s.video_url,
-        poster: s.image,
-        poster_alt: s.image_alt
-      -%}
+      {%- if kn_demo_poster != blank -%}
+        <img
+          class="kn-img kn-hero__poster"
+          src="{{ kn_demo_poster | asset_url }}"
+          alt=""
+          width="1000"
+          height="1600"
+          fetchpriority="high"
+        >
+      {%- else -%}
+        {%- render 'kn-home-hero-media',
+          video: s.video,
+          video_url: s.video_url,
+          poster: s.image,
+          poster_alt: s.image_alt
+        -%}
+      {%- endif -%}
 
       {%- if has_text -%}
         <div class="kn-hero__scrim"></div>
