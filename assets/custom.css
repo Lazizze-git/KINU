@@ -95,7 +95,7 @@
      de galerie). Elle sert AUSSI de gouttière de page au catalogue, pour que
      le filet vertical d'une colonne tombe exactement sur la marge du titre.
      Une seule valeur, un seul alignement. */
-  --kn-cell-pad:         clamp(1rem, 2vw, 1.5rem);
+  --kn-cell-pad:         clamp(0.75rem, 1.4vw, 1rem);
 
   /* ---- Traits, rayons, cibles ------------------------------------------ */
   --kn-radius:        0;
