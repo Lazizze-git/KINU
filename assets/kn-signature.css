@@ -252,7 +252,7 @@ body.kn-header--over-media .kn-hero__frame {
 }
 
 .kn-grid__item::before {
-  content: "[" counter(kn-cell, decimal-leading-zero) "]";
+  content: none;
   counter-increment: kn-cell;
   position: absolute;
   inset-inline-end: var(--kn-cell-pad);
@@ -268,8 +268,10 @@ body.kn-header--over-media .kn-hero__frame {
   pointer-events: none;
 }
 
-[data-kn-grid-index="false"] .kn-grid__item::before {
-  content: none;
+/* La numérotation ne s'allume que sur un « oui » explicite : toute valeur
+   ambiguë laisse la cellule propre plutôt que chiffrée. */
+[data-kn-grid-index="true"] .kn-grid__item::before {
+  content: "[" counter(kn-cell, decimal-leading-zero) "]";
 }
 
 /* --------------------------------------------------------------------------
