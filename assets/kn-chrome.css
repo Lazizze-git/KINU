@@ -625,10 +625,15 @@ body.kn-header--over-media
     padding-block: var(--kn-space-xl) var(--kn-space-2xl);
   }
 
+  /* Quatre rails, comme les colonnes du pied de page. En flex-wrap, chaque
+     entree faisait la largeur de son texte : les colonnes tombaient en
+     escalier et le panneau paraissait improvise. Sur une grille, elles
+     s'alignent sur le meme rythme que le reste du site. */
   .kn-nav__list {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: var(--kn-space-3xl);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--kn-space-2xl) var(--kn-grid-gap);
+    align-items: start;
   }
 
   .kn-nav__sub {
@@ -702,12 +707,21 @@ body.kn-header--over-media
 @media (min-width: 640px) {
   .kn-news__field {
     flex-direction: row;
-    align-items: end;
+    align-items: stretch;
   }
 
+  /* Le champ epouse la hauteur du bouton (56 px, DA §7.4). Alignes par le bas
+     seulement, le bouton depassait de douze pixels en haut : un pave a cote
+     d'un filet. Ils partagent maintenant la meme assise. */
   .kn-news__input {
     flex: 1;
+    min-height: 56px;
+    padding-block: 0;
     text-align: start;
+  }
+
+  .kn-news__submit {
+    flex: none;
   }
 }
 
@@ -826,9 +840,30 @@ body.kn-header--over-media
   border-inline-start: var(--kn-stroke) solid var(--kn-line-invert);
 }
 
-.kn-footer__copy {
+/* Mention legale et signature d'atelier : un seul bloc, deux informations de
+   poids different. Le copyright reste attenue, le nom de l'atelier passe en
+   ivoire — visible sans reclamer la vedette. */
+.kn-footer__legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--kn-space-2xs) var(--kn-space-lg);
+}
+
+.kn-footer__copy,
+.kn-footer__credit {
   margin: 0;
   color: var(--kn-muted-invert);
+}
+
+.kn-footer__credit-link {
+  color: var(--kn-ivory);
+  text-decoration: none;
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-footer__credit-link:hover {
+  color: var(--kn-forest-soft);
 }
 
 @media (min-width: 768px) {

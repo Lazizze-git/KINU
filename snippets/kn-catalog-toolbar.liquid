@@ -66,7 +66,17 @@
         form="{{ kn_form_id }}"
         data-kn-sort
       >
+        {%- comment -%}
+          Le tri alphabetique est ecarte : classer des vetements par initiale
+          ne repond a aucune intention d'achat et brise la mise en scene de la
+          collection. Restent les tris qui disent quelque chose — mise en
+          avant, nouveautes, prix, meilleures ventes.
+        {%- endcomment -%}
+        {%- assign kn_sort_banned = 'title-ascending,title-descending' | split: ',' -%}
         {%- for option in results.sort_options -%}
+          {%- if kn_sort_banned contains option.value -%}
+            {%- continue -%}
+          {%- endif -%}
           <option value="{{ option.value }}" {% if option.value == kn_sort %}selected{% endif %}>
             {{- option.name -}}
           </option>
