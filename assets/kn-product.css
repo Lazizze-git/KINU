@@ -883,7 +883,8 @@ body:has(.kn-sticky.is-visible) {
 
 /* Quatre produits : on saute l'étape à trois colonnes, qui laisserait
    toujours une carte seule sur sa ligne. */
-@media (min-width: 900px) {
+/* Meme palier que toutes les autres grilles a quatre colonnes du theme. */
+@media (min-width: 1024px) {
   .kn-recos__grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }

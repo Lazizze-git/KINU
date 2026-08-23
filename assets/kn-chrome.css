@@ -702,7 +702,7 @@ body.kn-header--over-media
   text-align: start;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 768px) {
   /* Le propos a gauche, l'action a droite — et le formulaire aligne son filet
      sur la ligne de base du titre plutot que de flotter sous lui. */
   .kn-news__inner {

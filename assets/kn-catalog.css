@@ -18,12 +18,13 @@
   --kn-facets-z: 100;
   --kn-toolbar-z: 4;
 
-  /* Le catalogue adopte la marge intérieure de cellule comme gouttière de
-     page. C'est ce qui fait tomber le bord gauche de la première image sur le
-     bord gauche du H1, et le filet vertical d'une colonne exactement au milieu
-     de l'écart entre deux images. Ces deux marges doivent rester égales : une
-     seule source, pas deux valeurs voisines à tenir synchronisées à la main. */
-  --kn-gutter: var(--kn-cell-pad);
+  /* Le catalogue garde la gouttiere de page commune. Il l'ecrasait autrefois
+     avec --kn-cell-pad pour faire tomber le bord de la premiere image sur
+     celui du H1 : l'alignement interne etait juste, mais le rail du catalogue
+     ne correspondait plus a celui du header ni du footer, qui vivent hors de
+     .kn-catalog. Sur une page collection, le titre et les images se posaient
+     donc plus a gauche que le logo. L'alignement image/titre est desormais
+     obtenu par le retrait du champ (voir §5), sans toucher au rail. */
 
   background-color: var(--kn-surface-bg);
   color: var(--kn-surface-fg);
@@ -500,8 +501,14 @@
 
 /* Le bord haut du champ, c'est le filet bas de la barre d'outils : on ne
    remet pas d'espace au-dessus, sinon la ligne se dédouble visuellement. */
+/* Le champ est retire de la difference entre la gouttiere de page et la marge
+   de cellule : la cellule rajoute ensuite sa propre marge, et le bord gauche
+   de la premiere image tombe exactement sur la gouttiere — donc sur le H1, sur
+   la barre d'outils, sur le logo et sur le pied de page. Un seul rail pour
+   toute la page, a toutes les largeurs. */
 .kn-collection__results {
   padding-block: 0 var(--kn-space-3xl);
+  padding-inline: calc(var(--kn-gutter) - var(--kn-cell-pad));
   transition: opacity var(--kn-dur-2) var(--kn-ease-state);
 }
 
@@ -520,7 +527,7 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0;
   width: 100%;
-  max-width: var(--kn-container);
+  max-width: calc(var(--kn-container) - 2 * var(--kn-gutter) + 2 * var(--kn-cell-pad));
   margin: 0 auto;
   padding: 0;
   list-style: none;
