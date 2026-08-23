@@ -387,7 +387,7 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 
 - **Collection** : en-tête sur la surface du territoire (R3) avec `H1` = la catégorie (`Femme`, en casse normale — le §4.2 et le §9 interdisent les titres éditoriaux en capitales, et c'est cette règle-là qui prime ; le libellé reste éditable si le client préfère les majuscules), sur-titre = la collection (`FLUID-MOTION`), une phrase de contexte max 68ch. Filtres dans un drawer latéral (pas de sidebar permanente), déclenché par `FILTRER (2)` en `--kn-fs-label`. Tri à droite. Filet 1 px sous la barre.
 - **Fil d'Ariane** : `Accueil / Femme / T-shirts` en `--kn-fs-label` `--kn-grey`, séparateur `/`, présent sur collection et produit (exigence du brief).
-- **Produit** : deux colonnes desktop (galerie 7/12 collante, informations 5/12), une colonne mobile (galerie plein cadre puis informations). Sélecteurs de taille en carrés de 44 px, filet 1 px, sélection = remplissage encre. Accordéons (Description / Matière & entretien / Livraison) en filets 1 px, sans fond, chevrons 12 px.
+- **Produit** : **trois colonnes desktop** — caractéristiques 3/12 à gauche, galerie 6/12 au centre, achat 3/12 à droite ; une colonne mobile (galerie plein cadre, puis achat, puis caractéristiques). Le placement est explicite en grille : l'ordre du DOM reste galerie / achat / caractéristiques, qui est l'ordre de lecture juste sur petit écran et au clavier. Les accordéons de caractéristiques restent repliés sur mobile et **se lisent dépliés sur ordinateur**, en colonne, comme une fiche technique. Sélecteurs de taille en carrés de 44 px, filet 1 px, sélection = remplissage encre. Accordéons (Description / Matière & entretien / Livraison) en filets 1 px, sans fond, chevrons 12 px.
 
 ---
 
@@ -700,6 +700,16 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 | `page_width` | `narrow` | conservé, surchargé par `--page-width` |
 | `cart_type` | `drawer` | conservé |
 | `page_transition_enabled` | `false` | conservé |
+
+---
+
+> **Amendement du 23 août 2026 — page produit à trois colonnes.** Ce paragraphe
+> prescrivait deux colonnes (galerie 7/12, informations 5/12). La demande client
+> du 23 août a tranché pour la disposition de [noartmusic.com](https://www.noartmusic.com) :
+> caractéristiques à gauche, image au centre, achat à droite. Ce qui change, c'est
+> l'endroit où le lecteur trouve la matière et l'entretien — plus sous le bouton
+> d'achat, mais en regard de l'image. Le reste du §7.7 (sélecteurs de taille,
+> filets, fil d'Ariane) reste en vigueur.
 
 ---
 

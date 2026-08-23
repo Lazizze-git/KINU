@@ -73,10 +73,43 @@ body:has(.kn-pdp) .kn-territory-surface {
 }
 
 @media (min-width: 1024px) {
+  /* Trois colonnes : caracteristiques, image, achat. Le placement est
+     explicite, donc l'ordre du DOM reste galerie / achat / details — l'ordre
+     de lecture juste sur mobile et au clavier. */
   .kn-pdp__layout {
-    grid-template-columns: 7fr 5fr;
+    grid-template-columns: 3fr 6fr 3fr;
     gap: clamp(2rem, 4vw, 3.5rem);
     align-items: start;
+  }
+
+  .kn-pdp__spec {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .kn-pdp__gallery {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .kn-pdp__info {
+    grid-column: 3;
+    grid-row: 1;
+  }
+
+  /* Les caracteristiques ne se replient plus : elles se lisent d'un coup, en
+     colonne, comme une fiche technique. Les `details` restent des `details`
+     pour le repli mobile — c'est leur contenu qu'on force a l'affichage. */
+  @supports selector(::details-content) {
+    .kn-pdp__spec .kn-acc__item::details-content {
+      content-visibility: visible;
+      block-size: auto;
+    }
+
+    .kn-pdp__spec .kn-acc__sum {
+      cursor: default;
+      pointer-events: none;
+    }
   }
 }
 

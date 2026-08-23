@@ -123,6 +123,14 @@
           section_id: section.id
         -%}
 
+      </div>
+
+      {%- comment -%}
+        Colonne des details. Placee a gauche de la galerie sur ordinateur par
+        placement explicite en grille : l'ordre du DOM reste galerie, achat,
+        details — c'est l'ordre de lecture juste sur mobile et au clavier.
+      {%- endcomment -%}
+      <div class="kn-pdp__spec">
         {%- render 'kn-product-details', product: kn_product, opts: kn_s, section_id: section.id -%}
       </div>
     </div>
