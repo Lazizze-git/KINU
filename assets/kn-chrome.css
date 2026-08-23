@@ -670,7 +670,7 @@ body.kn-header--over-media
    du site, et le formulaire prend sa propre colonne. */
 .kn-news__inner {
   display: grid;
-  gap: var(--kn-space-xl);
+  gap: var(--kn-space-2xl);
   text-align: start;
 }
 
@@ -702,16 +702,6 @@ body.kn-header--over-media
   text-align: start;
 }
 
-@media (min-width: 768px) {
-  /* Le propos a gauche, l'action a droite — et le formulaire aligne son filet
-     sur la ligne de base du titre plutot que de flotter sous lui. */
-  .kn-news__inner {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-    gap: var(--kn-space-3xl);
-    align-items: end;
-  }
-}
-
 .kn-news__feedback {
   margin-block-end: var(--kn-space-md);
   color: var(--kn-ivory);
@@ -722,23 +712,31 @@ body.kn-header--over-media
 }
 
 @media (min-width: 640px) {
+  /* Le formulaire cesse d'etre une colonne posee a cote du propos : il
+     traverse toute la largeur sur un filet unique, et le bouton s'assied
+     dessus. Le champ ne porte plus son propre trait — c'est la rangee entiere
+     qui le porte. Un geste au lieu de trois objets flottants sur du vert. */
   .kn-news__field {
     flex-direction: row;
     align-items: stretch;
+    gap: var(--kn-space-lg);
+    border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
   }
 
-  /* Le champ epouse la hauteur du bouton (56 px, DA §7.4). Alignes par le bas
-     seulement, le bouton depassait de douze pixels en haut : un pave a cote
-     d'un filet. Ils partagent maintenant la meme assise. */
+  /* Plus haut et plus grand : sur un aplat de cette taille, un champ au corps
+     de texte se fait avaler par l'air qui l'entoure. */
   .kn-news__input {
     flex: 1;
-    min-height: 56px;
+    min-height: 76px;
     padding-block: 0;
+    border-block-end: 0;
+    font-size: var(--kn-fs-lead);
     text-align: start;
   }
 
   .kn-news__submit {
     flex: none;
+    align-self: center;
   }
 }
 
