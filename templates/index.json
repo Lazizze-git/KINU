@@ -18,7 +18,8 @@
           "settings": {
             "category": "Femme",
             "collection_name": "Fluid-Motion",
-            "description": "Brassières, leggings, shorts, t-shirts, vestes"
+            "description": "Brassières, leggings, shorts, t-shirts, vestes",
+            "collection": "fluid-motion"
           }
         },
         "homme": {
@@ -26,7 +27,8 @@
           "settings": {
             "category": "Homme",
             "collection_name": "CrossOver",
-            "description": "T-shirts, shorts"
+            "description": "T-shirts, shorts",
+            "collection": "crossover"
           }
         },
         "unisexe": {
@@ -34,7 +36,8 @@
           "settings": {
             "category": "Unisexe",
             "collection_name": "Amplitude",
-            "description": "T-shirts, hoodies, joggers"
+            "description": "T-shirts, hoodies, joggers",
+            "collection": "amplitude"
           }
         }
       },
