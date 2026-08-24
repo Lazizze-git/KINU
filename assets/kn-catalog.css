@@ -198,12 +198,26 @@
    transpose la mecanique : le nom et le prix descendent au meme corps, le nom
    garde la graisse moyenne, le prix reste en chiffres tabulaires. L'image
    redevient le seul element qui parle fort. */
+/* La taille de la meta suit la densite reelle de la grille. A onze pixels,
+   l'argument est la densite : cinq colonnes, quarante cellules, l'image porte
+   et le texte s'efface. Sur deux colonnes mobiles cet argument tombe, et il
+   ne reste qu'un nom de produit trop petit a lire au pouce. */
+.kn-card {
+  --kn-card-meta: var(--kn-fs-sm);
+}
+
+@media (min-width: 1024px) {
+  .kn-card {
+    --kn-card-meta: var(--kn-fs-label);
+  }
+}
+
 .kn-card__title {
   position: relative;
   align-self: flex-start;
   margin: 0;
   font-family: var(--kn-font-ui);
-  font-size: var(--kn-fs-label);
+  font-size: var(--kn-card-meta);
   font-weight: var(--kn-fw-medium);
   line-height: var(--kn-lh-tight);
   letter-spacing: var(--kn-ls-label);
@@ -256,7 +270,7 @@
 }
 
 .kn-card__price {
-  font-size: var(--kn-fs-label);
+  font-size: var(--kn-card-meta);
   letter-spacing: var(--kn-ls-label);
   color: var(--kn-surface-fg);
 }

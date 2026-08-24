@@ -304,7 +304,7 @@ body:has(.kn-pdp) .kn-territory-surface {
 .kn-pdp__title {
   margin: 0;
   font-family: var(--kn-font-ui);
-  font-size: var(--kn-fs-label);
+  font-size: var(--kn-fs-sm);
   font-weight: var(--kn-fw-medium);
   line-height: var(--kn-lh-tight);
   letter-spacing: var(--kn-ls-label);
@@ -320,9 +320,20 @@ body:has(.kn-pdp) .kn-territory-surface {
 }
 
 .kn-pdp__price {
-  font-size: var(--kn-fs-label);
+  font-size: var(--kn-fs-sm);
   font-weight: var(--kn-fw-regular);
   letter-spacing: var(--kn-ls-label);
+}
+
+/* Sur ordinateur, la colonne d'achat est etroite et le regard a l'image en
+   vis-a-vis : la meta peut descendre a l'echelle d'etiquette, comme dans la
+   reference. Sur un telephone, ce meme titre est le H1 d'une page pleine
+   largeur — onze pixels n'y sont plus de la retenue, mais un defaut. */
+@media (min-width: 1024px) {
+  .kn-pdp__title,
+  .kn-pdp__price {
+    font-size: var(--kn-fs-label);
+  }
 }
 
 /* Prix barré en gris — jamais de rouge (DA §7.3). */
