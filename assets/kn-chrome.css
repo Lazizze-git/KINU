@@ -660,8 +660,12 @@ body.kn-header--over-media
    6. Newsletter — aplat forêt posé sur le footer encre (DA §3.4 R12)
    -------------------------------------------------------------------------- */
 
+/* Le §5.3 veut qu'une surface coloree recoive plus d'air qu'une surface
+   claire, et il a raison — mais l'inondation standard donnait 160 px en haut
+   et en bas pour trois lignes de contenu : l'aplat paraissait vide, pas
+   genereux. Valeur intermediaire, toujours au-dessus d'une section claire. */
 .kn-news {
-  padding-block: var(--kn-section-y-flood);
+  padding-block: clamp(4rem, 9vw, 7rem);
 }
 
 /* Alignee a gauche, sur les memes rails que le reste de la page. Centree, la
@@ -670,8 +674,19 @@ body.kn-header--over-media
    du site, et le formulaire prend sa propre colonne. */
 .kn-news__inner {
   display: grid;
-  gap: var(--kn-space-2xl);
+  gap: var(--kn-space-xl);
   text-align: start;
+}
+
+@media (min-width: 900px) {
+  /* Deux colonnes egales, alignees par le bas : le filet du champ tombe sur la
+     derniere ligne du propos. Le formulaire remplit sa colonne au lieu de
+     tirer un trait de mille pixels en travers de la page. */
+  .kn-news__inner {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--kn-space-3xl);
+    align-items: end;
+  }
 }
 
 .kn-news__tag {
@@ -727,16 +742,19 @@ body.kn-header--over-media
      de texte se fait avaler par l'air qui l'entoure. */
   .kn-news__input {
     flex: 1;
-    min-height: 76px;
+    min-height: 64px;
     padding-block: 0;
     border-block-end: 0;
-    font-size: var(--kn-fs-lead);
+    font-size: var(--kn-fs-body);
     text-align: start;
   }
 
+  /* `stretch`, pas `center` : centre, le bouton flottait au-dessus du trait.
+     Etire, son bord bas EST le filet — les deux ne font plus qu'une piece. */
   .kn-news__submit {
     flex: none;
-    align-self: center;
+    align-self: stretch;
+    min-height: 0;
   }
 }
 
