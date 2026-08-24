@@ -51,12 +51,16 @@ body:has(.kn-pdp) .kn-territory-surface {
   --kn-surface-accent: var(--kn-forest);
 }
 
+/* Meme ouverture que la page collection (--kn-space-xl). La fiche ouvrait a
+   24 px : son fil d'Ariane etait colle sous le header collant et disparaissait
+   au premier pixel de defilement. La collection ouvrait deja a 48 px — c'est
+   la fiche qui faisait exception. */
 .kn-pdp__inner {
-  padding-block: var(--kn-space-md) var(--kn-section-y);
+  padding-block: var(--kn-space-xl) var(--kn-section-y);
 }
 
 .kn-pdp__breadcrumb {
-  margin-bottom: var(--kn-space-2xs);
+  margin-bottom: var(--kn-space-xs);
 }
 
 /* Le seul signe de territoire de la page (DA §3.4 R4). */
