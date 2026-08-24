@@ -141,7 +141,11 @@ body:has(.kn-pdp) .kn-territory-surface {
 }
 
 @media (min-width: 1024px) {
-  .kn-gal {
+  /* Deux colonnes seulement s'il y a des vignettes. Sans elles, `.kn-gal`
+     n'avait qu'un enfant, qui atterrissait dans la colonne des vignettes :
+     le visuel se retrouvait large de 64 px. La plupart des produits n'ont
+     qu'une photographie — c'etait donc le cas courant, pas le cas limite. */
+  .kn-gal:has(.kn-gal__thumbs) {
     display: grid;
     grid-template-columns: var(--kn-thumb-w) 1fr;
     gap: var(--kn-space-xs);
@@ -493,6 +497,17 @@ body:has(.kn-pdp) .kn-territory-surface {
   .kn-buy__row {
     grid-template-columns: auto 1fr;
     align-items: stretch;
+  }
+}
+
+@media (min-width: 1024px) {
+  /* La colonne d'achat ne fait plus qu'un quart de page depuis le passage a
+     trois colonnes. Cote a cote avec le selecteur de quantite, le bouton
+     tombait sous 160 px et son libelle se cassait sur trois lignes. Empiles,
+     il occupe toute sa colonne — comme dans la reference. */
+  .kn-buy__row {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--kn-space-sm);
   }
 }
 

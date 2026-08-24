@@ -63,7 +63,12 @@
       var rank = position + 1;
       section.setAttribute('data-kn-section-rank', String(rank));
 
-      var slot = section.querySelector('[data-kn-index]');
+      /* Attribut dedie, et non `[data-kn-index]` : la galerie produit pose ce
+         dernier sur ses diapositives. Le selecteur attrapait donc la premiere
+         diapositive et ecrasait son contenu par le numero de section — le
+         `textContent` supprimait l'image du DOM. La page produit s'affichait
+         sans visuel, avec un « 01 » a la place. */
+      var slot = section.querySelector('[data-kn-section-index]');
       if (slot) slot.textContent = pad(rank);
     });
 
