@@ -38,7 +38,7 @@
       <div class="kn-products__grid kn-home-body">
         {%- for product in target_collection.products limit: s.count -%}
           <div class="kn-reveal">
-            {%- render 'kn-product-card', product: product, show_universe: true -%}
+            {%- render 'kn-product-card', product: product -%}
           </div>
         {%- endfor -%}
       </div>

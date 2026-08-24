@@ -66,9 +66,16 @@
     `product.collections` coûte cher répétée sur 48 cartes.
   endcomment
   assign kn_universes = 'fluid-motion,crossover,amplitude' | split: ','
-  assign kn_wants_universe = true
-  if show_universe == false
-    assign kn_wants_universe = false
+  comment
+    Amendement du 23 aout : le sur-titre d'univers ne s'affiche plus par
+    defaut. Le §7.3 le listait parmi les quatre elements de la carte, mais il
+    ramenait la cellule a quatre lignes de texte la ou la reference en tient
+    deux. L'univers reste lisible dans le fil d'Ariane et sur la fiche ;
+    passer `show_universe: true` le rallume la ou il apprend quelque chose.
+  endcomment
+  assign kn_wants_universe = false
+  if show_universe == true
+    assign kn_wants_universe = true
   endif
   if collection.handle != blank and kn_universes contains collection.handle
     assign kn_wants_universe = false

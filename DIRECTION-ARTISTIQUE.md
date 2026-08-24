@@ -258,7 +258,7 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 
 - **12 colonnes** desktop (≥ 1024 px), **6 colonnes** tablette (640–1023 px), **4 colonnes** mobile.
 - Gouttière : `clamp(1rem, 2vw, 1.5rem)` → 16 px mobile, 24 px desktop.
-- Grille produits : **2 colonnes mobile** (jamais 1 — la comparaison visuelle fait vendre), 3 tablette, **4 desktop maximum**. `column-gap` 24 px, `row-gap` 64 px : l'écart vertical est toujours ~2,5× l'écart horizontal, c'est ce qui fait respirer une grille mode.
+- Grille produits : **2 colonnes mobile** (jamais 1 — la comparaison visuelle fait vendre), 3 tablette, 4 desktop, **5 au-delà de 1280 px** (amendement du 23/08/2026 : la densité est ce qui fait la précision de la référence ; sous 1280 px, cinq colonnes donneraient des vignettes trop étroites pour juger un vêtement). `column-gap` 24 px, `row-gap` 64 px : l'écart vertical est toujours ~2,5× l'écart horizontal, c'est ce qui fait respirer une grille mode.
 - Alignement par défaut : **fer à gauche**. Le centrage est réservé au bloc newsletter et aux messages d'état vides.
 
 ### 5.3 Rythme vertical
@@ -339,6 +339,15 @@ Niveau 1 en `--kn-fs-h2` DM Sans 700 ivoire ; niveau 2 en `--kn-fs-sm` `--kn-mut
 > par la transparence.
 
 ### 7.3 Carte produit
+
+> **Amendement du 23 août 2026.** Le schéma ci-dessous décrivait quatre lignes de
+> texte sous l'image : nom, sur-titre d'univers, prix. La carte en tient
+> désormais **deux** — nom et prix, tous deux à l'échelle d'étiquette, en
+> capitales, séparés par la seule graisse. Le sur-titre d'univers est éteint par
+> défaut (`show_universe` à faux) ; il reste rallumable là où il apprend quelque
+> chose, et l'univers demeure lisible dans le fil d'Ariane et sur la fiche. Motif :
+> la référence tient sa cellule en deux lignes, et c'est cette retenue qui laisse
+> l'image porter seule.
 
 Alignée à gauche, sans cadre, sans fond, sans ombre — **la carte n'est pas un objet, c'est une colonne**.
 
@@ -446,7 +455,7 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 
 - Pas d'Inter (ni de police système par défaut) : les polices sont DM Sans et Montserrat, réglées dans le thème.
 - Pas de troisième famille, pas de serif décoratif, pas d'italique.
-- Pas de titre éditorial en majuscules.
+- Pas de titre **éditorial** en majuscules. **Précision du 23/08/2026 :** un nom de produit n'est pas un titre éditorial. Sur la carte et sur la fiche, le nom et le prix descendent à l'échelle d'étiquette — capitales, chassé positif, hiérarchie portée par la graisse et la couleur, jamais par la taille. C'est la mécanique de la référence : une seule taille de caractère, et l'image qui parle seule. Les titres de section et les titres d'article restent en casse normale.
 - Pas de graisse 300 ni 900.
 - Pas de texte centré au-delà de 3 lignes.
 - Pas de paragraphe dépassant 68 caractères de large.
@@ -457,7 +466,7 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 - Pas de rayon 14 px hérité de Horizon : rayon 0 partout (sauf badges).
 - Pas de `box-shadow`.
 - Pas de sidebar de filtres permanente.
-- Pas de grille produit à 1 colonne sur mobile ni à 5+ colonnes sur desktop.
+- Pas de grille produit à 1 colonne sur mobile. ~~Ni à 5+ colonnes sur desktop~~ — **levé le 23/08/2026** : 5 colonnes autorisées au-delà de 1280 px, jamais en deçà (voir §5.2).
 - Pas de bandeau sticky supplémentaire en bas d'écran (« Ajouter au panier » collant) sur desktop ; toléré sur mobile page produit uniquement, en surface claire avec filet haut.
 
 **Contenu & ton**

@@ -25,7 +25,6 @@
 
   assign kn_titles = 'Coupe-vent Ridge|Veste Sillon|Polo Crête|Débardeur Foehn|Poncho Averse|Veste Moraine|Parka Combe|Pantalon Bise' | split: '|'
   assign kn_prices = '240|320|130|75|260|290|380|190' | split: '|'
-  assign kn_lines = 'Homme — CrossOver|Homme — CrossOver|Unisexe — Amplitude|Femme — Fluid-Motion|Unisexe — Amplitude|Homme — CrossOver|Unisexe — Amplitude|Femme — Fluid-Motion' | split: '|'
   assign kn_files = 'kn-demo-01.jpg|kn-demo-02.jpg|kn-demo-03.jpg|kn-demo-04.jpg|kn-demo-05.jpg|kn-demo-06.jpg|kn-demo-07.jpg|kn-demo-02.jpg' | split: '|'
   assign kn_badges = 'Nouveau||||Nouveau|||' | split: '|'
 
@@ -68,7 +67,6 @@
           {%- endif -%}
         </span>
 
-        <span class="kn-label kn-card__universe">{{ kn_lines[kn_index] }}</span>
         <{{ kn_tag }} class="kn-card__title">{{ kn_titles[kn_index] }}</{{ kn_tag }}>
         <span class="kn-card__prices">
           <span class="kn-price kn-card__price">CHF {{ kn_prices[kn_index] }}.–</span>

@@ -288,9 +288,19 @@ body:has(.kn-pdp) .kn-territory-surface {
 }
 
 /* Échelle H2 : la colonne fait ~410 px, l'échelle H1 y casserait chaque ligne. */
+/* Amendement du 23 aout. La reference tient sa fiche entiere sur une seule
+   taille de caractere : le nom et le prix y sont au meme corps, separes par la
+   graisse et rien d'autre. C'est ce qui laisse l'image parler seule. On
+   transpose la mecanique sur l'echelle d'etiquette, la seule du systeme qui
+   supporte les capitales et le chasse positif. */
 .kn-pdp__title {
   margin: 0;
-  font-size: var(--kn-fs-h2);
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-label);
+  font-weight: var(--kn-fw-medium);
+  line-height: var(--kn-lh-tight);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
 }
 
 .kn-pdp__prices {
@@ -302,7 +312,9 @@ body:has(.kn-pdp) .kn-territory-surface {
 }
 
 .kn-pdp__price {
-  font-size: var(--kn-fs-h4);
+  font-size: var(--kn-fs-label);
+  font-weight: var(--kn-fw-regular);
+  letter-spacing: var(--kn-ls-label);
 }
 
 /* Prix barré en gris — jamais de rouge (DA §7.3). */

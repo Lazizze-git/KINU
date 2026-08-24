@@ -192,18 +192,22 @@
   color: var(--kn-surface-bg);
 }
 
-/* D'un cran sous le corps de texte : dans un champ de quarante cellules, un
-   nom de produit est une etiquette, pas une phrase. C'est ce que fait la
-   reference — la meta s'efface, l'image porte. */
+/* Amendement du 23 aout : la meta passe a l'echelle d'etiquette. La reference
+   tient toute sa page produit et tout son catalogue sur UNE seule taille de
+   caractere ; la hierarchie ne passe que par la graisse et la couleur. On
+   transpose la mecanique : le nom et le prix descendent au meme corps, le nom
+   garde la graisse moyenne, le prix reste en chiffres tabulaires. L'image
+   redevient le seul element qui parle fort. */
 .kn-card__title {
   position: relative;
   align-self: flex-start;
   margin: 0;
   font-family: var(--kn-font-ui);
-  font-size: var(--kn-fs-sm);
+  font-size: var(--kn-fs-label);
   font-weight: var(--kn-fw-medium);
-  line-height: 1.3;
-  letter-spacing: var(--kn-ls-body);
+  line-height: var(--kn-lh-tight);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
   color: var(--kn-surface-fg);
   text-wrap: pretty;
   overflow-wrap: break-word;
@@ -252,6 +256,8 @@
 }
 
 .kn-card__price {
+  font-size: var(--kn-fs-label);
+  letter-spacing: var(--kn-ls-label);
   color: var(--kn-surface-fg);
 }
 
@@ -590,6 +596,37 @@
   }
 
   .kn-grid__item:nth-child(-n + 4) {
+    border-block-start: 0;
+  }
+}
+
+/* Amendement du 23 aout : cinq colonnes au-dela de 1280 px. Le §5.2 plafonnait
+   a quatre — c'est la densite qui fait la precision de la reference, et sous
+   1280 px cinq colonnes donneraient des vignettes trop etroites pour juger un
+   vetement. La regle de bord se recalcule sur le nouveau pas. */
+@media (min-width: 1280px) {
+  .kn-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .kn-grid__item:nth-child(n) {
+    border-inline-start: var(--kn-stroke) solid var(--kn-surface-line);
+    border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
+  }
+
+  .kn-grid__item:nth-child(4n + 1) {
+    border-inline-start: var(--kn-stroke) solid var(--kn-surface-line);
+  }
+
+  .kn-grid__item:nth-child(-n + 4) {
+    border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
+  }
+
+  .kn-grid__item:nth-child(5n + 1) {
+    border-inline-start: 0;
+  }
+
+  .kn-grid__item:nth-child(-n + 5) {
     border-block-start: 0;
   }
 }
