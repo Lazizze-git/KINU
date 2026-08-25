@@ -278,7 +278,6 @@ body.kn-header--over-media .kn-hero__frame {
    5. Numérotation des univers et des piliers
    -------------------------------------------------------------------------- */
 
-.kn-universe__index,
 .kn-manifesto__index {
   display: block;
   color: var(--kn-surface-muted);

@@ -248,10 +248,15 @@
   opacity: 1;
 }
 
+/* Trois lignes, un seul rythme. Le bloc en empilait quatre et melangeait
+   trois sources d'espacement : un `gap` de grille, un `padding` en tete et une
+   marge propre sur la derniere ligne. La collection signe, la categorie
+   domine, la description precise — dans cet ordre et sans rien d'autre
+   (DA §7.2). */
 .kn-universe__text {
   display: grid;
-  gap: var(--kn-space-3xs);
-  padding-block-start: var(--kn-space-md);
+  gap: var(--kn-space-2xs);
+  padding-block-start: var(--kn-space-sm);
 }
 
 .kn-universe__collection {
@@ -269,7 +274,7 @@
 
 .kn-universe__note {
   color: var(--kn-surface-muted);
-  margin-block-start: var(--kn-space-2xs);
+  max-width: var(--kn-measure);
 }
 
 /* --------------------------------------------------------------------------

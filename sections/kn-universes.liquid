@@ -59,7 +59,6 @@
           </div>
 
           <div class="kn-universe__text">
-            <span class="kn-label kn-brk kn-universe__index" translate="no">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }} / {% if section.blocks.size < 10 %}0{% endif %}{{ section.blocks.size }}</span>
             {%- if b.collection_name != blank -%}
               <span class="kn-label kn-universe__collection" translate="no">
                 {{- b.collection_name | escape -}}
