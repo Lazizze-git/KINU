@@ -1005,12 +1005,14 @@ body.kn-header--over-media
 
 /* Vignette : 72 px de large en 3:4, comme la DA §7.5 — elle arrivait en carre
    de 54 px, sans rapport avec le ratio des cartes du catalogue. */
+/* Hauteur explicite plutot qu'`aspect-ratio` : l'image porte ses dimensions
+   intrinseques, et le ratio se faisait battre — la vignette restait carree.
+   72 x 96, soit le 3:4 que demande la DA §7.5. */
 #cart-drawer .cart-items__media-image,
 #cart-drawer .cart-items__media {
   width: 72px;
   min-width: 72px;
-  aspect-ratio: var(--kn-ratio-card);
-  height: auto;
+  height: 96px;
   object-fit: cover;
   border-radius: var(--kn-radius);
   background-color: var(--kn-sage);
