@@ -52,6 +52,13 @@
 
 .kn-scroll-sentinel {
   display: block;
+  /* `.page-wrapper` est un flex en colonne de hauteur fixe : ses enfants sont
+     compressibles. La sentinelle etant une div vide, son contenu minimal vaut
+     zero — flex ecrasait donc sa hauteur a 0 pendant que sa marge negative
+     survivait intacte. Tout remontait de 64 px, le sticky du header se bloquait
+     a -32, et la barre d'annonce (32 px) se retrouvait definitivement hors
+     champ. Elle ne se laisse plus comprimer. */
+  flex: none;
   width: var(--kn-stroke);
   height: var(--kn-header-shift);
   margin-block-end: calc(var(--kn-header-shift) * -1);
