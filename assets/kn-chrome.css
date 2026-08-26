@@ -1021,6 +1021,22 @@ body.kn-header--over-media
   background-color: var(--kn-sage);
 }
 
+/* Zone sure : le pied du tiroir ne passe plus sous la barre systeme.
+
+   Le theme protege deja la zone sure a cinq endroits — filtres du catalogue,
+   banniere, barre d'achat collante — mais pas ici. Sur un iPhone, la barre
+   d'accueil recouvre les 34 px du bas, soit exactement la hauteur ou se trouve
+   le bouton de paiement. Le pied etant collant dans un tiroir en 100dvh, rien
+   ne permet de le remonter : le bouton reste inaccessible.
+
+   `max()` plutot qu'une addition : sur un ecran sans encoche, `env()` vaut 0
+   et le rembourrage d'origine est conserve tel quel. */
+#cart-drawer .cart-drawer__summary,
+#cart-drawer [class*="cart-drawer__summary"],
+#cart-drawer .cart__ctas {
+  padding-bottom: max(var(--kn-space-md), env(safe-area-inset-bottom, 0px));
+}
+
 /* La ligne d'article, dans la typographie de la maison.
 
    ATTENTION — on ne touche ici QUE l'apparence : police, corps, couleur,
