@@ -989,6 +989,53 @@ body.kn-header--over-media
 }
 
 /* La pastille redevient un simple nombre entre parenthèses : PANIER (2). */
+/* --------------------------------------------------------------------------
+   8 bis. Ce que la peinture ne couvrait pas encore
+   La section ci-dessus ne repeignait que le dialogue, le voile, l'en-tete, le
+   titre et la pastille. Lignes d'article, vignette, totaux et boutons
+   restaient du Horizon brut.
+   -------------------------------------------------------------------------- */
+
+/* L'en-tete faisait 125 px de haut pour un titre de 13 px : il heritait de la
+   gouttiere de page (40 px) sur ses deux faces. Le retrait lateral reste, la
+   hauteur se resserre. */
+#cart-drawer .theme-drawer__header {
+  padding-block: var(--kn-space-md);
+}
+
+/* Vignette : 72 px de large en 3:4, comme la DA §7.5 — elle arrivait en carre
+   de 54 px, sans rapport avec le ratio des cartes du catalogue. */
+#cart-drawer .cart-items__media-image,
+#cart-drawer .cart-items__media {
+  width: 72px;
+  min-width: 72px;
+  aspect-ratio: var(--kn-ratio-card);
+  height: auto;
+  object-fit: cover;
+  border-radius: var(--kn-radius);
+  background-color: var(--kn-sage);
+}
+
+/* Les prix du panier sont des valeurs qui varient : chiffres tabulaires et
+   alignement a droite, sinon les montants dansent d'une ligne a l'autre. */
+#cart-drawer :where(.cart-items__price, .cart-totals, [class*="price"]) {
+  font-family: var(--kn-font-ui);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Le paiement accelere apporte deux couleurs d'accent supplementaires — le
+   violet de Shop Pay et le jaune de PayPal — en bas d'un tiroir qui n'en
+   admet qu'une (DA §9). Ils sont masques.
+
+   POUR LES RETABLIR : supprimer ce bloc. C'est un arbitrage de marque contre
+   conversion, pas une correction technique — le passage en caisse standard
+   reste entierement fonctionnel au-dessus. */
+#cart-drawer .dynamic-checkout__content,
+#cart-drawer [class*="dynamic-checkout"],
+#cart-drawer shopify-accelerated-checkout {
+  display: none !important;
+}
+
 #cart-drawer .theme-drawer__badge {
   min-width: 0;
   height: auto;
