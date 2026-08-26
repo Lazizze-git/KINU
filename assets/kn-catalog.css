@@ -519,13 +519,11 @@
    2 colonnes mobile · 3 tablette · 4 desktop.
 
    Transposition de Mover : la grille n'est pas une série de cartes posées sur
-   un fond avec de l'air entre elles, c'est un CHAMP continu que des filets
-   découpent. Donc aucun écart : les cellules se touchent, séparées par un
-   trait d'1 px, et c'est la marge intérieure de chaque cellule qui fait
-   respirer l'image. Le filet est obtenu par le fond du champ vu à travers
-   l'écart d'1 px — une seule déclaration, aucun bord à désactiver au bout
-   des rangées, et une dernière rangée incomplète ne laisse aucun trait
-   orphelin.
+   un fond avec de l'air entre elles, c'est un CHAMP continu. Aucun écart et
+   aucun filet : les cellules se touchent, et c'est la marge intérieure de
+   chacune qui fait respirer l'image. Le seul trait du champ est le repère de
+   coupe révélé au survol (.kn-marks), qui appartient à la cellule survolée et
+   à elle seule.
 
    Le champ va bord à bord jusqu'à --kn-container et n'a pas de marge de page :
    ce sont les cellules qui la portent (--kn-cell-pad = --kn-gutter). C'est ce
@@ -569,19 +567,6 @@
 .kn-grid__item {
   display: flex;
   padding: var(--kn-cell-pad) var(--kn-cell-pad) var(--kn-space-lg);
-  border-inline-start: var(--kn-stroke) solid var(--kn-surface-line);
-  border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
-}
-
-/* Le bord gauche de la premiere colonne et le bord haut de la premiere rangee
-   appartiennent a la page, pas au champ : le filet de la barre d'outils tient
-   deja le haut, et la marge tient le cote. */
-.kn-grid__item:nth-child(2n + 1) {
-  border-inline-start: 0;
-}
-
-.kn-grid__item:nth-child(-n + 2) {
-  border-block-start: 0;
 }
 
 .kn-grid__item > * {
@@ -593,37 +578,11 @@
   .kn-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-
-  .kn-grid__item:nth-child(n) {
-    border-inline-start: var(--kn-stroke) solid var(--kn-surface-line);
-    border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
-  }
-
-  .kn-grid__item:nth-child(3n + 1) {
-    border-inline-start: 0;
-  }
-
-  .kn-grid__item:nth-child(-n + 3) {
-    border-block-start: 0;
-  }
 }
 
 @media (min-width: 1024px) {
   .kn-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .kn-grid__item:nth-child(n) {
-    border-inline-start: var(--kn-stroke) solid var(--kn-surface-line);
-    border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
-  }
-
-  .kn-grid__item:nth-child(4n + 1) {
-    border-inline-start: 0;
-  }
-
-  .kn-grid__item:nth-child(-n + 4) {
-    border-block-start: 0;
   }
 }
 
@@ -634,27 +593,6 @@
 @media (min-width: 1280px) {
   .kn-grid {
     grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-
-  .kn-grid__item:nth-child(n) {
-    border-inline-start: var(--kn-stroke) solid var(--kn-surface-line);
-    border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
-  }
-
-  .kn-grid__item:nth-child(4n + 1) {
-    border-inline-start: var(--kn-stroke) solid var(--kn-surface-line);
-  }
-
-  .kn-grid__item:nth-child(-n + 4) {
-    border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
-  }
-
-  .kn-grid__item:nth-child(5n + 1) {
-    border-inline-start: 0;
-  }
-
-  .kn-grid__item:nth-child(-n + 5) {
-    border-block-start: 0;
   }
 }
 
