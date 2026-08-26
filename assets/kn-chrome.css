@@ -1005,17 +1005,29 @@ body.kn-header--over-media
 
 /* Vignette : 72 px de large en 3:4, comme la DA §7.5 — elle arrivait en carre
    de 54 px, sans rapport avec le ratio des cartes du catalogue. */
-/* Hauteur explicite plutot qu'`aspect-ratio` : l'image porte ses dimensions
-   intrinseques, et le ratio se faisait battre — la vignette restait carree.
-   72 x 96, soit le 3:4 que demande la DA §7.5. */
-#cart-drawer .cart-items__media-image,
-#cart-drawer .cart-items__media {
+/* C'est le CONTENEUR qui porte le format, jamais l'image.
+
+   Horizon construit chaque ligne comme une grille CSS posee sur le <tr>, et
+   l'image vit dans un <a> de 72 x 72 en `overflow: hidden`. Dimensionner
+   l'image faisait deborder sa boite : le <td> s'etirait a 96 px, les rangees
+   de la grille deraillaient et le texte passait par-dessus la vignette.
+
+   Le conteneur prend donc les 72 x 96 du 3:4 (DA §7.5), et l'image le remplit
+   sans jamais en sortir. */
+#cart-drawer .cart-items__media-container {
   width: 72px;
   min-width: 72px;
   height: 96px;
-  object-fit: cover;
+  overflow: hidden;
   border-radius: var(--kn-radius);
   background-color: var(--kn-sage);
+}
+
+#cart-drawer .cart-items__media-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--kn-radius);
 }
 
 /* Les prix du panier sont des valeurs qui varient : chiffres tabulaires et
