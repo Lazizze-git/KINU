@@ -101,7 +101,20 @@
 }
 
 .kn-breadcrumb__link {
+  position: relative;
   transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+/* Zone tactile portee a 45 px sans deplacer une seule ligne. Le lien mesure
+   13 px de haut — c'est la hauteur de son texte de 11 px — soit sous le
+   minimum de 24 px exige au niveau AA, et loin des 44 px que reclame la
+   DA §7.1. Le pseudo-element etend la cible verticalement ; les maillons du
+   fil sont cote a cote, donc rien ne se chevauche. */
+.kn-breadcrumb__link::after {
+  content: "";
+  position: absolute;
+  inset-block: -16px;
+  inset-inline: 0;
 }
 
 .kn-breadcrumb__link:hover {
