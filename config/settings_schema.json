@@ -2163,13 +2163,6 @@
       },
       {
         "type": "checkbox",
-        "id": "kn_section_index",
-        "label": "Numéroter les sections de la page",
-        "default": true,
-        "info": "Affiche l’index [01], [02]… en tête de chaque section. La séquence aide à se situer dans une page longue."
-      },
-      {
-        "type": "checkbox",
         "id": "kn_grid_index",
         "label": "Numéroter les cellules de la grille produits",
         "default": false,

@@ -94,13 +94,6 @@
   border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
 }
 
-/* L'interrupteur d'admin coupe l'index, jamais le compteur : le compteur est
-   une information, l'index n'est qu'un repère. */
-[data-kn-section-index="false"] .kn-datarow__idx {
-  display: none;
-}
-
-.kn-datarow__idx,
 .kn-datarow__count {
   flex: none;
   font-variant-numeric: tabular-nums;
@@ -126,12 +119,6 @@
     transparent var(--kn-stroke) 5px
   );
   opacity: 0.5;
-}
-
-/* L'index est rempli par kn-signature.js ; tant qu'il est vide il n'existe
-   pas, ce qui évite un crochet orphelin si le script ne s'exécute pas. */
-.kn-datarow__idx:empty {
-  display: none;
 }
 
 /* --------------------------------------------------------------------------
