@@ -362,7 +362,9 @@ body.kn-header--over-media .kn-hero__frame {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--kn-space-md) var(--kn-space-lg);
-  margin-block: var(--kn-space-2xl) var(--kn-space-xl);
+  /* La bande separait deux blocs par 64 px au-dessus et 48 en dessous, pour
+     72 px de contenu. Le rythme etait calibre pour un pied de page plein. */
+  margin-block: var(--kn-space-xl) var(--kn-space-lg);
   padding-block-start: var(--kn-space-md);
   border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
 }

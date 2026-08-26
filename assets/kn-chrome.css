@@ -769,8 +769,12 @@ body.kn-header--over-media
    7. Pied de page (DA §7.6)
    -------------------------------------------------------------------------- */
 
+/* Le pied de page ouvrait sur le rembourrage d'une section pleine (115 px)
+   alors qu'il n'est pas une section de contenu mais une fin de page. Le
+   rembourrage bas garde ses 30 px supplementaires : c'est la compensation de
+   la bande de telemetrie fixe (DA §11.5). */
 .kn-footer {
-  padding-block: var(--kn-section-y) var(--kn-space-xl);
+  padding-block: var(--kn-space-3xl) var(--kn-space-xl);
 }
 
 .kn-footer__cols {
@@ -945,7 +949,8 @@ body.kn-header--over-media
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
-    margin-block-start: var(--kn-space-3xl);
+    /* 96 px separaient une ligne legale haute de 38 px du bloc precedent. */
+    margin-block-start: var(--kn-space-xl);
   }
 }
 
