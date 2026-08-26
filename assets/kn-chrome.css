@@ -1021,9 +1021,69 @@ body.kn-header--over-media
   background-color: var(--kn-sage);
 }
 
-/* Les prix du panier sont des valeurs qui varient : chiffres tabulaires et
-   alignement a droite, sinon les montants dansent d'une ligne a l'autre. */
-#cart-drawer :where(.cart-items__price, .cart-totals, [class*="price"]) {
+/* La ligne d'article, dans la typographie de la maison.
+
+   ATTENTION — on ne touche ici QUE l'apparence : police, corps, couleur,
+   filets. Aucune largeur, aucune hauteur, aucun `display`. La ligne est une
+   grille CSS dont Horizon calcule les colonnes ; deux tentatives de la
+   redimensionner l'ont cassee. L'apparence se surcharge sans risque, la
+   geometrie non.
+
+   Hierarchie visee : le nom porte, la taille et le prix unitaire s'effacent,
+   le total de ligne est le seul chiffre qui compte. Les deux montants
+   arrivaient au meme corps a une graisse d'ecart — on ne savait pas lequel
+   etait lequel. */
+
+#cart-drawer .cart-items__title {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-sm);
+  font-weight: var(--kn-fw-medium);
+  line-height: var(--kn-lh-tight);
+  color: var(--kn-ink);
+  text-decoration: none;
+}
+
+#cart-drawer .cart-items__variants,
+#cart-drawer .cart-items__variants dd {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-label);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
+  color: var(--kn-grey);
+}
+
+/* Prix unitaire : une precision, pas le montant a retenir. */
+#cart-drawer .cart-items__unit-price-wrapper {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-label);
+  letter-spacing: var(--kn-ls-label);
+  color: var(--kn-grey);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Total de ligne : le chiffre qui compte. */
+#cart-drawer .cart-items__price {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-price);
+  font-weight: var(--kn-fw-medium);
+  color: var(--kn-ink);
+  font-variant-numeric: tabular-nums;
+  text-align: end;
+}
+
+/* Un filet entre les articles, aucun au-dessus du premier. */
+#cart-drawer .cart-items__table-row + .cart-items__table-row {
+  border-block-start: var(--kn-stroke) solid var(--kn-line);
+}
+
+/* Selecteur de quantite : filet 1 px, angle vif (DA §7.5). */
+#cart-drawer .quantity-selector {
+  border: var(--kn-stroke) solid var(--kn-line);
+  border-radius: var(--kn-radius);
+}
+
+/* Les totaux du pied restent tabulaires. */
+#cart-drawer .cart-totals {
   font-family: var(--kn-font-ui);
   font-variant-numeric: tabular-nums;
 }
