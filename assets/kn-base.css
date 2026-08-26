@@ -32,6 +32,20 @@ body {
 }
 
 /* --------------------------------------------------------------------------
+   L'attribut `hidden` doit gagner, toujours.
+   Le navigateur lui applique `display: none` depuis sa propre feuille — donc
+   la moindre regle d'auteur qui pose un `display` le bat, sans avertissement.
+   Le Liquid masque alors correctement un element qui s'affiche quand meme :
+   c'est ainsi que l'etiquette « Reference » restait visible sans valeur, sa
+   rangee etant en `display: flex`. Le piege vaut pour nos composants comme
+   pour ceux de Horizon ; on le ferme une fois pour toutes.
+   -------------------------------------------------------------------------- */
+
+[hidden] {
+  display: none !important;
+}
+
+/* --------------------------------------------------------------------------
    2. Titres — DM Sans, casse normale, interlettrage négatif (DA §4.2)
    -------------------------------------------------------------------------- */
 
