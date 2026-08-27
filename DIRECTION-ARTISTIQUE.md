@@ -364,6 +364,15 @@ Niveau 1 en `--kn-fs-h4` DM Sans 500, capitales, chasse positive, ivoire ; nivea
 > de bas de panneau — ferment la même liste au lieu d'un pied séparé : même
 > rangée, même filet, corps atténué. R7 (l'item visé reste net, les autres
 > s'effacent) reste en vigueur et porte désormais aussi la flèche.
+>
+> **Complément du même jour.** Un univers qui porte des catégories devient une
+> **liste déroulante** : la rangée est un `summary`, la flèche cède au chevron
+> qui pivote de 180° à l'ouverture, et les catégories s'empilent **une par
+> ligne** sous le titre. En ligne, séparées par des points médians, elles
+> débordaient sur deux lignes et laissaient un point orphelin en tête de la
+> seconde. La collection entière reste joignable par une première ligne « Tout
+> voir », en échelle d'étiquette pour ne pas se confondre avec une catégorie.
+> Les univers sans catégorie gardent leur lien direct et leur flèche.
 
 > **Correction du 10/08/2026 (implémentation).** Ce sur-titre était prévu en
 > `--kn-faint-invert` (45 % d'ivoire). À 11 px sur l'aplat vert, cela donne 3,1:1 —

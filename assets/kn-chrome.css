@@ -559,6 +559,36 @@ body.kn-header--over-media
   border-block-start: var(--kn-stroke) solid var(--kn-line-invert);
 }
 
+/* `summary` recoit un remplissage et un marqueur par le socle d'Horizon : la
+   rangee les reprend a son compte. */
+.kn-nav__summary {
+  padding-block: 0;
+  cursor: pointer;
+  list-style: none;
+}
+
+.kn-nav__summary::-webkit-details-marker {
+  display: none;
+}
+
+.kn-nav__chevron {
+  display: flex;
+  flex: none;
+  color: inherit;
+  opacity: 0.7;
+  transition: transform var(--kn-dur-1) var(--kn-ease-state),
+    opacity var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-nav__fold[open] .kn-nav__chevron {
+  transform: rotate(180deg);
+}
+
+.kn-nav__entry:hover .kn-nav__chevron,
+.kn-nav__entry:focus-within .kn-nav__chevron {
+  opacity: 1;
+}
+
 .kn-nav__level1 {
   display: flex;
   align-items: center;
@@ -653,35 +683,32 @@ body.kn-header--over-media
   }
 }
 
-/* Les categories vivent dans la rangee de leur univers : elles la suivent, en
-   retrait sous le filet du haut, jamais dans une rangee a elles. */
+/* Amendement du 27 aout : une categorie par ligne, sous le titre de l'univers.
+   En ligne, separees par des points medians, elles debordaient sur deux lignes
+   et un point se retrouvait en tete de la seconde. */
 .kn-nav__sub {
   display: flex;
-  flex-wrap: wrap;
-  column-gap: var(--kn-space-2xs);
-  row-gap: var(--kn-space-3xs);
+  flex-direction: column;
   margin: 0;
   padding: 0 0 var(--kn-space-sm);
   list-style: none;
 }
 
-.kn-nav__sub li {
-  display: inline-flex;
-  align-items: center;
-}
-
-.kn-nav__sub li + li::before {
-  content: '·';
-  margin-inline-end: var(--kn-space-2xs);
-  color: var(--kn-faint-invert);
-}
-
 .kn-nav__level2 {
-  display: inline-block;
+  display: block;
   padding-block: var(--kn-space-2xs);
   font-size: var(--kn-fs-sm);
   color: var(--kn-muted-invert);
   transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+/* La collection entiere : premiere ligne de la liste, marquee comme un
+   libelle de service pour ne pas se confondre avec une categorie. */
+.kn-nav__level2--all {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-label);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
 }
 
 .kn-nav__level2:hover,
