@@ -126,9 +126,9 @@
       </div>
 
       {%- comment -%}
-        Colonne des details. Placee a gauche de la galerie sur ordinateur par
-        placement explicite en grille : l'ordre du DOM reste galerie, achat,
-        details — c'est l'ordre de lecture juste sur mobile et au clavier.
+        Colonne des details. Elle suit le bloc d'achat, dans la meme colonne que
+        lui sur ordinateur : l'ordre du DOM reste galerie, achat, details, qui
+        est aussi l'ordre de lecture sur mobile et au clavier.
       {%- endcomment -%}
       <div class="kn-pdp__spec">
         {%- render 'kn-product-details', product: kn_product, opts: kn_s, section_id: section.id -%}

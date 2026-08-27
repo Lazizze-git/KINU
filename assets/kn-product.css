@@ -77,43 +77,37 @@ body:has(.kn-pdp) .kn-territory-surface {
 }
 
 @media (min-width: 1024px) {
-  /* Trois colonnes : caracteristiques, image, achat. Le placement est
-     explicite, donc l'ordre du DOM reste galerie / achat / details — l'ordre
-     de lecture juste sur mobile et au clavier. */
+  /* Amendement du 27 aout : retour a deux colonnes — galerie 7/12, achat 5/12.
+     Description et caracteristiques redescendent sous le bouton, dans la meme
+     colonne que le prix et les options : tout ce qui se lit se lit d'un cote,
+     l'image tient l'autre. L'ordre du DOM reste galerie / achat / details, qui
+     est aussi l'ordre de lecture sur mobile et au clavier.
+
+     La deuxieme rangee est en `1fr` : quand la galerie est plus haute que la
+     colonne d'achat, c'est elle qui absorbe le surplus. Sans cela, une galerie
+     qui s'etend sur les deux rangees repartirait l'ecart entre les deux et
+     creuserait un trou entre le bouton et les accordeons. */
   .kn-pdp__layout {
-    grid-template-columns: 3fr 6fr 3fr;
-    gap: clamp(2rem, 4vw, 3.5rem);
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(2rem, 4vw, 3.5rem);
+    row-gap: var(--kn-space-lg);
     align-items: start;
   }
 
-  .kn-pdp__spec {
+  .kn-pdp__gallery {
     grid-column: 1;
-    grid-row: 1;
+    grid-row: 1 / -1;
   }
 
-  .kn-pdp__gallery {
+  .kn-pdp__info {
     grid-column: 2;
     grid-row: 1;
   }
 
-  .kn-pdp__info {
-    grid-column: 3;
-    grid-row: 1;
-  }
-
-  /* Les caracteristiques ne se replient plus : elles se lisent d'un coup, en
-     colonne, comme une fiche technique. Les `details` restent des `details`
-     pour le repli mobile — c'est leur contenu qu'on force a l'affichage. */
-  @supports selector(::details-content) {
-    .kn-pdp__spec .kn-acc__item::details-content {
-      content-visibility: visible;
-      block-size: auto;
-    }
-
-    .kn-pdp__spec .kn-acc__sum {
-      cursor: default;
-      pointer-events: none;
-    }
+  .kn-pdp__spec {
+    grid-column: 2;
+    grid-row: 2;
   }
 }
 
@@ -295,7 +289,6 @@ body:has(.kn-pdp) .kn-territory-surface {
   color: var(--kn-grey);
 }
 
-/* Échelle H2 : la colonne fait ~410 px, l'échelle H1 y casserait chaque ligne. */
 /* Amendement du 23 aout. La reference tient sa fiche entiere sur une seule
    taille de caractere : le nom et le prix y sont au meme corps, separes par la
    graisse et rien d'autre. C'est ce qui laisse l'image parler seule. On
@@ -325,10 +318,10 @@ body:has(.kn-pdp) .kn-territory-surface {
   letter-spacing: var(--kn-ls-label);
 }
 
-/* Sur ordinateur, la colonne d'achat est etroite et le regard a l'image en
-   vis-a-vis : la meta peut descendre a l'echelle d'etiquette, comme dans la
-   reference. Sur un telephone, ce meme titre est le H1 d'une page pleine
-   largeur — onze pixels n'y sont plus de la retenue, mais un defaut. */
+/* Sur ordinateur, le regard a l'image en vis-a-vis : la meta peut descendre a
+   l'echelle d'etiquette, comme dans la reference. Sur un telephone, ce meme
+   titre est le H1 d'une page pleine largeur — onze pixels n'y sont plus de la
+   retenue, mais un defaut. */
 @media (min-width: 1024px) {
   .kn-pdp__title,
   .kn-pdp__price {
