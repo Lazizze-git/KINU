@@ -186,6 +186,37 @@
             </li>
           {%- endfor -%}
         </ul>
+
+        {%- comment -%}
+          Mentions legales, en petits caracteres au pied du panneau. Le menu
+          regle dans l'editeur passe devant ; sans lui, on retombe sur les
+          politiques renseignees dans Shopify — celles qui sont vides ne
+          renvoient aucun lien, la liste ne montre donc jamais de page morte.
+        {%- endcomment -%}
+        {%- liquid
+          assign kn_legal = linklists[section.settings.legal_menu].links
+          assign kn_legal_size = kn_legal.size
+          if kn_legal_size == 0
+            assign kn_legal_size = shop.policies.size
+          endif
+        -%}
+        {%- if kn_legal_size > 0 -%}
+          <ul class="kn-nav__legal" role="list">
+            {%- if kn_legal.size > 0 -%}
+              {%- for kn_link in kn_legal -%}
+                <li>
+                  <a class="kn-nav__legal-link" href="{{ kn_link.url }}">{{ kn_link.title | escape }}</a>
+                </li>
+              {%- endfor -%}
+            {%- else -%}
+              {%- for kn_policy in shop.policies -%}
+                <li>
+                  <a class="kn-nav__legal-link" href="{{ kn_policy.url }}">{{ kn_policy.title | escape }}</a>
+                </li>
+              {%- endfor -%}
+            {%- endif -%}
+          </ul>
+        {%- endif -%}
       </nav>
     </div>
   </div>

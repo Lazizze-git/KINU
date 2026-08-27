@@ -539,7 +539,39 @@ body.kn-header--over-media
 }
 
 .kn-nav__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   padding: var(--kn-space-lg) var(--kn-gutter) var(--kn-space-2xl);
+}
+
+/* Mentions legales : plus petites que tout le reste du panneau, poussees au
+   bas de l'ecran. Elles doivent se trouver, pas se lire. */
+.kn-nav__legal {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--kn-space-md);
+  row-gap: var(--kn-space-3xs);
+  /* `auto` colle le bloc au bas du panneau ; le remplissage prend le relais
+     quand le contenu deborde et que la marge automatique tombe a zero. */
+  margin: auto 0 0;
+  padding: var(--kn-space-lg) 0 0;
+  list-style: none;
+}
+
+.kn-nav__legal-link {
+  display: inline-block;
+  padding-block: var(--kn-space-3xs);
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-label);
+  letter-spacing: var(--kn-ls-label);
+  color: var(--kn-muted-invert);
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-nav__legal-link:hover,
+.kn-nav__legal-link:focus-visible {
+  color: var(--kn-ivory);
 }
 
 /* Amendement du 27 aout : une liste de rangees a filets, toutes au meme corps.

@@ -372,7 +372,12 @@ Niveau 1 en `--kn-fs-h4` DM Sans 500, capitales, chasse positive, ivoire ; nivea
 > débordaient sur deux lignes et laissaient un point orphelin en tête de la
 > seconde. La collection entière reste joignable par une première ligne « Tout
 > voir », en échelle d'étiquette pour ne pas se confondre avec une catégorie.
-> Les univers sans catégorie gardent leur lien direct et leur flèche.
+> Les univers sans catégorie gardent leur lien direct et leur flèche. « Rechercher »
+> quitte la liste — la loupe du header la rend redondante. Le panneau se ferme
+> sur les **mentions légales** en `--kn-fs-label` atténué, poussées au bas de
+> l'écran : elles doivent se trouver, pas se lire. Sans menu réglé dans
+> l'éditeur, elles reprennent les politiques renseignées dans Shopify, si bien
+> qu'une politique non rédigée n'expose jamais de page morte.
 
 > **Correction du 10/08/2026 (implémentation).** Ce sur-titre était prévu en
 > `--kn-faint-invert` (45 % d'ivoire). À 11 px sur l'aplat vert, cela donne 3,1:1 —
