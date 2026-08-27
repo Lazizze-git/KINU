@@ -540,13 +540,24 @@ body.kn-header--over-media
   cursor: pointer;
 }
 
+/* Le pied du panneau se pose au bas de l'ecran plutot que de pendre sous la
+   derniere entree : la liste tient le haut, les liens de service tiennent le
+   bas, et le vide se range entre les deux au lieu de s'accumuler dessous.
+   `flex: 1` sur le corps et non `min-height: 100%` : le panneau porte aussi la
+   barre de fermeture, et le pourcentage aurait ajoute sa hauteur au calcul. */
 .kn-nav__body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
   padding: var(--kn-space-lg) var(--kn-gutter) var(--kn-space-2xl);
 }
 
+/* `flex: 1 0 auto` : la liste prend le reste de la hauteur, ce qui pousse le
+   pied en bas tout en lui laissant sa marge haute quand le panneau deborde. */
 .kn-nav__list {
   display: flex;
   flex-direction: column;
+  flex: 1 0 auto;
   gap: var(--kn-space-lg);
   margin: 0;
   padding: 0;
