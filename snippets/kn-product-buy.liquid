@@ -35,37 +35,47 @@
   {%- form 'product', product, id: form_id, data-type: 'add-to-cart-form' -%}
     <input type="hidden" name="id" ref="variantId" value="{{ variant.id }}">
 
-    <div class="kn-buy__row">
-      <div class="kn-qty">
-        <label class="kn-visually-hidden" for="KnQty-{{ section_id }}">{{ opts.label_quantity }}</label>
-        <button
-          type="button"
-          class="kn-qty__step"
-          data-kn-qty-step="-1"
-          aria-label="{{ opts.label_decrease | escape }}"
-        >
-          <span aria-hidden="true">–</span>
-        </button>
-        <input
-          id="KnQty-{{ section_id }}"
-          class="kn-qty__input"
-          type="number"
-          name="quantity"
-          value="1"
-          min="1"
-          step="1"
-          inputmode="numeric"
-          autocomplete="off"
-          data-kn-qty-input
-        >
-        <button
-          type="button"
-          class="kn-qty__step"
-          data-kn-qty-step="1"
-          aria-label="{{ opts.label_increase | escape }}"
-        >
-          <span aria-hidden="true">+</span>
-        </button>
+    <div class="kn-buy__actions">
+      {%- comment -%}
+        La quantite se lit comme les autres choix de la fiche : une etiquette en
+        capitales grises, puis le controle dessous. C'est ce qui la rattache aux
+        selecteurs de couleur et de taille au lieu de la laisser flotter.
+      {%- endcomment -%}
+      <div class="kn-buy__qty">
+        <label class="kn-label kn-buy__qty-label" for="KnQty-{{ section_id }}">
+          {{- opts.label_quantity -}}
+        </label>
+
+        <div class="kn-qty">
+          <button
+            type="button"
+            class="kn-qty__step"
+            data-kn-qty-step="-1"
+            aria-label="{{ opts.label_decrease | escape }}"
+          >
+            <span aria-hidden="true">–</span>
+          </button>
+          <input
+            id="KnQty-{{ section_id }}"
+            class="kn-qty__input"
+            type="number"
+            name="quantity"
+            value="1"
+            min="1"
+            step="1"
+            inputmode="numeric"
+            autocomplete="off"
+            data-kn-qty-input
+          >
+          <button
+            type="button"
+            class="kn-qty__step"
+            data-kn-qty-step="1"
+            aria-label="{{ opts.label_increase | escape }}"
+          >
+            <span aria-hidden="true">+</span>
+          </button>
+        </div>
       </div>
 
       <add-to-cart-component

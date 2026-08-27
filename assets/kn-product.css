@@ -496,27 +496,19 @@ body:has(.kn-pdp) .kn-territory-surface {
   margin-top: var(--kn-space-md);
 }
 
-.kn-buy__row {
+/* Quantite puis bouton, empiles, au meme rythme vertical que les groupes
+   d'options : la quantite est un choix de plus, pas un accessoire du bouton.
+   Cote a cote, elle n'avait pas la place de porter son etiquette et le libelle
+   du bouton se cassait sur trois lignes. */
+.kn-buy__actions {
   display: grid;
-  gap: var(--kn-space-xs);
+  gap: var(--kn-space-md);
 }
 
-@media (min-width: 640px) {
-  .kn-buy__row {
-    grid-template-columns: auto 1fr;
-    align-items: stretch;
-  }
-}
-
-@media (min-width: 1024px) {
-  /* La colonne d'achat ne fait plus qu'un quart de page depuis le passage a
-     trois colonnes. Cote a cote avec le selecteur de quantite, le bouton
-     tombait sous 160 px et son libelle se cassait sur trois lignes. Empiles,
-     il occupe toute sa colonne — comme dans la reference. */
-  .kn-buy__row {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--kn-space-sm);
-  }
+.kn-buy__qty-label {
+  display: block;
+  margin-bottom: var(--kn-space-2xs);
+  color: var(--kn-grey);
 }
 
 .kn-qty {
