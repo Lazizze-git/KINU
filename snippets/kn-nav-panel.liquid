@@ -49,6 +49,12 @@
         </button>
       </div>
 
+      {%- comment -%}
+        Amendement du 27 aout : une seule liste de rangees a filets, toutes au
+        meme corps, chacune fermee par une fleche — navigation et liens de
+        service compris. Les grands titres empiles laissaient les trois quarts
+        du panneau vides et ne disaient pas ou l'on va.
+      {%- endcomment -%}
       <nav class="kn-nav__body">
         <ul class="kn-nav__list" role="list">
           {%- if kn_links.size > 0 -%}
@@ -56,7 +62,7 @@
               {%- liquid
                 comment
                   Profondeur du rayon. Le compteur ne remplace jamais le
-                  libellé : il le suit, en exposant, atténué.
+                  libelle : il le suit, atténué.
                 endcomment
                 assign kn_count = 0
                 if kn_link.type == 'collection_link' and kn_link.object != blank
@@ -74,15 +80,27 @@
                 endfor
               -%}
               <li class="kn-nav__entry">
-                {%- if kn_overline != blank -%}
-                  <span class="kn-nav__overline kn-label" translate="no">{{ kn_overline | escape }}</span>
-                {%- endif -%}
                 <a class="kn-nav__level1" href="{{ kn_link.url }}">
-                  {{- kn_link.title | escape -}}
-                  {%- if kn_count > 0 -%}
-                    <span class="kn-brk kn-nav__count" translate="no">{% if kn_count < 10 %}0{% endif %}{{ kn_count }}</span>
+                  <span class="kn-nav__name">{{ kn_link.title | escape }}</span>
+                  {%- if kn_overline != blank or kn_count > 0 -%}
+                  <span class="kn-nav__aside">
+                    {%- if kn_overline != blank -%}
+                      <span class="kn-nav__overline kn-label" translate="no">
+                        {{- kn_overline | escape -}}
+                      </span>
+                    {%- endif -%}
+                    {%- if kn_count > 0 -%}
+                      <span class="kn-brk kn-nav__count" translate="no">
+                        {%- if kn_count < 10 %}0{% endif %}{{ kn_count -}}
+                      </span>
+                    {%- endif -%}
+                  </span>
                   {%- endif -%}
+                  <span class="kn-nav__arrow" aria-hidden="true">
+                    {%- render 'kn-icon', name: 'arrow-right', size: 18 -%}
+                  </span>
                 </a>
+
                 {%- if kn_link.links.size > 0 -%}
                   <ul class="kn-nav__sub" role="list">
                     {%- for kn_child in kn_link.links -%}
@@ -103,32 +121,47 @@
                 endif
               -%}
               <li class="kn-nav__entry" {{ kn_block.shopify_attributes }}>
-                {%- if kn_block.settings.overline != blank -%}
-                  <span class="kn-nav__overline kn-label" translate="no">{{ kn_block.settings.overline | escape }}</span>
-                {%- endif -%}
-                <a class="kn-nav__level1" href="{{ kn_url }}">{{ kn_block.settings.label | escape }}</a>
+                <a class="kn-nav__level1" href="{{ kn_url }}">
+                  <span class="kn-nav__name">{{ kn_block.settings.label | escape }}</span>
+                  {%- if kn_block.settings.overline != blank -%}
+                    <span class="kn-nav__aside">
+                      <span class="kn-nav__overline kn-label" translate="no">
+                        {{- kn_block.settings.overline | escape -}}
+                      </span>
+                    </span>
+                  {%- endif -%}
+                  <span class="kn-nav__arrow" aria-hidden="true">
+                    {%- render 'kn-icon', name: 'arrow-right', size: 18 -%}
+                  </span>
+                </a>
               </li>
             {%- endfor -%}
           {%- endif -%}
+
+          {%- comment -%}
+            Les liens de service ferment la meme liste : meme rangee, meme
+            filet, corps attenue. Rien ne pend plus sous la navigation.
+          {%- endcomment -%}
+          <li class="kn-nav__entry kn-nav__entry--service">
+            <a class="kn-nav__level1" href="{{ kn_all_url }}">
+              <span class="kn-nav__name">{{ section.settings.secondary_label | escape }}</span>
+              <span class="kn-nav__arrow" aria-hidden="true">
+                {%- render 'kn-icon', name: 'arrow-right', size: 18 -%}
+              </span>
+            </a>
+          </li>
+
+          {%- for kn_link in kn_utility -%}
+            <li class="kn-nav__entry kn-nav__entry--service">
+              <a class="kn-nav__level1" href="{{ kn_link.url }}">
+                <span class="kn-nav__name">{{ kn_link.title | escape }}</span>
+                <span class="kn-nav__arrow" aria-hidden="true">
+                  {%- render 'kn-icon', name: 'arrow-right', size: 18 -%}
+                </span>
+              </a>
+            </li>
+          {%- endfor -%}
         </ul>
-
-        <div class="kn-nav__foot">
-          <a class="kn-nav__secondary kn-label" href="{{ kn_all_url }}">
-            {{- section.settings.secondary_label | escape -}}
-          </a>
-
-          {%- if kn_utility.size > 0 -%}
-            <ul class="kn-nav__utility" role="list">
-              {%- for kn_link in kn_utility -%}
-                <li>
-                  <a class="kn-nav__utility-link kn-label" href="{{ kn_link.url }}">
-                    {{- kn_link.title | escape -}}
-                  </a>
-                </li>
-              {%- endfor -%}
-            </ul>
-          {%- endif -%}
-        </div>
       </nav>
     </div>
   </div>

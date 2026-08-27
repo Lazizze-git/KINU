@@ -351,7 +351,19 @@ TOUTES LES COLLECTIONS
 JOURNAL · À PROPOS
 ```
 
-Niveau 1 en `--kn-fs-h2` DM Sans 700 ivoire ; niveau 2 en `--kn-fs-sm` `--kn-muted-invert`. Le nom de collection est un sur-titre `--kn-fs-label` en `--kn-muted-invert` : **présent comme signature de marque, jamais comme repère de navigation** (exigence explicite du brief).
+Niveau 1 en `--kn-fs-h4` DM Sans 500, capitales, chasse positive, ivoire ; niveau 2 en `--kn-fs-sm` `--kn-muted-invert`. Le nom de collection est un sur-titre `--kn-fs-label` en `--kn-muted-invert` : **présent comme signature de marque, jamais comme repère de navigation** (exigence explicite du brief).
+
+> **Amendement du 27 août 2026 — le panneau en rangées.** Le niveau 1 était en
+> `--kn-fs-h2` (48 px), une entrée par bloc empilé, sur-titre au-dessus. Trois
+> entrées remplissaient un quart du panneau et rien ne disait qu'elles menaient
+> quelque part. La demande client du 27 août, référence [olafhussein.com](https://olafhussein.com)
+> à l'appui, les ramène à une **liste de rangées à filets 1 px, toutes au même
+> corps**, fermées par une flèche qui avance de 4 px au survol. Le nom de
+> collection et le compteur passent à droite de la rangée, comme la valeur d'une
+> ligne de données. Les liens de service — Toutes les collections, puis le menu
+> de bas de panneau — ferment la même liste au lieu d'un pied séparé : même
+> rangée, même filet, corps atténué. R7 (l'item visé reste net, les autres
+> s'effacent) reste en vigueur et porte désormais aussi la flèche.
 
 > **Correction du 10/08/2026 (implémentation).** Ce sur-titre était prévu en
 > `--kn-faint-invert` (45 % d'ivoire). À 11 px sur l'aplat vert, cela donne 3,1:1 —

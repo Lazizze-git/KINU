@@ -403,23 +403,19 @@ body.kn-header--over-media .kn-hero__frame {
    rayon. Il ne remplace jamais le libellé, il le suit.
    -------------------------------------------------------------------------- */
 
+/* Amendement du 27 aout : le compteur suivait un grand titre, en exposant et
+   colle par une marge en em. Dans une rangee, il se range a droite avec le nom
+   de collection — c'est la boite qui l'espace, et il s'aligne sur la ligne de
+   base. La teinte passe de `faint` a `muted` : le §7.2 reserve `faint` a
+   l'attenuation transitoire, jamais a du texte permanent. */
 .kn-nav__count {
-  margin-inline-start: 0.4em;
-  color: var(--kn-faint-invert);
   font-family: var(--kn-font-ui);
   font-size: var(--kn-fs-label);
   font-weight: var(--kn-fw-medium);
   letter-spacing: var(--kn-ls-label);
   font-variant-numeric: tabular-nums;
-  vertical-align: 0.55em;
 }
 
-/* Le survol du panneau atténue les autres entrées (DA §3.6) : le compteur
-   suit son entrée, sinon il flotterait tout seul en pleine lumière. */
-.kn-nav__entry:hover .kn-nav__count,
-.kn-nav__entry:focus-within .kn-nav__count {
-  color: var(--kn-muted-invert);
-}
 
 /* --------------------------------------------------------------------------
    9. Colonnes de pied de page entre crochets

@@ -103,8 +103,6 @@ body.kn-header--over-media .content-for-layout {
 .kn-nav__close,
 .kn-nav__level1,
 .kn-nav__level2,
-.kn-nav__secondary,
-.kn-nav__utility-link,
 .kn-announce__item,
 .kn-announce__close,
 .kn-footer__summary,
@@ -540,54 +538,93 @@ body.kn-header--over-media
   cursor: pointer;
 }
 
-/* Le pied du panneau se pose au bas de l'ecran plutot que de pendre sous la
-   derniere entree : la liste tient le haut, les liens de service tiennent le
-   bas, et le vide se range entre les deux au lieu de s'accumuler dessous.
-   `flex: 1` sur le corps et non `min-height: 100%` : le panneau porte aussi la
-   barre de fermeture, et le pourcentage aurait ajoute sa hauteur au calcul. */
 .kn-nav__body {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
   padding: var(--kn-space-lg) var(--kn-gutter) var(--kn-space-2xl);
 }
 
-/* `flex: 1 0 auto` : la liste prend le reste de la hauteur, ce qui pousse le
-   pied en bas tout en lui laissant sa marge haute quand le panneau deborde. */
+/* Amendement du 27 aout : une liste de rangees a filets, toutes au meme corps.
+   Les grands titres empiles laissaient les trois quarts du panneau vides, et
+   rien ne signalait qu'une entree menait quelque part. */
 .kn-nav__list {
-  display: flex;
-  flex-direction: column;
-  flex: 1 0 auto;
-  gap: var(--kn-space-lg);
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.kn-nav__overline {
-  display: block;
-  margin-block-end: var(--kn-space-3xs);
-  color: var(--kn-muted-invert);
+.kn-nav__entry {
+  border-block-end: var(--kn-stroke) solid var(--kn-line-invert);
+}
+
+.kn-nav__entry:first-child {
+  border-block-start: var(--kn-stroke) solid var(--kn-line-invert);
 }
 
 .kn-nav__level1 {
-  display: inline-block;
-  font-family: var(--kn-font-display);
-  font-size: var(--kn-fs-h2);
-  font-weight: var(--kn-fw-bold);
-  line-height: var(--kn-lh-title);
-  letter-spacing: var(--kn-ls-title);
+  display: flex;
+  align-items: center;
+  gap: var(--kn-space-sm);
+  min-height: 64px;
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-h4);
+  font-weight: var(--kn-fw-medium);
+  line-height: var(--kn-lh-tight);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
   color: var(--kn-ivory);
   transition: color var(--kn-dur-2) var(--kn-ease-state);
 }
 
-/* R7 — l'item visé reste net, tous les autres s'effacent. */
+/* Les liens de service ferment la liste : meme rangee, corps attenue, pour que
+   la navigation garde le premier plan. */
+.kn-nav__entry--service .kn-nav__level1 {
+  font-size: var(--kn-fs-sm);
+  color: var(--kn-muted-invert);
+}
+
+.kn-nav__name {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* Le nom de collection et le compteur se rangent a droite, comme la valeur
+   d'une ligne de donnees. Signature de marque, jamais repere de navigation
+   (DA §7.2). */
+.kn-nav__aside {
+  display: inline-flex;
+  align-items: baseline;
+  flex: none;
+  gap: var(--kn-space-2xs);
+}
+
+/* Nom de collection, compteur et fleche heritent de la teinte de leur rangee
+   et s'attenuent d'un cran : quand R7 efface une entree, ils s'effacent avec
+   elle au lieu de rester en pleine lumiere. */
+.kn-nav__overline,
+.kn-nav__count,
+.kn-nav__arrow {
+  color: inherit;
+  opacity: 0.7;
+}
+
+.kn-nav__arrow {
+  display: flex;
+  flex: none;
+  transition: transform var(--kn-dur-2) var(--kn-ease-out),
+    opacity var(--kn-dur-2) var(--kn-ease-state);
+}
+
+/* R7 — l'item vise reste net, tous les autres s'effacent. */
 .kn-nav__list:focus-within .kn-nav__level1 {
   color: var(--kn-faint-invert);
 }
 
 .kn-nav__entry:focus-within .kn-nav__level1 {
   color: var(--kn-ivory);
+}
+
+.kn-nav__entry:focus-within .kn-nav__arrow {
+  opacity: 1;
+  transform: translateX(var(--kn-space-3xs));
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -598,20 +635,37 @@ body.kn-header--over-media
   .kn-nav__entry:hover .kn-nav__level1 {
     color: var(--kn-ivory);
   }
+
+  .kn-nav__entry:hover .kn-nav__arrow {
+    opacity: 1;
+    transform: translateX(var(--kn-space-3xs));
+  }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .kn-nav__arrow {
+    transition: opacity var(--kn-dur-2) var(--kn-ease-state);
+  }
+
+  .kn-nav__entry:hover .kn-nav__arrow,
+  .kn-nav__entry:focus-within .kn-nav__arrow {
+    transform: none;
+  }
+}
+
+/* Les categories vivent dans la rangee de leur univers : elles la suivent, en
+   retrait sous le filet du haut, jamais dans une rangee a elles. */
 .kn-nav__sub {
   display: flex;
   flex-wrap: wrap;
   column-gap: var(--kn-space-2xs);
   row-gap: var(--kn-space-3xs);
-  margin: var(--kn-space-2xs) 0 0;
-  padding: 0;
+  margin: 0;
+  padding: 0 0 var(--kn-space-sm);
   list-style: none;
 }
 
-.kn-nav__sub li,
-.kn-nav__utility li {
+.kn-nav__sub li {
   display: inline-flex;
   align-items: center;
 }
@@ -633,49 +687,6 @@ body.kn-header--over-media
 .kn-nav__level2:hover,
 .kn-nav__level2:focus-visible {
   color: var(--kn-ivory);
-}
-
-.kn-nav__foot {
-  display: flex;
-  flex-direction: column;
-  gap: var(--kn-space-md);
-  margin-block-start: var(--kn-space-xl);
-  padding-block-start: var(--kn-space-md);
-  border-block-start: var(--kn-stroke) solid var(--kn-line-invert);
-}
-
-.kn-nav__secondary,
-.kn-nav__utility-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: var(--kn-tap);
-  color: var(--kn-ivory);
-  transition: color var(--kn-dur-2) var(--kn-ease-state);
-}
-
-.kn-nav__utility-link {
-  color: var(--kn-muted-invert);
-}
-
-.kn-nav__secondary:hover,
-.kn-nav__utility-link:hover {
-  color: var(--kn-forest-soft);
-}
-
-.kn-nav__utility {
-  display: flex;
-  flex-wrap: wrap;
-  column-gap: var(--kn-space-2xs);
-  row-gap: var(--kn-space-3xs);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.kn-nav__utility li + li::before {
-  content: '·';
-  margin-inline-end: var(--kn-space-2xs);
-  color: var(--kn-faint-invert);
 }
 
 @media (min-width: 1024px) {
@@ -702,34 +713,14 @@ body.kn-header--over-media
     padding-block: var(--kn-space-xl) var(--kn-space-2xl);
   }
 
-  /* Quatre rails, comme les colonnes du pied de page. En flex-wrap, chaque
-     entree faisait la largeur de son texte : les colonnes tombaient en
-     escalier et le panneau paraissait improvise. Sur une grille, elles
-     s'alignent sur le meme rythme que le reste du site. */
+  /* Depuis que les libelles sont dans la barre, le burger ne s'affiche plus au
+     dela de 1024 px et ce panneau n'est plus atteignable. On garde sa mise en
+     page juste — des rangees, comme sur telephone — pour qu'il reste correct
+     le jour ou on lui rend un declencheur. La grille a quatre colonnes qui
+     vivait ici cassait les rangees. */
   .kn-nav__list {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--kn-space-2xl) var(--kn-grid-gap);
-    align-items: start;
-  }
-
-  .kn-nav__sub {
-    flex-direction: column;
-    row-gap: 0;
-  }
-
-  .kn-nav__level2 {
-    padding-block: var(--kn-space-3xs);
-  }
-
-  .kn-nav__sub li + li::before {
-    content: none;
-  }
-
-  .kn-nav__foot {
-    flex-direction: row;
-    align-items: baseline;
-    justify-content: space-between;
+    max-width: var(--kn-container);
+    margin-inline: auto;
   }
 }
 
