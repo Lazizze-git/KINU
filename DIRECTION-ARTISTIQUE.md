@@ -388,7 +388,7 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 ### 7.6 Footer
 
 - Surface **SOMBRE** (`#1B1A16`), texte `#F7F5F0`, liens `rgba(247,245,240,.7)` → `--kn-forest-soft` (`#6FA98C`) au survol.
-- Juste au-dessus : le bloc **newsletter en aplat forêt** pleine largeur (R2 / R12), champ e-mail en filet ivoire 1 px sur fond transparent, bouton `S'INSCRIRE` ivoire.
+- Juste au-dessus : le bloc **newsletter en aplat forêt** pleine largeur (R2 / R12), champ e-mail en filet ivoire 1 px sur fond transparent, bouton `S'INSCRIRE` ivoire. Le filet est un **contour**, pas un trait bas : à partir de 640 px, champ et bouton tiennent dans une seule boîte, l'aplat ivoire du bouton en fermant le bord droit. Boîte bornée à 34 rem et calée sur le rail droit — un aplat de cette largeur ne se traverse pas d'un trait de 780 px pour saisir une adresse. Empilés sous 640 px, champ à filet bas et bouton pleine largeur.
 - 4 colonnes desktop / accordéons repliés sur mobile : Boutique · Aide (FAQ, Livraison, Retours) · Maison (À propos, Journal, Contact) · Légal (CGV, Confidentialité).
 - Bas de footer : réseaux sociaux en icônes 18 px trait 1,5 px, **sélecteur de langue FR / EN** en `--kn-fs-label` séparé par un filet vertical, mention `© KINŪ 2026`.
 

@@ -719,7 +719,9 @@ body.kn-header--over-media
   width: 100%;
 }
 
-/* Le contraste du filet sur aplat vert est traité au socle (kn-base.css §8). */
+/* Empile, le champ garde le filet bas du socle, dont le contraste sur aplat
+   vert est deja traite la-bas (kn-base.css §8). En ligne, c'est la boite qui
+   prend le filet a son compte. */
 .kn-news__input {
   text-align: start;
 }
@@ -734,34 +736,58 @@ body.kn-header--over-media
 }
 
 @media (min-width: 640px) {
-  /* Le formulaire cesse d'etre une colonne posee a cote du propos : il
-     traverse toute la largeur sur un filet unique, et le bouton s'assied
-     dessus. Le champ ne porte plus son propre trait — c'est la rangee entiere
-     qui le porte. Un geste au lieu de trois objets flottants sur du vert. */
+  /* Le §7.6 demande un champ « en filet ivoire 1 px » : un contour, pas le
+     seul trait bas qu'on avait. Champ et bouton tiennent donc dans une boite
+     unique — la grammaire du selecteur de quantite de la fiche produit. Le
+     bouton ne peut plus flotter au-dessus du filet puisqu'il est dedans, et
+     l'aplat ivoire cesse d'etre un pave orphelin pose sur le vert : il ferme
+     une piece. */
   .kn-news__field {
     flex-direction: row;
     align-items: stretch;
-    gap: var(--kn-space-lg);
-    border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
+    gap: 0;
+    max-width: 34rem;
+    border: var(--kn-stroke) solid var(--kn-surface-muted);
+    transition: border-color var(--kn-dur-2) var(--kn-ease-state);
   }
 
-  /* Plus haut et plus grand : sur un aplat de cette taille, un champ au corps
-     de texte se fait avaler par l'air qui l'entoure. */
-  .kn-news__input {
+  .kn-news__field:hover {
+    border-color: var(--kn-surface-fg);
+  }
+
+  /* Le champ n'ayant plus de bordure propre, c'est la boite qui doit porter le
+     signal de focus : `.kn-input:focus` supprime deja l'outline, sans ce
+     relais la navigation au clavier n'aurait plus aucun repere. */
+  .kn-news__field:focus-within {
+    border-color: var(--kn-surface-accent);
+    box-shadow: inset 0 0 0 var(--kn-stroke) var(--kn-surface-accent);
+  }
+
+  .kn-news__field .kn-news__input,
+  .kn-news__field .kn-news__input:hover,
+  .kn-news__field .kn-news__input:focus {
     flex: 1;
-    min-height: 64px;
-    padding-block: 0;
-    border-block-end: 0;
+    min-width: 0;
+    min-height: 60px;
+    padding: 0 var(--kn-space-sm);
+    border: 0;
     font-size: var(--kn-fs-body);
     text-align: start;
   }
 
-  /* `stretch`, pas `center` : centre, le bouton flottait au-dessus du trait.
-     Etire, son bord bas EST le filet — les deux ne font plus qu'une piece. */
   .kn-news__submit {
     flex: none;
     align-self: stretch;
     min-height: 0;
+  }
+}
+
+@media (min-width: 900px) {
+  /* Une adresse e-mail ne demande pas 780 px de trait. Bornee et poussee au
+     bout de sa colonne, la boite se cale sur le rail droit de la page au lieu
+     de traverser la moitie de l'aplat. */
+  .kn-news__field {
+    margin-inline-start: auto;
   }
 }
 
