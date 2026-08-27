@@ -1,59 +1,11 @@
 {%- comment -%}
   KINŪ — Pied de page
-  Newsletter en aplat forêt posée directement sur le footer encre : la marche
-  franche est volontaire (DIRECTION-ARTISTIQUE.md §3.4 R12, §7.6).
+
+  Amendement du 27 aout : la newsletter n'est plus une section forêt posée
+  au-dessus du footer, mais sa premiere rangee. Un seul bloc encre, un seul
+  rythme : lettre a gauche, menus a droite, telemetrie puis ligne legale
+  dessous (DIRECTION-ARTISTIQUE.md §7.6).
 {%- endcomment -%}
-
-{%- if section.settings.show_newsletter -%}
-  <section class="kn-news" data-kn-surface="flood" aria-labelledby="kn-news-title">
-    <div class="kn-container kn-news__inner">
-      <div class="kn-news__intro">
-        {%- if section.settings.newsletter_tag != blank -%}
-          <span class="kn-label kn-brk kn-news__tag">{{ section.settings.newsletter_tag | escape }}</span>
-        {%- endif -%}
-
-        <h2 class="kn-news__title kn-h2" id="kn-news-title">{{ section.settings.newsletter_title | escape }}</h2>
-
-        {%- if section.settings.newsletter_text != blank -%}
-          <p class="kn-news__text kn-sm">{{ section.settings.newsletter_text | escape }}</p>
-        {%- endif -%}
-      </div>
-
-      {%- form 'customer', id: 'kn-newsletter', class: 'kn-news__form' -%}
-        <input type="hidden" name="contact[tags]" value="newsletter">
-
-        {%- if form.posted_successfully? -%}
-          <p class="kn-news__feedback kn-sm" role="status">{{ section.settings.newsletter_success | escape }}</p>
-        {%- elsif form.errors -%}
-          <p class="kn-news__feedback kn-news__feedback--error kn-sm" role="alert">
-            {{- section.settings.newsletter_error | escape -}}
-          </p>
-        {%- endif -%}
-
-        <div class="kn-news__field">
-          <label class="kn-visually-hidden" for="kn-news-email">
-            {{- section.settings.newsletter_placeholder | escape -}}
-          </label>
-          <input
-            class="kn-input kn-news__input"
-            id="kn-news-email"
-            type="email"
-            name="contact[email]"
-            value="{{ form.email }}"
-            placeholder="{{ section.settings.newsletter_placeholder | escape }}"
-            autocomplete="email"
-            spellcheck="false"
-            autocapitalize="off"
-            required
-          >
-          <button type="submit" class="kn-btn kn-btn--primary kn-news__submit">
-            {{- section.settings.newsletter_cta | escape -}}
-          </button>
-        </div>
-      {%- endform -%}
-    </div>
-  </section>
-{%- endif -%}
 
 <div class="kn-footer" data-kn-surface="dark" {{ section.shopify_attributes }}>
   <div class="kn-container">
@@ -68,27 +20,78 @@
       endfor
     -%}
 
-    {%- if kn_has_columns -%}
-      <div class="kn-footer__cols">
-        {%- for block in section.blocks -%}
-          {%- assign kn_links = linklists[block.settings.menu].links -%}
-          {%- if kn_links.size == 0 -%}
-            {%- continue -%}
-          {%- endif -%}
-          <details class="kn-footer__col" {{ block.shopify_attributes }}>
-            <summary class="kn-footer__summary">
-              <span class="kn-label kn-brk">{{ block.settings.title | escape }}</span>
-              <span class="kn-footer__chevron">{%- render 'kn-icon', name: 'chevron', size: 16 -%}</span>
-            </summary>
-            <ul class="kn-footer__links" role="list">
-              {%- for kn_link in kn_links -%}
-                <li><a class="kn-footer__link kn-sm" href="{{ kn_link.url }}">{{ kn_link.title | escape }}</a></li>
-              {%- endfor -%}
-            </ul>
-          </details>
-        {%- endfor -%}
-      </div>
-    {%- endif -%}
+    <div class="kn-footer__top">
+      {%- if section.settings.show_newsletter -%}
+        <section class="kn-news" aria-labelledby="kn-news-title">
+          <div class="kn-news__intro">
+            {%- if section.settings.newsletter_tag != blank -%}
+              <span class="kn-label kn-brk kn-news__tag">{{ section.settings.newsletter_tag | escape }}</span>
+            {%- endif -%}
+
+            <h2 class="kn-news__title kn-h3" id="kn-news-title">{{ section.settings.newsletter_title | escape }}</h2>
+
+            {%- if section.settings.newsletter_text != blank -%}
+              <p class="kn-news__text kn-sm">{{ section.settings.newsletter_text | escape }}</p>
+            {%- endif -%}
+          </div>
+
+          {%- form 'customer', id: 'kn-newsletter', class: 'kn-news__form' -%}
+            <input type="hidden" name="contact[tags]" value="newsletter">
+
+            {%- if form.posted_successfully? -%}
+              <p class="kn-news__feedback kn-sm" role="status">{{ section.settings.newsletter_success | escape }}</p>
+            {%- elsif form.errors -%}
+              <p class="kn-news__feedback kn-news__feedback--error kn-sm" role="alert">
+                {{- section.settings.newsletter_error | escape -}}
+              </p>
+            {%- endif -%}
+
+            <div class="kn-news__field">
+              <label class="kn-visually-hidden" for="kn-news-email">
+                {{- section.settings.newsletter_placeholder | escape -}}
+              </label>
+              <input
+                class="kn-input kn-news__input"
+                id="kn-news-email"
+                type="email"
+                name="contact[email]"
+                value="{{ form.email }}"
+                placeholder="{{ section.settings.newsletter_placeholder | escape }}"
+                autocomplete="email"
+                spellcheck="false"
+                autocapitalize="off"
+                required
+              >
+              <button type="submit" class="kn-btn kn-btn--primary kn-news__submit">
+                {{- section.settings.newsletter_cta | escape -}}
+              </button>
+            </div>
+          {%- endform -%}
+        </section>
+      {%- endif -%}
+
+      {%- if kn_has_columns -%}
+        <div class="kn-footer__cols">
+          {%- for block in section.blocks -%}
+            {%- assign kn_links = linklists[block.settings.menu].links -%}
+            {%- if kn_links.size == 0 -%}
+              {%- continue -%}
+            {%- endif -%}
+            <details class="kn-footer__col" {{ block.shopify_attributes }}>
+              <summary class="kn-footer__summary">
+                <span class="kn-label kn-brk">{{ block.settings.title | escape }}</span>
+                <span class="kn-footer__chevron">{%- render 'kn-icon', name: 'chevron', size: 16 -%}</span>
+              </summary>
+              <ul class="kn-footer__links" role="list">
+                {%- for kn_link in kn_links -%}
+                  <li><a class="kn-footer__link kn-sm" href="{{ kn_link.url }}">{{ kn_link.title | escape }}</a></li>
+                {%- endfor -%}
+              </ul>
+            </details>
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+    </div>
 
     {%- comment -%}
       Les coordonnées de l'atelier : la signature « donnée vivante » du site,

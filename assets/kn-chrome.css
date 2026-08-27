@@ -664,36 +664,18 @@ body.kn-header--over-media
 }
 
 /* --------------------------------------------------------------------------
-   6. Newsletter — aplat forêt posé sur le footer encre (DA §3.4 R12)
+   6. Lettre d'information — premiere rangee du pied de page (DA §7.6)
    -------------------------------------------------------------------------- */
 
-/* Le §5.3 veut qu'une surface coloree recoive plus d'air qu'une surface
-   claire, et il a raison — mais l'inondation standard donnait 160 px en haut
-   et en bas pour trois lignes de contenu : l'aplat paraissait vide, pas
-   genereux. Valeur intermediaire, toujours au-dessus d'une section claire. */
+/* Amendement du 27 aout : la lettre etait un aplat foret pose au-dessus du
+   footer encre. Deux blocs, deux surfaces, deux rythmes pour une meme fin de
+   page — et l'aplat sonnait vide, trois lignes perdues dans 340 px de vert.
+   Elle est desormais la premiere rangee du footer, sur la meme surface. */
 .kn-news {
-  padding-block: clamp(4rem, 9vw, 7rem);
-}
-
-/* Alignee a gauche, sur les memes rails que le reste de la page. Centree, la
-   section n'avait ni bord ni hierarchie : un titre flottant, un filet, un pave
-   beige au milieu du vert. Le libelle entre crochets l'ancre dans la grammaire
-   du site, et le formulaire prend sa propre colonne. */
-.kn-news__inner {
   display: grid;
-  gap: var(--kn-space-xl);
+  gap: var(--kn-space-lg);
+  align-content: start;
   text-align: start;
-}
-
-@media (min-width: 900px) {
-  /* Deux colonnes egales, alignees par le bas : le filet du champ tombe sur la
-     derniere ligne du propos. Le formulaire remplit sa colonne au lieu de
-     tirer un trait de mille pixels en travers de la page. */
-  .kn-news__inner {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--kn-space-3xl);
-    align-items: end;
-  }
 }
 
 .kn-news__tag {
@@ -719,8 +701,8 @@ body.kn-header--over-media
   width: 100%;
 }
 
-/* Empile, le champ garde le filet bas du socle, dont le contraste sur aplat
-   vert est deja traite la-bas (kn-base.css §8). En ligne, c'est la boite qui
+/* Empile, le champ garde le filet bas du socle, dont le contraste sur surface
+   sombre est deja traite la-bas (kn-base.css §8). En ligne, c'est la boite qui
    prend le filet a son compte. */
 .kn-news__input {
   text-align: start;
@@ -782,15 +764,6 @@ body.kn-header--over-media
   }
 }
 
-@media (min-width: 900px) {
-  /* Une adresse e-mail ne demande pas 780 px de trait. Bornee et poussee au
-     bout de sa colonne, la boite se cale sur le rail droit de la page au lieu
-     de traverser la moitie de l'aplat. */
-  .kn-news__field {
-    margin-inline-start: auto;
-  }
-}
-
 /* --------------------------------------------------------------------------
    7. Pied de page (DA §7.6)
    -------------------------------------------------------------------------- */
@@ -801,6 +774,14 @@ body.kn-header--over-media
    la bande de telemetrie fixe (DA §11.5). */
 .kn-footer {
   padding-block: var(--kn-space-3xl) var(--kn-space-xl);
+}
+
+/* Premiere rangee : la lettre tient la gauche, les menus la droite. C'est ce
+   qui remplit le pied de page — avant, deux colonnes de liens flottaient
+   seules sur toute la largeur. */
+.kn-footer__top {
+  display: grid;
+  gap: var(--kn-space-xl);
 }
 
 .kn-footer__cols {
@@ -937,8 +918,12 @@ body.kn-header--over-media
 }
 
 @media (min-width: 768px) {
+  /* Autant de colonnes que de menus reellement remplis, pas quatre pistes
+     figees : avec deux menus configures, `repeat(4, 1fr)` laissait la moitie
+     droite du pied de page vide. */
   .kn-footer__cols {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
     gap: var(--kn-grid-gap);
   }
 
@@ -977,6 +962,15 @@ body.kn-header--over-media
     justify-content: space-between;
     /* 96 px separaient une ligne legale haute de 38 px du bloc precedent. */
     margin-block-start: var(--kn-space-xl);
+  }
+}
+
+@media (min-width: 900px) {
+  /* La lettre a besoin d'assez de largeur pour que son titre ne se casse pas,
+     les menus d'assez peu pour rester des colonnes de liens : 5/12 — 7/12. */
+  .kn-footer__top {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: var(--kn-space-3xl);
   }
 }
 

@@ -114,9 +114,8 @@ La teinte `--kn-sage` est une **variante de la surface claire**, pas une quatri�
 [ivoire]   les 3 univers
 [FORÊT]    le manifeste / la promesse produit      ← inondation 1
 [ivoire]   nouveautés (grille produits)
-[sage]     bandeau éditorial / journal
-[FORÊT]    newsletter + sélecteur de langue        ← inondation 2
-[encre]    footer
+[sage]     bandeau éditorial / journal               ← dernier plan clair
+[encre]    footer (lettre d'information + menus + télémétrie)
 ```
 
 **R3 — Territoires de collection.** Chaque univers reçoit une **surface**, pas une nouvelle teinte. C'est la transposition directe du `body[data-collection=…] main` de Mover, et ça résout le problème d'arborescence du brief : le visiteur *voit* dans quel univers il se trouve.
@@ -149,11 +148,11 @@ Implémentation Liquid : ajouter `data-kn-territory="fluid-motion|crossover|ampl
 
 **R9 — Un mot en vert par titre, jamais deux.** Comme le `strong` jaune de Mover : dans un gros titre éditorial, un seul mot peut passer en `#1E4D3B`. Sur surface inondée, ce mécanisme est **désactivé** (pas de vert sur vert).
 
-**R10 — Micro-surfaces vertes autorisées.** Bouton burger mobile (carré plein 44 × 44), pastille du compteur panier, badges (« Nouveau », « Édition limitée »), bandeau de message de formulaire, barre d'annonce défilante, bloc newsletter du footer. Toutes en aplat plein, texte ivoire.
+**R10 — Micro-surfaces vertes autorisées.** Bouton burger mobile (carré plein 44 × 44), pastille du compteur panier, badges (« Nouveau », « Édition limitée »), bandeau de message de formulaire, barre d'annonce défilante. Toutes en aplat plein, texte ivoire.
 
 **R11 — Le vert n'écrit jamais de texte courant.** `#1E4D3B` en couleur de texte est réservé aux liens, à un mot de titre et aux libellés d'état. Un paragraphe entier en vert est interdit.
 
-**R12 — Jamais deux surfaces colorées adjacentes.** Une section forêt ne touche jamais une section encre : il faut toujours un plan clair entre les deux. Seule exception tolérée : la newsletter forêt posée directement sur le footer encre, qui crée volontairement une marche franche en bas de page.
+**R12 — Jamais deux surfaces colorées adjacentes.** Une section forêt ne touche jamais une section encre : il faut toujours un plan clair entre les deux. Plus d'exception depuis l'amendement du 27 août : la lettre d'information ayant rejoint le footer encre, la règle vaut désormais partout sans réserve.
 
 ### 3.5 États d'interaction
 
@@ -387,10 +386,20 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 
 ### 7.6 Footer
 
-- Surface **SOMBRE** (`#1B1A16`), texte `#F7F5F0`, liens `rgba(247,245,240,.7)` → `--kn-forest-soft` (`#6FA98C`) au survol.
-- Juste au-dessus : le bloc **newsletter en aplat forêt** pleine largeur (R2 / R12), champ e-mail en filet ivoire 1 px sur fond transparent, bouton `S'INSCRIRE` ivoire. Le filet est un **contour**, pas un trait bas : à partir de 640 px, champ et bouton tiennent dans une seule boîte, l'aplat ivoire du bouton en fermant le bord droit. Boîte bornée à 34 rem et calée sur le rail droit — un aplat de cette largeur ne se traverse pas d'un trait de 780 px pour saisir une adresse. Empilés sous 640 px, champ à filet bas et bouton pleine largeur.
-- 4 colonnes desktop / accordéons repliés sur mobile : Boutique · Aide (FAQ, Livraison, Retours) · Maison (À propos, Journal, Contact) · Légal (CGV, Confidentialité).
+- Surface **SOMBRE** (`#1B1A16`), texte `#F7F5F0`, liens `rgba(247,245,240,.7)` → `--kn-forest-soft` (`#6FA98C`) au survol. **Un seul bloc**, trois rangées séparées par des filets 1 px : lettre + menus, télémétrie, ligne légale.
+- **Rangée 1 — lettre d'information à gauche (5/12), menus à droite (7/12).** Sur-titre `[LETTRE]`, titre à l'échelle H3, une phrase de promesse, puis le formulaire. Champ e-mail en filet ivoire 1 px sur fond transparent, bouton `S'INSCRIRE` ivoire. Le filet est un **contour**, pas un trait bas : à partir de 640 px, champ et bouton tiennent dans une seule boîte, l'aplat ivoire du bouton en fermant le bord droit. Boîte bornée à 34 rem. Empilés sous 640 px, champ à filet bas et bouton pleine largeur.
+- **Menus** : autant de colonnes que de menus réellement remplis (1 à 4), jamais quatre pistes figées — une colonne vide se voit. Accordéons repliés sur mobile. Ordre visé : Boutique · Aide (FAQ, Livraison, Retours) · Maison (À propos, Journal, Contact) · Légal (CGV, Confidentialité).
 - Bas de footer : réseaux sociaux en icônes 18 px trait 1,5 px, **sélecteur de langue FR / EN** en `--kn-fs-label` séparé par un filet vertical, mention `© KINŪ 2026`.
+
+> **Amendement du 27 août 2026 — la lettre entre dans le footer.** Elle était un
+> aplat forêt pleine largeur posé au-dessus du footer encre, avec la marche
+> franche que R12 tolérait en exception. La demande client du 27 août réunit les
+> deux en un seul pied de page. Ce qui motive le changement : l'aplat portait
+> trois lignes dans 340 px de vert et paraissait vide plutôt que généreux, tandis
+> que le footer, avec deux colonnes de liens étalées sur quatre pistes, l'était
+> tout autant. Réunis, les deux blocs se remplissent l'un l'autre. La page
+> d'accueil perd son inondation 2 — R2 en tolère deux au maximum, une seule reste
+> conforme.
 
 ### 7.7 Page collection & page produit
 
