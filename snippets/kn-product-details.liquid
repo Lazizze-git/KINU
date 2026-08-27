@@ -8,14 +8,33 @@
 {%- enddoc -%}
 
 {%- liquid
-  assign kn_material = product.metafields.custom.matiere_entretien.value
-  if kn_material == blank
-    assign kn_material = opts.text_material
-  endif
-  assign kn_shipping = product.metafields.custom.livraison_retours.value
-  if kn_shipping == blank
-    assign kn_shipping = opts.text_shipping
-  endif
+  comment
+    Les metachamps texte enrichi passent par metafield_tag, qui les rend en
+    HTML. Lire .value renverrait la structure brute du champ.
+  endcomment
+  assign kn_material_mf = product.metafields.custom.matiere_entretien
+  assign kn_shipping_mf = product.metafields.custom.livraison_retours
+-%}
+
+{%- capture kn_material -%}
+  {%- if kn_material_mf != blank -%}
+    {{- kn_material_mf | metafield_tag -}}
+  {%- else -%}
+    {{- opts.text_material -}}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- capture kn_shipping -%}
+  {%- if kn_shipping_mf != blank -%}
+    {{- kn_shipping_mf | metafield_tag -}}
+  {%- else -%}
+    {{- opts.text_shipping -}}
+  {%- endif -%}
+{%- endcapture -%}
+
+{%- liquid
+  assign kn_material = kn_material | strip
+  assign kn_shipping = kn_shipping | strip
 -%}
 
 <div class="kn-acc">
