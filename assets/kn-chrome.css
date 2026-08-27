@@ -295,14 +295,69 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
   margin-inline-end: var(--kn-icon-inset);
 }
 
+/* Sous 1024 px, la navigation vit dans le panneau : le burger seul l'ouvre. */
+.kn-header__nav {
+  display: none;
+}
+
+.kn-header__nav-list {
+  display: flex;
+  align-items: center;
+  gap: var(--kn-space-lg);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* L'echelle d'etiquette est celle de tout le chrome du site, mais 11 px de
+   haut ne font pas une cible : c'est la hauteur tactile qui donne sa zone au
+   lien, pas son corps. */
+.kn-header__nav-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--kn-tap);
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-label);
+  font-weight: var(--kn-fw-medium);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
+  color: var(--kn-surface-fg);
+  text-decoration: none;
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+/* DA §3.6 : au survol d'une entree, les autres s'attenuent — la survolee reste
+   nette. C'est le geste tranche du brief, pas un soulignement. */
+.kn-header__nav-list:hover .kn-header__nav-link:not(:hover) {
+  color: var(--kn-surface-muted);
+}
+
+.kn-header__nav-link[aria-current='page'] {
+  color: var(--kn-surface-accent);
+}
+
 @media (min-width: 1024px) {
   .kn-header__row {
-    grid-template-columns: auto auto 1fr;
-    column-gap: var(--kn-space-md);
+    grid-template-columns: auto 1fr auto;
+    column-gap: var(--kn-space-lg);
   }
 
   .kn-header__brand {
     justify-self: start;
+  }
+
+  .kn-header__nav {
+    display: block;
+    justify-self: start;
+    min-width: 0;
+  }
+
+  /* Amendement du 27 aout : les trois univers etant dans la barre, le burger
+     n'a plus rien a ouvrir ici. Il reste la navigation du telephone. On ne le
+     retire que si la barre porte reellement un menu — sans lui, il redevient
+     le seul acces a la navigation. */
+  .kn-header__row:has(.kn-header__nav) .kn-header__lead {
+    display: none;
   }
 }
 

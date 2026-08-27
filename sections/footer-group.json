@@ -15,7 +15,8 @@
         "column_aide": {
           "type": "kn_column",
           "settings": {
-            "title": "Aide"
+            "title": "Aide",
+            "menu": "aide"
           }
         },
         "column_maison": {

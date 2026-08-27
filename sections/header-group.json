@@ -55,7 +55,7 @@
         "wordmark": "KINŪ",
         "transparent_over_media": true,
         "menu": "main-menu",
-        "utility_menu": "panneau-bas",
+        "utility_menu": "aide",
         "secondary_label": "Toutes les collections",
         "nav_open_label": "Ouvrir la navigation",
         "nav_close_label": "Fermer la navigation",

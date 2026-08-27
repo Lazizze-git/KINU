@@ -13,7 +13,7 @@ Le PDF `note-instructrice-webdesigner.pdf` (3 pages) est la source de vérité. 
 | Sujet | Demande du client | Statut dans cette DA |
 |---|---|---|
 | Ton général | Site épuré, premium, l'image produit prime sur la navigation | Retenu tel quel |
-| Header | **Aucun libellé de menu visible.** 3 icônes seulement : compte, recherche, panier. Navigation par burger ou survol | Retenu tel quel |
+| Header | **Aucun libellé de menu visible.** 3 icônes seulement : compte, recherche, panier. Navigation par burger ou survol | Retenu jusqu'au 27 août, puis **amendé** : libellés rétablis sur ordinateur (§7.1) |
 | Fond | Off-white / blanc cassé, **pas de blanc pur clinique** — ex. `#F7F5F0` | Retenu, `#F7F5F0` confirmé |
 | Accent | Vert forêt au survol des menus — ex. `#1E4D3B` | Retenu, `#1E4D3B` confirmé, et **massivement étendu** (voir §3) |
 | Typo titres/menus | DM Sans | Retenu |
@@ -319,7 +319,17 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 ### 7.1 Header
 
 - Hauteur fixe : **56 px mobile / 72 px desktop**. Ne change jamais au scroll.
-- Structure identique sur mobile et desktop : **[burger] — [logo KINŪ] — [recherche · compte · panier]**. Le burger est présent aussi sur desktop : c'est ce qui rend le header réellement épuré, comme le demande le brief.
+- **Téléphone** : **[burger] — [logo KINŪ] — [recherche · compte · panier]**. La navigation vit dans le panneau.
+- **Ordinateur** : **[logo KINŪ] — [Femme · Homme · Unisexe] — [recherche · compte · panier]**. Les entrées de premier niveau du menu passent dans la barre, à l'échelle d'étiquette (11 px, capitales, chasse positive), zone cliquable 44 px. Survol : les autres entrées s'atténuent, la survolée reste nette (§3.6). L'entrée de la page courante porte `aria-current` et passe en accent.
+
+> **Amendement du 27 août 2026 — libellés dans la barre.** Le brief interdisait
+> tout libellé de menu visible : le burger tenait la navigation sur les deux
+> formats. La demande client du 27 août rétablit une barre classique sur
+> ordinateur — « Accueil / Catalogue / Contact », le menu Shopify par défaut, ne
+> disait rien d'une marque de vêtements, et le panneau était le seul endroit où
+> le voir. Le burger disparaît donc sur ordinateur, faute d'avoir encore quelque
+> chose à ouvrir, et reste la navigation du téléphone. Une seule source : le même
+> menu alimente la barre et le panneau.
 - Logo : wordmark `KINŪ`, hauteur 20 px mobile / 24 px desktop, aligné à gauche sur desktop, centré sur mobile.
 - Icônes : trait **1,5 px**, taille 20 px, zone tactile 44 × 44 px, sans libellé. Le compteur du panier est une pastille verte de 16 px, chiffre 10 px DM Sans 500 en ivoire.
 - Comportement au scroll : voir **R5**. Header sticky, jamais masqué au scroll descendant.

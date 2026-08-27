@@ -1,6 +1,8 @@
 {%- comment -%}
   KINŪ — Header
-  Aucun libellé de menu visible : [burger] — [logo] — [recherche · compte · panier].
+  Telephone : [burger] — [logo] — [recherche · compte · panier].
+  Ordinateur : [logo] — [Femme · Homme · Unisexe] — [icones], le burger cede la
+  place aux libelles (amendement du 27 aout, DIRECTION-ARTISTIQUE.md §7.1).
   Hauteur constante, sticky, jamais masqué. Seule la couleur bouge au scroll
   (geste signature, DIRECTION-ARTISTIQUE.md §3.4 R5 et §7.1).
 {%- endcomment -%}
@@ -82,6 +84,31 @@
         {%- endif -%}
       </a>
     </div>
+
+    {%- comment -%}
+      Amendement du 27 aout : les entrees de premier niveau passent dans la
+      barre sur ordinateur. Meme menu que le panneau — une seule source, deux
+      rendus. Sous 1024 px la liste reste masquee : c'est le burger qui ouvre
+      la navigation.
+    {%- endcomment -%}
+    {%- assign kn_nav_links = linklists[section.settings.menu].links -%}
+    {%- if kn_nav_links.size > 0 -%}
+      <nav class="kn-header__nav" aria-label="{{ section.settings.nav_dialog_label | escape }}">
+        <ul class="kn-header__nav-list" role="list">
+          {%- for kn_link in kn_nav_links -%}
+            <li>
+              <a
+                class="kn-header__nav-link"
+                href="{{ kn_link.url }}"
+                {% if kn_link.current %}
+                  aria-current="page"
+                {% endif %}
+              >{{ kn_link.title | escape }}</a>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+    {%- endif -%}
 
     <div class="kn-header__actions">
       <button
