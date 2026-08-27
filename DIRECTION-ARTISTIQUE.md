@@ -110,13 +110,18 @@ La teinte `--kn-sage` est une **variante de la surface claire**, pas une quatri�
 **R2 — Une section inondée toutes les 3 à 4 sections, maximum 2 par page.** Rythme de la page d'accueil :
 
 ```
-[vidéo hero — plein cadre, aucune couleur]
+[vidéo hero — plein premier écran, aucune couleur]
 [ivoire]   les 3 univers
 [FORÊT]    le manifeste / la promesse produit      ← inondation 1
-[ivoire]   nouveautés (grille produits)
-[sage]     bandeau éditorial / journal               ← dernier plan clair
+[ivoire]   nouveautés (grille produits)            ← dernier plan clair
 [encre]    footer (lettre d'information + menus + télémétrie)
 ```
+
+> **Amendement du 27 août 2026 — le journal quitte l'accueil.** Le bandeau
+> éditorial en sauge est retiré de la page d'accueil à la demande du client. La
+> section reste dans le thème et se rajoute d'un clic dans l'éditeur. Ce sont
+> les nouveautés qui tiennent désormais le dernier plan clair avant le footer
+> encre — R12 reste satisfaite.
 
 **R3 — Territoires de collection.** Chaque univers reçoit une **surface**, pas une nouvelle teinte. C'est la transposition directe du `body[data-collection=…] main` de Mover, et ça résout le problème d'arborescence du brief : le visiteur *voit* dans quel univers il se trouve.
 

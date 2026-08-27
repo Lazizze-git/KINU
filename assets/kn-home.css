@@ -1,8 +1,9 @@
 /* ==========================================================================
    KINŪ — kn-home : la page d'accueil
    --------------------------------------------------------------------------
-   Six sections, un seul rythme : média plein cadre → ivoire → forêt → ivoire
-   → sauge → forêt (DIRECTION-ARTISTIQUE.md §3.4 R2).
+   Un seul rythme : média plein écran → ivoire → forêt → ivoire, puis le pied
+   de page encre (DIRECTION-ARTISTIQUE.md §3.4 R2). Le bandeau éditorial garde
+   ses styles ici : il a quitté l'accueil le 27 août, pas le thème.
    Aucune valeur en dur : tout vient des jetons --kn-*. Mobile-first.
    Chargé après kn-base.css.
    ========================================================================== */

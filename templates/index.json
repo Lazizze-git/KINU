@@ -98,25 +98,12 @@
         "empty_text": "Les nouveautés de la saison arrivent très bientôt.",
         "empty_link_label": "VOIR TOUS LES PRODUITS"
       }
-    },
-    "editorial": {
-      "type": "kn-editorial",
-      "settings": {
-        "eyebrow": "Journal",
-        "blog": "news",
-        "link_label": "TOUS LES ARTICLES",
-        "read_label": "LIRE L’ARTICLE",
-        "fallback_title": "Dans l’atelier : la coupe d’une brassière de course",
-        "fallback_text": "Trois mois de patronage, onze prototypes, et une seule question à chaque essayage : est-ce que la pièce se fait oublier une fois lancée ?",
-        "fallback_url": ""
-      }
     }
   },
   "order": [
     "hero",
     "universes",
     "manifesto",
-    "featured-products",
-    "editorial"
+    "featured-products"
   ]
 }
