@@ -788,6 +788,13 @@ champ réglé et sur les cadres d'univers. Sur une photographie ils sont tracés
 `mix-blend-mode: difference` : lisibles sur une image claire comme sur une image
 sombre, sans jamais poser d'aplat ni d'ombre.
 
+> **Amendement du 27 août 2026 — repères désactivés.** La demande client du
+> 27 août les retire de tout le site. Le réglage « Afficher les repères de
+> coupe » (groupe *KINŪ · Signature*) passe à `false` par défaut ; la couche
+> reste en place et se rallume d'une case à cocher. Il ne reste donc que quatre
+> gestes de signature actifs sur les cinq du §11 — c'est un geste de moins, pas
+> une grammaire différente.
+
 ### 11.4 La numérotation du champ réglé
 
 Un compteur CSS sur `.kn-grid` : chaque cellule porte son rang `[01]`, `[02]`…

@@ -2172,7 +2172,8 @@
         "type": "checkbox",
         "id": "kn_crop_marks",
         "label": "Afficher les repères de coupe",
-        "default": true
+        "default": false,
+        "info": "Les quatre angles tracés sur la bannière, les cadres d’univers et les cartes produits. Désactivés le 27 août 2026 à la demande du client."
       }
     ]
   }
