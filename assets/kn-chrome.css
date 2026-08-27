@@ -71,7 +71,11 @@
   z-index: var(--layer-menu-drawer, 18);
 }
 
-#header-group:has(.kn-announce:not([hidden])) {
+/* Portee sur :root plutot que sur #header-group : la banniere d'accueil en a
+   besoin pour retrancher la barre de sa hauteur plein ecran, et une variable
+   posee sur le groupe d'en-tete ne descend pas jusqu'a elle. Le selecteur suit
+   la fermeture de la barre — la banniere se rehausse dans la foulee. */
+:root:has(#header-group .kn-announce:not([hidden])) {
   --kn-announce-h: var(--kn-announce-size);
 }
 

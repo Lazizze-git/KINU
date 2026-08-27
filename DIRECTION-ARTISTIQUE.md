@@ -282,7 +282,7 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 
 | Contexte | Ratio | Traitement |
 |---|---|---|
-| Vidéo hero d'accueil | 16:9 desktop (hauteur max `88vh`), **4:5 mobile** | Autoplay, muet, boucle, `playsinline`, poster obligatoire, aucun contrôle visible |
+| Vidéo hero d'accueil | **Plein premier écran**, tous formats — `100dvh` moins la barre d'annonce | Autoplay, muet, boucle, `playsinline`, poster obligatoire, aucun contrôle visible, titre ancré en bas de cadre |
 | Carte produit (grille) | **3:4** | `object-fit: cover`, fond `--kn-sage` derrière les packshots détourés |
 | Galerie page produit | 3:4, premier visuel en 4:5 sur mobile | Zoom au clic (lightbox plein écran, fond `#1B1A16`), pas de zoom au survol |
 | Bannière éditoriale / univers | 21:9 desktop, 4:5 mobile | Full-bleed |
@@ -297,6 +297,15 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 - Cohérence de casting : arrière-plans réels neutres (béton, ivoire, bois clair, vert végétal), lumière naturelle diffuse, pas de flash direct, pas de fond studio coloré.
 - **Survol de carte produit :** fondu croisé vers la 2ᵉ image du produit en 320 ms. **Pas de zoom, pas de translation, pas d'ombre.** Le réglage Horizon `card_hover_effect: "none"` est correct, on l'implémente nous-mêmes.
 - Chargement : `loading="lazy"` sauf les 2 premières images de la vue, `fetchpriority="high"` sur le poster du hero, placeholder en `--kn-sage` uni — **jamais de skeleton scintillant**.
+
+> **Amendement du 27 août 2026 — bannière plein écran.** Elle était réglée par
+> ratio : 4:5 sur mobile, 16:9 plafonné à `88vh` au-delà. Elle ne remplissait
+> donc jamais tout à fait la fenêtre, et la section suivante entamait toujours
+> le premier écran. La demande client du 27 août la porte à `100dvh` moins la
+> barre d'annonce — le header la chevauchant déjà, il n'entre pas dans le
+> calcul. `dvh` et non `vh` : sur mobile, la barre d'URL se rétracte au
+> défilement et `vh` laisserait un décalage permanent. Le titre reste ancré en
+> bas de cadre, ce qui suffit à signaler qu'il y a une suite.
 
 ---
 

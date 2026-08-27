@@ -78,27 +78,36 @@
 
 /* --------------------------------------------------------------------------
    1. Bannière vidéo (DA §6)
-   4:5 sur mobile — une 16:9 sur un téléphone ne montre rien.
+   Amendement du 27 aout : plein premier ecran, a tous les formats. Elle etait
+   reglee par ratio — 4:5 sur mobile, 16:9 plafonne a 88vh au-dela — et ne
+   remplissait donc jamais tout a fait la fenetre.
    -------------------------------------------------------------------------- */
 
 .kn-hero {
   position: relative;
   width: 100%;
+
+  /* Ce que le chrome retient au-dessus de la banniere. Posee ailleurs qu'en
+     ouverture, elle passe sous un header qui occupe sa place dans le flux. */
+  --kn-hero-chrome: calc(var(--kn-announce-h) + var(--kn-header-h) + var(--kn-stroke));
 }
 
+/* En ouverture de page, le header chevauche la banniere : seule la barre
+   d'annonce la repousse vers le bas. */
+body.kn-header--over-media .kn-hero {
+  --kn-hero-chrome: var(--kn-announce-h);
+}
+
+/* Sans ce retrait, le bas de la banniere tomberait sous la ligne de
+   flottaison et il faudrait defiler pour voir le titre, qui y est ancre.
+   `dvh` suit la retractation de la barre d'URL mobile ; `vh` sert de repli. */
 .kn-hero__frame {
   position: relative;
   width: 100%;
-  aspect-ratio: var(--kn-ratio-portrait);
+  height: calc(100vh - var(--kn-hero-chrome));
+  height: calc(100dvh - var(--kn-hero-chrome));
   overflow: hidden;
   background-color: var(--kn-sage);
-}
-
-@media (min-width: 768px) {
-  .kn-hero__frame {
-    aspect-ratio: var(--kn-ratio-hero);
-    max-height: 88vh;
-  }
 }
 
 .kn-hero__poster,
@@ -111,10 +120,10 @@
 }
 
 /* Maquette uniquement. Les images de demonstration sont en portrait
-   (1000 x 1600) alors que la banniere est en 16:9 : `cover` rogne 65 % de la
-   hauteur par le milieu, ce qui decapitait le sujet. On decale le cadrage vers
-   le haut pour garder le visage. A retirer avec les kn-demo-*.jpg le jour ou
-   la vraie video, elle-meme en 16:9, prend leur place. */
+   (1000 x 1600) et la banniere remplit l'ecran : sur un moniteur, `cover`
+   rogne l'essentiel de la hauteur par le milieu, ce qui decapitait le sujet.
+   On decale le cadrage vers le haut pour garder le visage. A retirer avec les
+   kn-demo-*.jpg le jour ou la vraie video prend leur place. */
 .kn-hero__poster--demo {
   object-position: 50% 22%;
 }
