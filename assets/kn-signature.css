@@ -272,14 +272,11 @@ body.kn-header--over-media .kn-hero__frame {
    5. Numérotation des univers et des piliers
    -------------------------------------------------------------------------- */
 
+/* L'index tient la premiere colonne de la cellule (kn-home.css §3) : ni bloc
+   ni marge basse, c'est la grille qui l'espace. */
 .kn-manifesto__index {
-  display: block;
   color: var(--kn-surface-muted);
   font-variant-numeric: tabular-nums;
-}
-
-.kn-manifesto__index {
-  margin-block-end: var(--kn-space-2xs);
 }
 
 /* --------------------------------------------------------------------------
