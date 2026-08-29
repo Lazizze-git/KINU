@@ -337,15 +337,14 @@ body.kn-header--over-media .kn-hero {
 /* Les filets hauts s'alignent en une ligne continue sur desktop, et deviennent
    des séparateurs horizontaux dès que la grille se replie.
 
-   L'index passe en marge, sur la ligne de la cle : deux informations tenaient
-   trois lignes, elles en tiennent deux, et le chiffre redevient une reference
-   au lieu d'un titre pose au-dessus. */
+   Le pilier est une simple pile : la cle, puis sa phrase, tous deux cales sur
+   le meme bord gauche. La disposition en deux colonnes qui existait ici tenait
+   a l'index [01] retire le 29 aout ; sans lui, la cle heritait d'une colonne
+   de largeur variable et la phrase demarrait plus loin a chaque rangee. */
 .kn-manifesto__pillar {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  column-gap: var(--kn-space-xs);
-  align-items: baseline;
-  padding-block: var(--kn-space-md);
+  gap: var(--kn-space-2xs);
+  padding-block: var(--kn-space-lg);
   border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
 }
 
@@ -358,20 +357,17 @@ body.kn-header--over-media .kn-hero {
   letter-spacing: -0.015em;
 }
 
-/* Colonne 2 explicite : sans elle, le placement automatique deposerait le
-   paragraphe sous l'index, dans la marge. */
 .kn-manifesto__pillar p {
-  grid-column: 2;
-  margin-block: var(--kn-space-2xs) 0;
+  margin: 0;
   color: var(--kn-surface-muted);
   max-width: var(--kn-measure);
 }
 
 @media (min-width: 768px) {
   /* Des cellules separees par un filet plutot que par une gouttiere : la rangee
-     se lit comme une bande d'instruments et non comme trois paragraphes ranges
-     cote a cote (DA §11). La premiere cellule n'a pas de retrait — elle reste
-     calee sur le rail gauche de la page. */
+     se lit comme une seule bande et non comme trois paragraphes ranges cote a
+     cote. La premiere cellule n'a pas de retrait — elle reste calee sur le rail
+     gauche de la page. */
   .kn-manifesto__pillars {
     grid-template-columns: repeat(var(--kn-pillar-count, 3), minmax(0, 1fr));
   }
