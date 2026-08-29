@@ -29,7 +29,9 @@
   <div class="kn-section" data-kn-surface="sage">
     <div class="kn-container">
       <div class="kn-home-head">
-        {%- render 'kn-datarow', label: s.eyebrow, count: article_count, label_tag: 'h2' -%}
+        {%- if s.title != blank -%}
+          <h2 class="kn-home-head__title">{{ s.title | escape }}</h2>
+        {%- endif -%}
         {%- if show_head_link -%}
           <a class="kn-label kn-underline kn-home-head__link" href="{{ head_link_url }}">
             {{- s.link_label | escape -}}
@@ -119,8 +121,8 @@
   "settings": [
     {
       "type": "text",
-      "id": "eyebrow",
-      "label": "Sur-titre de la section",
+      "id": "title",
+      "label": "Titre de la section",
       "default": "Journal"
     },
     {

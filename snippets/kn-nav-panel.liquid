@@ -60,15 +60,6 @@
           {%- if kn_links.size > 0 -%}
             {%- for kn_link in kn_links -%}
               {%- liquid
-                comment
-                  Profondeur du rayon. Le compteur ne remplace jamais le
-                  libelle : il le suit, atténué.
-                endcomment
-                assign kn_count = 0
-                if kn_link.type == 'collection_link' and kn_link.object != blank
-                  assign kn_count = kn_link.object.all_products_count
-                endif
-
                 assign kn_overline = ''
                 assign kn_key = kn_link.title | downcase | strip
                 for kn_block in section.blocks
@@ -80,16 +71,11 @@
                 endfor
               -%}
               {%- capture kn_row_aside -%}
-                {%- if kn_overline != blank or kn_count > 0 -%}
+                {%- if kn_overline != blank -%}
                   <span class="kn-nav__aside">
                     {%- if kn_overline != blank -%}
                       <span class="kn-nav__overline kn-label" translate="no">
                         {{- kn_overline | escape -}}
-                      </span>
-                    {%- endif -%}
-                    {%- if kn_count > 0 -%}
-                      <span class="kn-brk kn-nav__count" translate="no">
-                        {%- if kn_count < 10 %}0{% endif %}{{ kn_count -}}
                       </span>
                     {%- endif -%}
                   </span>

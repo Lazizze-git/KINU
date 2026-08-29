@@ -658,11 +658,10 @@ body.kn-header--over-media
   gap: var(--kn-space-2xs);
 }
 
-/* Nom de collection, compteur et fleche heritent de la teinte de leur rangee
-   et s'attenuent d'un cran : quand R7 efface une entree, ils s'effacent avec
+/* Nom de collection et fleche heritent de la teinte de leur rangee et
+   s'attenuent d'un cran : quand R7 efface une entree, ils s'effacent avec
    elle au lieu de rester en pleine lumiere. */
 .kn-nav__overline,
-.kn-nav__count,
 .kn-nav__arrow {
   color: inherit;
   opacity: 0.7;

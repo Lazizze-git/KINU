@@ -9,24 +9,12 @@
   if s.link_label != blank and target_collection.url != blank
     assign show_link = true
   endif
-
-  comment
-    Le compteur de la ligne de données annonce ce qui est réellement affiché,
-    pas le catalogue entier : une promesse tenue à l'écran.
-  endcomment
-  assign kn_shown = s.count
-  if product_count < kn_shown
-    assign kn_shown = product_count
-  endif
 -%}
 
 <div class="kn-section" data-kn-surface="light">
   <div class="kn-container">
     <div class="kn-home-head">
-      {%- render 'kn-datarow', label: s.eyebrow, count: kn_shown -%}
-      <div class="kn-home-head__text">
-        <h2>{{ s.title | escape }}</h2>
-      </div>
+      <h2 class="kn-home-head__title">{{ s.title | escape }}</h2>
       {%- if show_link -%}
         <a class="kn-label kn-underline kn-home-head__link" href="{{ target_collection.url }}">
           {{- s.link_label | escape -}}
@@ -59,12 +47,6 @@
   "tag": "section",
   "class": "kn-products-section",
   "settings": [
-    {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Sur-titre",
-      "default": "Dernières pièces"
-    },
     {
       "type": "text",
       "id": "title",

@@ -114,7 +114,7 @@ La teinte `--kn-sage` est une **variante de la surface claire**, pas une quatri�
 [ivoire]   les 3 univers
 [FORÊT]    le manifeste / la promesse produit      ← inondation 1
 [ivoire]   nouveautés (grille produits)            ← dernier plan clair
-[encre]    footer (lettre d'information + menus + télémétrie)
+[encre]    footer (lettre d'information + menus + ligne légale)
 ```
 
 > **Amendement du 27 août 2026 — le journal quitte l'accueil.** Le bandeau
@@ -272,7 +272,9 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 
 - Padding de section standard : `--kn-section-y: clamp(3.5rem, 9vw, 7.5rem)` (56 → 120 px)
 - Padding de section **inondée** : `--kn-section-y-flood: clamp(5rem, 12vw, 10rem)` (80 → 160 px). **Une surface colorée reçoit toujours plus d'air qu'une surface claire** — sinon l'aplat paraît serré et bon marché.
-- Titre de section → contenu : 32 px mobile, 48 px desktop.
+- Titre de section → contenu : 48 px mobile, 64 px desktop (`--kn-space-xl`).
+  Relevé le 29 août avec la suppression du filet d'en-tête : c'est le blanc seul
+  qui sépare désormais le titre de la grille.
 
 ### 5.4 Coins, filets, ombres
 
@@ -359,8 +361,9 @@ Niveau 1 en `--kn-fs-h4` DM Sans 500, capitales, chasse positive, ivoire ; nivea
 > quelque part. La demande client du 27 août, référence [olafhussein.com](https://olafhussein.com)
 > à l'appui, les ramène à une **liste de rangées à filets 1 px, toutes au même
 > corps**, fermées par une flèche qui avance de 4 px au survol. Le nom de
-> collection et le compteur passent à droite de la rangée, comme la valeur d'une
-> ligne de données. Les liens de service — Toutes les collections, puis le menu
+> collection passe à droite de la rangée, comme la valeur d'une ligne de
+> données. (Le compteur de produits qui l'accompagnait est retiré le 29 août :
+> voir §11.) Les liens de service — Toutes les collections, puis le menu
 > de bas de panneau — ferment la même liste au lieu d'un pied séparé : même
 > rangée, même filet, corps atténué. R7 (l'item visé reste net, les autres
 > s'effacent) reste en vigueur et porte désormais aussi la flèche.
@@ -436,8 +439,8 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 
 ### 7.6 Footer
 
-- Surface **SOMBRE** (`#1B1A16`), texte `#F7F5F0`, liens `rgba(247,245,240,.7)` → `--kn-forest-soft` (`#6FA98C`) au survol. **Un seul bloc**, trois rangées séparées par des filets 1 px : lettre + menus, télémétrie, ligne légale.
-- **Rangée 1 — lettre d'information à gauche (5/12), menus à droite (7/12).** Sur-titre `[LETTRE]`, titre à l'échelle H3, une phrase de promesse, puis le formulaire. Champ e-mail en filet ivoire 1 px sur fond transparent, bouton `S'INSCRIRE` ivoire. Le filet est un **contour**, pas un trait bas : à partir de 640 px, champ et bouton tiennent dans une seule boîte, l'aplat ivoire du bouton en fermant le bord droit. Boîte bornée à 34 rem. Empilés sous 640 px, champ à filet bas et bouton pleine largeur.
+- Surface **SOMBRE** (`#1B1A16`), texte `#F7F5F0`, liens `rgba(247,245,240,.7)` → `--kn-forest-soft` (`#6FA98C`) au survol. **Un seul bloc**, deux rangées séparées par un filet 1 px : lettre + menus, puis la ligne légale.
+- **Rangée 1 — lettre d'information à gauche (5/12), menus à droite (7/12).** Sur-titre `LETTRE`, titre à l'échelle H3, une phrase de promesse, puis le formulaire. Champ e-mail en filet ivoire 1 px sur fond transparent, bouton `S'INSCRIRE` ivoire. Le filet est un **contour**, pas un trait bas : à partir de 640 px, champ et bouton tiennent dans une seule boîte, l'aplat ivoire du bouton en fermant le bord droit. Boîte bornée à 34 rem. Empilés sous 640 px, champ à filet bas et bouton pleine largeur.
 - **Menus** : autant de colonnes que de menus réellement remplis (1 à 4), jamais quatre pistes figées — une colonne vide se voit. Accordéons repliés sur mobile. Ordre visé : Boutique · Aide (FAQ, Livraison, Retours) · Maison (À propos, Journal, Contact) · Légal (CGV, Confidentialité).
 - Bas de footer : réseaux sociaux en icônes 18 px trait 1,5 px, **sélecteur de langue FR / EN** en `--kn-fs-label` séparé par un filet vertical, mention `© KINŪ 2026`.
 
@@ -792,89 +795,36 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 
 ---
 
-## 11. Couche signature — amendement du 22 août 2026
+## 11. Couche signature — retirée le 29 août 2026
 
-**Référence ajoutée : [noartmusic.com](https://www.noartmusic.com) (studio Boring).**
-On en reprend la *grammaire*, jamais l'identité : ni son globe en rotation, ni sa
-palette, ni sa mise en page. Ce qui est transposé, c'est sa manière de traiter
-l'interface comme un **instrument de mesure** plutôt que comme une vitrine.
+**Ce qui a existé.** Du 22 au 29 août, le site portait une couche « instrument
+de mesure » inspirée de [noartmusic.com](https://www.noartmusic.com) : libellés
+entre crochets (`.kn-brk`), en-têtes de section en ligne de données avec
+pointillé de conduite et compteur (`kn-datarow`), repères de coupe
+d'imprimeur aux angles des médias (`.kn-marks`), numérotation des cellules du
+champ produits, et une bande de télémétrie affichant les coordonnées et l'heure
+de l'atelier (`kn-hud`).
 
-Cinq gestes, et pas un de plus. Ils vivent dans `assets/kn-signature.css`,
-`assets/kn-signature.js`, `snippets/kn-datarow.liquid` et `snippets/kn-hud.liquid`.
+**Pourquoi elle part.** Demande client du 29 août : « il faut que ce soit très
+clean ». Relecture des références du créneau (Rains, SIGMA, In Common With,
+Studio Freight) : dans tous les cas, **l'image porte la page et la typographie
+se fait oublier**. Aucune de ces références ne pose de seconde lecture par-dessus
+le visuel. La couche signature en posait une sur chaque section : elle était
+cohérente, mais elle travaillait contre l'objectif du brief — « l'image produit
+prime sur la navigation » (§1).
 
-### 11.1 Le crochet comme ponctuation système
+**Ce qui la remplace.** Rien. C'est le point : un en-tête de section est
+désormais **un titre, et au plus un lien** — pas de sur-titre, pas de compteur,
+pas de filet. L'espace qui portait le filet est rendu au blanc
+(`.kn-home-body` passe de `--kn-space-lg` à `--kn-space-xl`).
 
-Classe `.kn-brk`. Un libellé entre crochets signale qu'il s'agit d'une **donnée**,
-pas d'une phrase : sur-titres, colonnes de pied de page, compteurs, index.
-Les crochets sont tracés en `--kn-surface-muted` — le mot reste le sujet.
+**Fichiers supprimés :** `assets/kn-signature.css`, `assets/kn-signature.js`,
+`snippets/kn-datarow.liquid`, `snippets/kn-hud.liquid`. Le groupe de réglages
+« KINŪ · Signature » a été retiré de `config/settings_schema.json`.
 
-### 11.2 L'en-tête de section en ligne de données
-
-Snippet `kn-datarow`. Remplace le sur-titre isolé :
-
-```
-[02]  TROIS UNIVERS ·············································· [03]
-```
-
-Index à gauche, sur-titre, pointillé de conduite, compteur à droite. Le vide
-devient une mesure. **L'index est écrit par JavaScript**, à partir de la position
-réelle de la section dans la page : déplacer une section dans l'éditeur de thème
-renumérote tout, sans intervention.
-
-### 11.3 Les repères de coupe
-
-Classe `.kn-marks`. Quatre angles tracés en filet 1 px, comme sur une planche
-d'imprimeur. Permanents sur la bannière, révélés au survol sur les cellules du
-champ réglé et sur les cadres d'univers. Sur une photographie ils sont tracés en
-`mix-blend-mode: difference` : lisibles sur une image claire comme sur une image
-sombre, sans jamais poser d'aplat ni d'ombre.
-
-> **Amendement du 27 août 2026 — repères désactivés.** La demande client du
-> 27 août les retire de tout le site. Le réglage « Afficher les repères de
-> coupe » (groupe *KINŪ · Signature*) passe à `false` par défaut ; la couche
-> reste en place et se rallume d'une case à cocher. Il ne reste donc que quatre
-> gestes de signature actifs sur les cinq du §11 — c'est un geste de moins, pas
-> une grammaire différente.
-
-### 11.4 La numérotation du champ réglé
-
-Un compteur CSS sur `.kn-grid` : chaque cellule porte son rang `[01]`, `[02]`…
-dans sa marge basse. Il se renumérote seul quand « Voir plus » ajoute une page.
-Le numéro ne monte jamais sur l'image : le badge garde son angle.
-
-### 11.5 La bande de télémétrie
-
-Snippet `kn-hud`, deux variantes :
-
-| Variante | Où | Contenu |
-|---|---|---|
-| `fixed` | Bas de fenêtre, **ordinateur uniquement** | Lieu, coordonnées, altitude, heure locale vivante, index de section, jauge de lecture |
-| `inline` | Pied de page, **partout** | Quatre champs étiquetés : atelier, latitude, longitude, heure locale |
-
-L'heure est calculée dans le navigateur du visiteur, dans le fuseau réglé en
-admin (`Europe/Zurich` par défaut), et s'arrête quand l'onglet passe en arrière-plan.
-La bande fixe **adopte la surface qu'elle recouvre** : ivoire sur ivoire, encre sur
-encre, ivoire sur forêt. Elle est `pointer-events: none` et `aria-hidden` : elle
-n'intercepte aucun clic et n'ajoute aucun bruit pour les lecteurs d'écran.
-
-> **Amendement au §9.** Le §9 interdit « tout bandeau sticky supplémentaire en bas
-> d'écran sur desktop ». Cette interdiction visait les barres d'**action** — le
-> « Ajouter au panier » collant qui vole la place du contenu. La bande de
-> télémétrie est une barre d'**état** : 30 px, aucun bouton, aucun lien, aucun
-> événement de pointeur. Elle est autorisée à ce titre, et à ce titre seulement.
-> Le pied de page compense sa hauteur par 30 px de marge basse supplémentaire.
-
-### 11.6 Les compteurs de navigation
-
-`Femme [12]` dans le panneau de navigation. Le chiffre dit la profondeur du
-rayon — ce que le menu ne dit pas. Il ne remplace jamais le libellé : il le suit,
-en exposant, atténué, et suit son entrée quand les autres s'estompent au survol.
-
-### 11.7 Réglages
-
-Groupe **« KINŪ · Signature »** dans les réglages du thème : activation de la
-bande, lieu, coordonnées, altitude, fuseau horaire, index, repères de coupe.
-Tout est désactivable sans casser la mise en page.
+**Conséquence sur les sections d'accueil :** le sur-titre des univers et du
+journal devient leur titre (réglage `title`) ; le sur-titre du manifeste et
+des nouveautés disparaît, leur titre suffisait.
 
 ---
 

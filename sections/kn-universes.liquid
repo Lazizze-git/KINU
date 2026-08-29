@@ -7,9 +7,9 @@
 {%- if section.blocks.size > 0 -%}
   <div class="kn-section" data-kn-surface="light">
     <div class="kn-container">
-      {%- if s.eyebrow != blank -%}
+      {%- if s.title != blank -%}
         <div class="kn-home-head">
-          {%- render 'kn-datarow', label: s.eyebrow, count: section.blocks.size, label_tag: 'h2' -%}
+          <h2 class="kn-home-head__title">{{ s.title | escape }}</h2>
         </div>
       {%- endif -%}
 
@@ -23,7 +23,7 @@
         -%}
 
         {%- capture column -%}
-          <div class="kn-ratio kn-marks kn-universe__frame">
+          <div class="kn-ratio kn-universe__frame">
             {%- if main_image == blank -%}
               {%- comment -%} Maquette : voir snippets/kn-demo-grid.liquid {%- endcomment -%}
               {%- assign kn_demo_files = 'kn-demo-04.jpg,kn-demo-02.jpg,kn-demo-07.jpg' | split: ',' -%}
@@ -103,8 +103,8 @@
   "settings": [
     {
       "type": "text",
-      "id": "eyebrow",
-      "label": "Sur-titre de la section",
+      "id": "title",
+      "label": "Titre de la section",
       "default": "Trois univers"
     }
   ],

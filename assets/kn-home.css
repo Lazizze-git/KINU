@@ -10,36 +10,38 @@
 
 /* --------------------------------------------------------------------------
    0. Vocabulaire partagé par les sections de l'accueil
-   Un en-tête de section = un filet, jamais un grand vide (DA §5.3).
+   Un en-tête de section = un titre et, au plus, un lien. Pas de sur-titre,
+   pas de compteur, pas de filet : c'est l'image en dessous qui porte la page
+   (amendement du 29/08/2026, voir DA §5.3).
    -------------------------------------------------------------------------- */
 
 .kn-home-head {
   display: flex;
   flex-wrap: wrap;
-  align-items: flex-end;
+  align-items: baseline;
   justify-content: space-between;
   gap: var(--kn-space-md);
-  padding-block-end: var(--kn-space-md);
-  border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
 }
 
-.kn-home-head__text {
-  display: grid;
-  gap: var(--kn-space-2xs);
+/* Un cran sous le titre de page : la section s'annonce, elle ne crie pas. */
+.kn-home-head__title {
+  font-family: var(--kn-font-display);
+  font-size: var(--kn-fs-h3);
+  font-weight: var(--kn-fw-medium);
+  line-height: var(--kn-lh-tight);
+  letter-spacing: var(--kn-ls-title);
   min-width: 0;
-}
-
-.kn-home-head__eyebrow {
-  color: var(--kn-surface-muted);
+  margin: 0;
 }
 
 .kn-home-head__link {
   flex: none;
 }
 
-/* Titre de section → contenu : 32 px mobile, 48 px desktop (DA §5.3). */
+/* Titre de section → contenu. Le filet ayant disparu, c'est le blanc seul qui
+   sépare l'en-tête de la grille : il doit être plus franc qu'avant. */
 .kn-home-body {
-  margin-block-start: var(--kn-space-lg);
+  margin-block-start: var(--kn-space-xl);
 }
 
 @media (min-width: 1024px) {

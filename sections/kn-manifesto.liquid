@@ -8,8 +8,6 @@
 
 <div class="kn-section" data-kn-surface="flood">
   <div class="kn-container">
-    {%- render 'kn-datarow', label: s.eyebrow, count: section.blocks.size -%}
-
     <div class="kn-manifesto__head">
       <div class="kn-reveal">
         <h2 class="kn-manifesto__title">{{ s.title | escape }}</h2>
@@ -29,7 +27,6 @@
       <div class="kn-manifesto__pillars" style="--kn-pillar-count: {{ section.blocks.size }};">
         {%- for block in section.blocks -%}
           <div class="kn-manifesto__pillar kn-reveal" {{ block.shopify_attributes }}>
-            <span class="kn-label kn-brk kn-manifesto__index" translate="no">{% if forloop.index < 10 %}0{% endif %}{{ forloop.index }}</span>
             <span class="kn-manifesto__key">{{ block.settings.key | escape }}</span>
             {%- if block.settings.text != blank -%}
               <p class="kn-sm">{{ block.settings.text | escape }}</p>
@@ -48,12 +45,6 @@
   "class": "kn-manifesto-section",
   "max_blocks": 3,
   "settings": [
-    {
-      "type": "text",
-      "id": "eyebrow",
-      "label": "Sur-titre",
-      "default": "La promesse"
-    },
     {
       "type": "text",
       "id": "title",

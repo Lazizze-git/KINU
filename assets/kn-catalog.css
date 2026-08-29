@@ -521,9 +521,7 @@
    Transposition de Mover : la grille n'est pas une série de cartes posées sur
    un fond avec de l'air entre elles, c'est un CHAMP continu. Aucun écart et
    aucun filet : les cellules se touchent, et c'est la marge intérieure de
-   chacune qui fait respirer l'image. Le seul trait du champ est le repère de
-   coupe révélé au survol (.kn-marks), qui appartient à la cellule survolée et
-   à elle seule.
+   chacune qui fait respirer l'image.
 
    Le champ va bord à bord jusqu'à --kn-container et n'a pas de marge de page :
    ce sont les cellules qui la portent (--kn-cell-pad = --kn-gutter). C'est ce

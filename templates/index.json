@@ -47,7 +47,7 @@
         "unisexe"
       ],
       "settings": {
-        "eyebrow": "Trois univers"
+        "title": "Trois univers"
       }
     },
     "manifesto": {
@@ -81,7 +81,6 @@
         "pillar-3"
       ],
       "settings": {
-        "eyebrow": "La promesse",
         "title": "Peu de pièces, pensées pour durer une décennie.",
         "text": "Petites séries, ateliers européens : nous préférons une coupe juste à une nouveauté de plus.",
         "link_label": "NOTRE FABRICATION",
@@ -91,7 +90,6 @@
     "featured-products": {
       "type": "kn-featured-products",
       "settings": {
-        "eyebrow": "Dernières pièces",
         "title": "Nouveautés",
         "count": 8,
         "link_label": "VOIR TOUT",
