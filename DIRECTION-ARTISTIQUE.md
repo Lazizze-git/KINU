@@ -77,9 +77,9 @@ Palette réelle de Mover : `#fff000` (jaune), `#1d1d1b` (encre), `#ffffff`, `#9f
 | Jeton | Hex | Rôle | Proportion cible |
 |---|---|---|---|
 | `--kn-ivory` | `#F7F5F0` | **Fond par défaut** de tout le site (brief) | **62 %** |
-| `--kn-ink` | `#1B1A16` | Texte principal, boutons primaires, territoire « CrossOver », footer | **20 %** |
+| `--kn-ink` | `#1B1A16` | Texte principal, boutons primaires, footer (territoire « CrossOver » retiré le 09/09/2026) | **20 %** |
 | `--kn-forest` | `#1E4D3B` | **Accent inondant** (brief) : sections pleines, panneau de nav, header scrollé, territoire « Amplitude » | **14 %** |
-| `--kn-sage` | `#E6EAE3` | Teinte douce : blocs secondaires, fonds de packshot, états de chargement | **4 %** |
+| `--kn-sage` | `#E6EAE3` | Teinte douce : blocs secondaires, fonds de packshot, états de chargement, territoire « CrossOver » | **4 %** |
 | `--kn-forest-deep` | `#163A2C` | Hover/pressed sur surface verte, filets sur vert | ponctuel |
 | `--kn-forest-soft` | `#6FA98C` | Accent **sur fond sombre uniquement** (liens dans le footer encre) | ponctuel |
 | `--kn-grey` | `#6E6B62` | Texte secondaire, prix barrés, placeholders, items de menu atténués | ponctuel |
@@ -128,8 +128,25 @@ La teinte `--kn-sage` est une **variante de la surface claire**, pas une quatri�
 | Univers | Catégorie affichée | Surface de la page collection |
 |---|---|---|
 | **Fluid-Motion** | Femme | CLAIRE (ivoire) |
-| **CrossOver** | Homme | SOMBRE (encre) |
+| **CrossOver** | Homme | CLAIRE, variante sauge (`#E6EAE3`) |
 | **Amplitude** | Unisexe | INONDÉE (forêt) |
+
+> **Amendement du 09/09/2026.** CrossOver recevait la surface SOMBRE : une page
+> collection entièrement en aplat encre. Décision du client de ne pas la garder.
+> L'univers passe à la variante sauge de la surface claire — le §3.3 la définit
+> déjà comme une variante, pas comme une quatrième surface : mêmes couleurs de
+> texte, mêmes filets. Les trois univers restent distincts (ivoire, sauge,
+> forêt) et le site n'a plus aucun aplat noir pleine page. L'encre reste la
+> couleur du texte, des boutons primaires et du pied de page ; elle perd
+> seulement son territoire.
+>
+> **Conséquence à trancher.** Le filet de territoire de R4 vaut `--kn-forest`
+> pour Fluid-Motion **et** pour Amplitude : deux univers sur trois portent déjà
+> le même signe sur la page produit. La palette n'offre pas de troisième teinte
+> qui tienne 3:1 sur l'ivoire en trait de 3 px — `--kn-forest-soft` y tombe à
+> 2,5:1. Le sur-titre `HOMME — CROSSOVER` nomme l'univers en toutes lettres,
+> donc le filet reste un signe secondaire ; à décider si l'on veut lui donner
+> une troisième couleur, ce qui suppose d'élargir la palette.
 
 Implémentation Liquid : ajouter `data-kn-territory="fluid-motion|crossover|amplitude"` sur `<body>` dans `layout/theme.liquid`, et un sélecteur `[data-kn-territory="amplitude"] .kn-collection-main { … }` dans `custom.css`. **Seul le `main` bascule**, le header et le footer gardent leur propre logique.
 

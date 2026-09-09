@@ -17,6 +17,11 @@
   --kn-sage:         #e6eae3;
   --kn-sage-deep:    #d8dfd6;
   --kn-grey:         #6e6b62;
+  /* Le gris attenue tient 4,89:1 sur l'ivoire mais tombe a 4,37:1 sur la
+     sauge, sous le seuil AA de 4,5:1 pour un corps de texte courant. Deux
+     crans plus sombre suffisent a repasser au-dessus (4,93:1) sans que l'oeil
+     distingue les deux gris cote a cote. */
+  --kn-grey-deep:    #66635b;
   --kn-error:        #a63a22;
   --kn-success:      var(--kn-forest);
 
@@ -171,7 +176,7 @@
   --kn-surface-bg: var(--kn-sage);
   --kn-surface-fg: var(--kn-ink);
   --kn-surface-line: var(--kn-line);
-  --kn-surface-muted: var(--kn-grey);
+  --kn-surface-muted: var(--kn-grey-deep);
   --kn-surface-accent: var(--kn-forest);
 }
 
@@ -210,12 +215,20 @@
   --kn-surface-accent: var(--kn-forest);
 }
 
+/* Amendement du 09/09/2026 — CrossOver quitte l'encre pour la sauge.
+   Le §3.4 R3 donnait la surface SOMBRE a l'univers Homme : une page entiere
+   en aplat noir, decision du client de ne pas la garder. La sauge n'est pas
+   une quatrieme surface, le §3.3 la definit comme une variante de la surface
+   claire — memes couleurs de texte, memes filets. Les trois univers restent
+   donc distincts : ivoire, sauge, foret, et plus un seul aplat noir.
+   L'encre reste la couleur du texte, des boutons primaires et du pied de
+   page ; elle perd seulement son territoire. */
 [data-kn-territory="crossover"] .kn-territory-surface {
-  --kn-surface-bg: var(--kn-ink);
-  --kn-surface-fg: var(--kn-ivory);
-  --kn-surface-line: var(--kn-line-invert);
-  --kn-surface-muted: var(--kn-muted-invert);
-  --kn-surface-accent: var(--kn-forest-soft);
+  --kn-surface-bg: var(--kn-sage);
+  --kn-surface-fg: var(--kn-ink);
+  --kn-surface-line: var(--kn-line);
+  --kn-surface-muted: var(--kn-grey-deep);
+  --kn-surface-accent: var(--kn-forest);
 }
 
 [data-kn-territory="amplitude"] .kn-territory-surface {
