@@ -274,12 +274,29 @@
   color: var(--kn-surface-muted);
 }
 
+/* Le prix se cale en bas de la carte, pas sous le nom. Les cellules d'une
+   rangee font deja la meme hauteur, et l'image aussi : seul le nom varie. Un
+   nom sur deux lignes descendait donc son prix de treize pixels, et les prix
+   d'une meme rangee ne tombaient plus sur la meme ligne — releve le 9
+   septembre sur la page Homme, ou « Coupe-vent Ridge » repliait quand
+   « Veste Moraine » et « Veste Sillon » tenaient sur une ligne.
+
+   La marge automatique pousse le prix au pied de la cellule. Reserver deux
+   lignes au nom aurait fait la meme chose, mais le soulignement revele du
+   survol s'ancre au bas de son bloc : il se serait detache du texte des que
+   le nom n'aurait rempli qu'une ligne. */
+.kn-card,
+.kn-card__link {
+  height: 100%;
+}
+
 .kn-card__prices {
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   gap: var(--kn-space-2xs);
-  margin-top: var(--kn-space-3xs);
+  margin-top: auto;
+  padding-top: var(--kn-space-3xs);
 }
 
 .kn-card__price {
@@ -591,6 +608,33 @@
 @media (min-width: 1280px) {
   .kn-grid {
     grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
+
+/* Une piste vide n'est pas une colonne. Le champ ne compte jamais plus de
+   colonnes qu'il n'a de pieces : a trois produits, cinq colonnes laissaient
+   les deux dernieres pistes nues et rapetissaient les images pour rien. Les
+   collections CrossOver et Amplitude n'en ont que trois — c'etait donc le cas
+   courant, pas le cas limite.
+
+   Les plafonds se lisent du plus large au plus etroit : le dernier qui
+   s'applique gagne, et c'est toujours le plus petit. Un champ de douze pieces
+   n'en declenche aucun et garde ses cinq colonnes. */
+@media (min-width: 1280px) {
+  .kn-grid:not(:has(> :nth-child(5))) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .kn-grid:not(:has(> :nth-child(4))) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 640px) {
+  .kn-grid:not(:has(> :nth-child(3))) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
