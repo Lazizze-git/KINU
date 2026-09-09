@@ -16,7 +16,9 @@
   'use strict';
 
   var ROOT_SELECTOR = '[data-kn-product]';
-  var DESKTOP_QUERY = '(min-width: 1024px)';
+  // Doit rester identique au palier de kn-product.css : au-dela, la piste n'est
+// plus un carrousel et une seule diapositive est affichee.
+var DESKTOP_QUERY = '(min-width: 768px)';
 
   /**
    * @typedef {object} KnVariant
@@ -82,10 +84,35 @@
     var current = 0;
     var ticking = false;
 
+    // Rang de l'option de coloris parmi les options du produit, -1 s'il n'y en
+    // a pas. Le Liquid l'a calcule, le JS n'a pas a deviner le nom de l'option.
+    var colourIndex = parseInt(gallery.getAttribute('data-kn-colour-index') || '-1', 10);
+    var colour = null;
+
     slides.forEach(function (slide, index) {
       var id = slide.getAttribute('data-kn-media-id');
       if (id) byMedia[id] = index;
     });
+
+    /**
+     * Une image sans coloris appartient a tous : c'est la place d'un plan de
+     * detail matiere, qui reste pertinent quelle que soit la couleur choisie.
+     * @param {Element} node
+     */
+    function belongs(node) {
+      if (colour === null) return true;
+      var own = node.getAttribute('data-kn-colour');
+      return !own || own === colour;
+    }
+
+    /** @returns {number[]} */
+    function shownIndexes() {
+      var out = [];
+      slides.forEach(function (slide, n) {
+        if (belongs(slide)) out.push(n);
+      });
+      return out;
+    }
 
     /** @param {number} index */
     function paint(index) {
@@ -109,8 +136,12 @@
       var moved = index !== current;
       paint(index);
       if (moved && !desktop.matches) {
+        // Position reelle plutot que `index * largeur` : des qu'un coloris en
+        // masque une partie, les rangs ne correspondent plus aux positions.
+        var slide = slides[index];
+        var left = track.scrollLeft + (slide.getBoundingClientRect().left - track.getBoundingClientRect().left);
         track.scrollTo({
-          left: index * track.clientWidth,
+          left: left,
           behavior: reducedMotion() ? 'auto' : 'smooth'
         });
       }
@@ -123,10 +154,18 @@
         ticking = true;
         window.requestAnimationFrame(function () {
           ticking = false;
-          var width = track.clientWidth;
-          if (!width) return;
-          var index = Math.round(track.scrollLeft / width);
-          if (index !== current && index >= 0 && index < slides.length) paint(index);
+          var edge = track.getBoundingClientRect().left;
+          var best = -1;
+          var closest = Infinity;
+          slides.forEach(function (slide, n) {
+            if (!belongs(slide)) return;
+            var gap = Math.abs(slide.getBoundingClientRect().left - edge);
+            if (gap < closest) {
+              closest = gap;
+              best = n;
+            }
+          });
+          if (best >= 0 && best !== current) paint(best);
         });
       },
       { passive: true }
@@ -142,9 +181,33 @@
 
     return {
       goTo: goTo,
+      colourIndex: colourIndex,
       showMedia: function (id) {
         var index = byMedia[String(id)];
         if (typeof index === 'number') goTo(index);
+      },
+      /**
+       * N'affiche que les photographies du coloris demande. Passer une valeur
+       * vide rend toute la galerie.
+       * @param {string|null|undefined} value
+       */
+      setColour: function (value) {
+        var next = value || null;
+        if (next === colour) return;
+        colour = next;
+        slides.forEach(function (slide) {
+          slide.hidden = !belongs(slide);
+        });
+        thumbs.forEach(function (thumb) {
+          thumb.hidden = !belongs(thumb);
+        });
+        dots.forEach(function (dot) {
+          dot.hidden = !belongs(dot);
+        });
+        if (!belongs(slides[current])) {
+          var first = shownIndexes()[0];
+          if (typeof first === 'number') goTo(first);
+        }
       }
     };
   }
@@ -451,6 +514,7 @@
         }
         if (sku) sku.textContent = variant.sku;
         if (skuRow) skuRow.hidden = !variant.sku;
+        if (gallery && gallery.colourIndex >= 0) gallery.setColour(choice[gallery.colourIndex]);
         if (gallery && variant.media !== null) gallery.showMedia(variant.media);
         if (announce) {
           pushUrl(variant);

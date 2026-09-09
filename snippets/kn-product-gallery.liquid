@@ -11,19 +11,68 @@
 {%- liquid
   assign kn_media = product.media
   assign kn_count = kn_media.size
-  assign kn_sizes = '(min-width: 1200px) 520px, (min-width: 1024px) 45vw, 100vw'
+  assign kn_sizes = '(min-width: 1200px) 520px, (min-width: 768px) 45vw, 100vw'
   assign kn_widths = '320, 480, 640, 750, 900, 1040, 1200, 1600'
+
+  comment
+    Regroupement des photographies par coloris.
+
+    Shopify ne rattache qu’une seule image à une variante ; on s’en sert comme
+    marqueur d’ouverture de groupe. Les photographies rangées dans l’ordre des
+    coloris se répartissent alors toutes seules : chaque image appartient au
+    coloris du dernier marqueur rencontré. Une image placée avant le premier
+    marqueur n’appartient à aucun coloris et reste visible en toute couleur —
+    c’est la place d’un plan de détail matière, par exemple.
+
+    Le client n’a donc que deux gestes à faire, et ce sont ceux qu’il fait
+    déjà : ranger ses photographies couleur par couleur, et choisir l’image de
+    chaque variante. Aucune convention de nommage, aucun métachamp.
+  endcomment
+  assign kn_colour_index = -1
+  assign kn_seek = 0
+  for kn_option in product.options_with_values
+    assign kn_lower = kn_option.name | downcase
+    if kn_colour_index == -1
+      if kn_lower contains 'couleur'
+        assign kn_colour_index = kn_seek
+      elsif kn_lower contains 'coloris'
+        assign kn_colour_index = kn_seek
+      elsif kn_lower contains 'color'
+        assign kn_colour_index = kn_seek
+      endif
+    endif
+    assign kn_seek = kn_seek | plus: 1
+  endfor
+
+  assign kn_marks = ''
+  if kn_colour_index >= 0
+    for kn_variant in product.variants
+      if kn_variant.featured_media != blank
+        assign kn_value = kn_variant.options[kn_colour_index]
+        assign kn_marks = kn_marks | append: '|' | append: kn_variant.featured_media.id | append: '::' | append: kn_value | append: '|'
+      endif
+    endfor
+  endif
 -%}
 
-<div class="kn-gal" data-kn-gallery>
+<div class="kn-gal" data-kn-gallery data-kn-colour-index="{{ kn_colour_index }}">
   {%- if kn_count > 1 -%}
     <div class="kn-gal__thumbs">
+      {%- assign kn_group = '' -%}
       {%- for media in kn_media -%}
+        {%- liquid
+          assign kn_key = '|' | append: media.id | append: '::'
+          if kn_marks contains kn_key
+            assign kn_rest = kn_marks | split: kn_key | last
+            assign kn_group = kn_rest | split: '|' | first
+          endif
+        -%}
         <button
           type="button"
           class="kn-gal__thumb{% if forloop.first %} is-active{% endif %}"
           data-kn-thumb
           data-kn-index="{{ forloop.index0 }}"
+          data-kn-colour="{{ kn_group | escape }}"
           aria-current="{% if forloop.first %}true{% else %}false{% endif %}"
         >
           {{
@@ -52,6 +101,7 @@
         </div>
       {%- endif -%}
 
+      {%- assign kn_group = '' -%}
       {%- for media in kn_media -%}
         {%- liquid
           assign kn_loading = 'lazy'
@@ -60,12 +110,18 @@
             assign kn_loading = 'eager'
             assign kn_priority = 'high'
           endif
+          assign kn_key = '|' | append: media.id | append: '::'
+          if kn_marks contains kn_key
+            assign kn_rest = kn_marks | split: kn_key | last
+            assign kn_group = kn_rest | split: '|' | first
+          endif
         -%}
         <div
           class="kn-gal__slide{% if forloop.first %} is-active{% endif %}"
           data-kn-slide
           data-kn-index="{{ forloop.index0 }}"
           data-kn-media-id="{{ media.id }}"
+          data-kn-colour="{{ kn_group | escape }}"
         >
           {%- if media.media_type == 'image' -%}
             <button
@@ -104,8 +160,20 @@
 
     {%- if kn_count > 1 -%}
       <div class="kn-gal__dots" aria-hidden="true">
+        {%- assign kn_group = '' -%}
         {%- for media in kn_media -%}
-          <span class="kn-gal__dot{% if forloop.first %} is-active{% endif %}" data-kn-dot></span>
+          {%- liquid
+            assign kn_key = '|' | append: media.id | append: '::'
+            if kn_marks contains kn_key
+              assign kn_rest = kn_marks | split: kn_key | last
+              assign kn_group = kn_rest | split: '|' | first
+            endif
+          -%}
+          <span
+            class="kn-gal__dot{% if forloop.first %} is-active{% endif %}"
+            data-kn-dot
+            data-kn-colour="{{ kn_group | escape }}"
+          ></span>
         {%- endfor -%}
       </div>
     {%- endif -%}
