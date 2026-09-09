@@ -170,6 +170,24 @@
   background-color: transparent;
 }
 
+/* Une cellule sans photographie ne doit pas etre un trou. Le fond d'attente
+   suit la surface courante : sur une page ivoire, une carte sans image devient
+   donc rigoureusement invisible, et le nom et le prix flottent seuls au-dessus
+   de rien. Le cas n'est pas theorique — deux produits attendent deja leurs
+   photographies dans l'admin, et le client en ajoutera d'autres avant chaque
+   seance photo.
+
+   Un voile de 6 % de la couleur du texte suffit : il se voit sur les trois
+   surfaces sans crier sur aucune, et il ne demande pas de teinte fixe qui
+   trahirait le territoire. La cellule redevient un cadre en attente plutot
+   qu'une absence. */
+.kn-card__media:not(:has(img))::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: color-mix(in srgb, var(--kn-surface-fg) 6%, transparent);
+}
+
 /* Fondu croisé vers la 2ᵉ image. Pas de zoom, pas de translation (DA §6). */
 .kn-card__img--alt {
   opacity: 0;
