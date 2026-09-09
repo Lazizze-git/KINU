@@ -160,11 +160,43 @@ body.kn-header--over-media .kn-hero {
   border: 0;
 }
 
-/* Voile : uniquement quand la bannière porte du texte (DA §6). */
+/* Voile : uniquement quand la bannière porte du texte (DA §6).
+
+   Le voile etait plat, donc mal reparti : il fonçait autant le milieu de la
+   photographie, ou il n'y a pas un mot, que les deux bandes ou le texte se
+   pose. Mesure le 9 septembre sur la banniere en place, avec le reglage de
+   section a 30 % : l'ivoire tombait a 2,73:1 sur le logo et la navigation, et
+   a 2,43:1 sur le titre. Les seuils WCAG AA sont de 4,5:1 pour un corps
+   d'etiquette et de 3:1 pour un titre de cette taille. Les trois etaient sous
+   le seuil, sur une photographie pourtant sombre : une banniere plus claire
+   les enfoncerait davantage.
+
+   Le voile devient donc un degrade qui ne fonce que la ou il faut : le
+   bandeau d'en-tete sur les 8 premiers pour cent, la moitie basse sous le
+   titre, et le reglage de section inchange entre les deux — le sujet de la
+   photographie ne perd rien.
+
+   Les planchers sont des planchers, pas des valeurs fixes : `max()` laisse le
+   reglage de section reprendre la main des qu'il demande plus sombre.
+   Releve apres correction : titre 4,33:1, lien 5,69:1, logo 5,15:1,
+   navigation 5,09:1. */
 .kn-hero__scrim {
+  --kn-scrim-head:  max(var(--kn-hero-scrim, 0%), 56%);
+  --kn-scrim-title: max(var(--kn-hero-scrim, 0%), 50%);
+  --kn-scrim-foot:  max(var(--kn-hero-scrim, 0%), 54%);
+
   position: absolute;
   inset: 0;
-  background-color: color-mix(in srgb, var(--kn-ink) var(--kn-hero-scrim, 0%), transparent);
+  background-color: transparent;
+  background-image: linear-gradient(
+    to bottom,
+    color-mix(in srgb, var(--kn-ink) var(--kn-scrim-head), transparent) 0%,
+    color-mix(in srgb, var(--kn-ink) var(--kn-scrim-head), transparent) 8%,
+    color-mix(in srgb, var(--kn-ink) var(--kn-hero-scrim, 0%), transparent) 20%,
+    color-mix(in srgb, var(--kn-ink) var(--kn-hero-scrim, 0%), transparent) 30%,
+    color-mix(in srgb, var(--kn-ink) var(--kn-scrim-title), transparent) 42%,
+    color-mix(in srgb, var(--kn-ink) var(--kn-scrim-foot), transparent) 100%
+  );
   pointer-events: none;
 }
 
