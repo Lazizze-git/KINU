@@ -32,9 +32,35 @@
   .kn-pdp { --kn-ctrl-h: 56px; }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .kn-pdp { --kn-gal-ratio: var(--kn-ratio-card); }
 }
+
+/* Amendement du 09/09/2026 — la fiche passe a deux colonnes des 768 px, plus
+   a 1024. En une seule colonne la galerie va bord a bord et garde le rapport
+   naturel de la photographie, environ 2:3. Passe 700 px de large, cette image
+   devient plus haute qu'un ecran entier : releve a 850 px de large, elle
+   faisait 1063 px de haut pour une fenetre de 900, et le prix n'apparaissait
+   qu'a 1301 px. Le visiteur voyait un visage en gros plan et devait faire
+   defiler un ecran et demi avant d'atteindre le bouton d'achat.
+
+   La bande 768–1023 px n'a rien de marginal : c'est la tablette en portrait et
+   la fenetre de navigateur reduite. A 768 px la galerie tient ses 7/12, soit
+   environ 394 px de large, et la colonne d'achat se place a cote au lieu de
+   passer dessous.
+
+   Le meme palier emporte tout ce qui dependait de la colonne unique : le
+   rapport de la galerie, sa position collante, la colonne de vignettes, la
+   piste qui cesse d'etre un carrousel, les pastilles de defilement, le
+   bandeau d'achat collant devenu inutile, et la meta qui descend a l'echelle
+   d'etiquette — cette derniere l'avait toujours motive par « le regard a
+   l'image en vis-a-vis », ce qui est desormais vrai des 768 px.
+
+   Sous 768 px le telephone garde le plein cadre demande par le §7.7 : a 390 px
+   l'image finit exactement sur la ligne de flottaison. La grille de
+   recommandations, elle, garde son palier de 1024 px : quatre colonnes a
+   768 px donneraient des vignettes de 165 px.
+   -------------------------------------------------------------------------- */
 
 /* --------------------------------------------------------------------------
    1. Ossature
@@ -76,7 +102,7 @@ body:has(.kn-pdp) .kn-territory-surface {
   gap: var(--kn-space-lg);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   /* Amendement du 27 aout : retour a deux colonnes — galerie 7/12, achat 5/12.
      Description et caracteristiques redescendent sous le bouton, dans la meme
      colonne que le prix et les options : tout ce qui se lit se lit d'un cote,
@@ -124,7 +150,7 @@ body:has(.kn-pdp) .kn-territory-surface {
   margin-inline: calc(-1 * var(--kn-gutter));
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .kn-pdp__gallery {
     width: auto;
     margin-inline: 0;
@@ -138,7 +164,7 @@ body:has(.kn-pdp) .kn-territory-surface {
   display: none;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   /* Deux colonnes seulement s'il y a des vignettes. Sans elles, `.kn-gal`
      n'avait qu'un enfant, qui atterrissait dans la colonne des vignettes :
      le visuel se retrouvait large de 64 px. La plupart des produits n'ont
@@ -204,7 +230,7 @@ body:has(.kn-pdp) .kn-territory-surface {
   scroll-snap-align: start;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .kn-gal__track {
     display: block;
     overflow: visible;
@@ -281,7 +307,7 @@ body:has(.kn-pdp) .kn-territory-surface {
   background-color: var(--kn-ink);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .kn-gal__dots {
     display: none;
   }
@@ -334,7 +360,7 @@ body:has(.kn-pdp) .kn-territory-surface {
    l'echelle d'etiquette, comme dans la reference. Sur un telephone, ce meme
    titre est le H1 d'une page pleine largeur — onze pixels n'y sont plus de la
    retenue, mais un defaut. */
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .kn-pdp__title,
   .kn-pdp__price {
     font-size: var(--kn-fs-label);
@@ -807,7 +833,7 @@ body:has(.kn-sticky.is-visible) {
   padding-bottom: var(--kn-space-3xl);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 768px) {
   .kn-sticky {
     display: none;
   }
