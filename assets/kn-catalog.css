@@ -652,6 +652,23 @@
   border-top: var(--kn-stroke) solid var(--kn-surface-line);
 }
 
+/* Le filet qui ferme le champ doit tomber sur le rail des images, comme celui
+   du manifeste, des accordeons et du pied de page. Il ne le faisait a aucune
+   largeur : `.kn-collection__results` retranche deja `--kn-cell-pad` de la
+   gouttiere pour que la premiere image tombe sur le rail, et `.kn-container`
+   posait ensuite son propre bord sur cette valeur retranchee. Le trait
+   depassait le champ de `--kn-cell-pad` exactement — 16 px sur grand ecran,
+   12 px sur telephone — de chaque cote.
+
+   Le remplissage ne deplacerait rien : un filet se trace sur la boite de
+   bordure, pas sur le contenu. C'est donc la largeur qu'on reprend, et la
+   marge automatique de `.kn-container` qui recentre. */
+.kn-collection__results .kn-pagination {
+  width: calc(100% - 2 * var(--kn-cell-pad));
+  max-width: calc(var(--kn-container) - 2 * var(--kn-gutter));
+  padding-inline: 0;
+}
+
 .kn-pagination__pages {
   display: flex;
   flex-wrap: wrap;
