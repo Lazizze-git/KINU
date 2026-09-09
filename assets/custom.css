@@ -273,4 +273,17 @@
 
   --page-width: var(--kn-container);
   --page-margin: var(--kn-gutter);
+
+  /* Echelle typographique. Horizon fige ses titres en pixels — 56, 48, 32 et
+     24 — la ou le §4.2 les veut fluides. Sans ce pont, la meme information
+     n'a pas la meme voix selon la page : un titre de page de contenu, de
+     billet ou de recherche arrivait a 56 px fixes, y compris sur un telephone
+     de 390 px de large, quand le titre d'une page collection s'y lit a 32 px.
+     Les pages restees a Horizon rejoignent l'echelle du reste du site. */
+  --font-h1--size: var(--kn-fs-h1);
+  --font-h2--size: var(--kn-fs-h2);
+  --font-h3--size: var(--kn-fs-h3);
+  --font-h4--size: var(--kn-fs-h4);
+  --font-h5--size: var(--kn-fs-sm);
+  --font-h6--size: var(--kn-fs-label);
 }

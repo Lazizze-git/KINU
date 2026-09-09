@@ -23,8 +23,14 @@
       {% assign heading_text = 'content.search_results' | t %}
     {% endif %}
 
+    {%- comment -%}
+      Le titre de la page arrivait en h3 : la page de recherche n'avait donc
+      aucun H1, et sautait du niveau 1 au niveau 3. C'est le titre de la page,
+      il en prend le niveau. Le rendu, lui, ne bouge pas : kn-catalog.css pose
+      le meme traitement sur les trois niveaux de cet en-tete.
+    {%- endcomment -%}
     {% capture heading_text %}
-      <h3>{{ heading_text }}</h3>
+      <h1>{{ heading_text }}</h1>
     {% endcapture %}
 
     {% content_for 'block', id: 'heading', type: '_heading', text: heading_text %}
