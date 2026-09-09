@@ -105,7 +105,12 @@
 
 <title>
   {{ page_title }}
-  {%- if current_tags %} &ndash; tagged "{{ current_tags | join: ', ' }}"{% endif -%}
+  {%- comment -%}
+    Le libellé « tagged » etait ecrit en anglais, en dur, dans le titre de
+    l'onglet d'une boutique francophone : « Fluid-Motion — Femme – tagged
+    "Legging" ». Le tag se suffit a lui-meme, comme dans le fil d'Ariane.
+  {%- endcomment -%}
+  {%- if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif -%}
   {%- if current_page != 1 %} &ndash; Page {{ current_page }}{% endif -%}
   {%- unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless -%}
 </title>

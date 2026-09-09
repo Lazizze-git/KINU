@@ -53,6 +53,11 @@
     {{ 'kn-home.css' | asset_url | stylesheet_tag }}
     {{ 'kn-catalog.css' | asset_url | stylesheet_tag }}
     {{ 'kn-product.css' | asset_url | stylesheet_tag }}
+    {%- comment -%}
+      En dernier : cette feuille ne peint que des composants d'Horizon, sur les
+      pages que le systeme KINU ne rend pas lui-meme.
+    {%- endcomment -%}
+    {{ 'kn-horizon.css' | asset_url | stylesheet_tag }}
 
     <script src="{{ 'kn-base.js' | asset_url }}" defer></script>
     <script src="{{ 'kn-chrome.js' | asset_url }}" defer></script>

@@ -52,6 +52,33 @@
   endif
 
   comment
+    Vue filtrée par tag. Le menu Femme mène à « Leggings », « Shorts »,
+    « T-shirts »… : autant d’adresses distinctes qui affichaient toutes le
+    titre, le sur-titre et la phrase de l’univers entier. Deux leggings se
+    présentaient donc sous un H1 « Femme » et sous une phrase qui en annonce
+    cinq, sans rien pour dire au visiteur où il venait d’arriver. Le §7.7
+    attend d’ailleurs « Accueil / Femme / T-shirts » au fil d’Ariane.
+
+    Le tag prend le H1, l’univers passe en sur-titre, et la phrase de contexte
+    s’efface : elle décrit la collection, pas la sélection.
+  endcomment
+  assign kn_tag = ''
+  if current_tags.size > 0
+    assign kn_tag = current_tags | join: ', '
+  endif
+
+  if kn_tag != blank
+    if kn_is_universe
+      assign kn_eyebrow = kn_category
+      if kn_universe_name != blank
+        assign kn_eyebrow = kn_category | append: ' — ' | append: kn_universe_name
+      endif
+    endif
+    assign kn_title = kn_tag
+    assign kn_intro = ''
+  endif
+
+  comment
     Nombre de filtres actifs, pour le libellé « FILTRER (2) ».
   endcomment
   assign kn_active = 0

@@ -79,7 +79,27 @@
     endif
   elsif collection != blank
     assign kn_last_url = collection.url
-    if kn_universe.handle == collection.handle
+    comment
+      Vue filtrée par tag : le §7.7 attend « Accueil / Femme / T-shirts ».
+      Le tag devient le dernier maillon et la page dont il est issu remonte au
+      milieu — sans quoi trois adresses distinctes affichaient le même fil,
+      « Accueil / Femme », et rien ne disait où l’on se trouvait.
+    endcomment
+    assign kn_tag = ''
+    if current_tags.size > 0
+      assign kn_tag = current_tags | join: ', '
+    endif
+
+    if kn_tag != blank
+      assign kn_last_label = kn_last_label | default: kn_tag
+      assign kn_last_url = request.path
+      assign kn_mid_url = collection.url
+      if kn_universe.handle == collection.handle
+        assign kn_mid_label = kn_category | default: collection.title
+      else
+        assign kn_mid_label = collection.title
+      endif
+    elsif kn_universe.handle == collection.handle
       assign kn_last_label = kn_last_label | default: kn_category | default: collection.title
     else
       assign kn_last_label = kn_last_label | default: collection.title
