@@ -1237,6 +1237,29 @@ body.kn-header--over-media
   border-radius: var(--kn-radius);
 }
 
+/* Le champ ne tenait qu'un seul chiffre. Horizon fige le selecteur a 105 px et
+   donne 36 px a chacun des deux boutons : il reste 33 px au champ, dont notre
+   filet reprend 2, et le remplissage propre du champ le reste. Une quantite a
+   deux chiffres y perdait son dernier chiffre — releve a 20 dans le panier, ou
+   le nombre s'affichait ampute.
+
+   On ne dispute pas ces pixels : on dimensionne le champ sur ce qu'il doit
+   contenir. Trois caracteres tabulaires couvrent toute quantite realiste, et
+   le selecteur reprend une largeur libre dont les 105 px ne sont plus que le
+   plancher. Le filet cesse alors de rogner quoi que ce soit. */
+#cart-drawer .cart-items .quantity-selector {
+  width: auto;
+  min-width: var(--quantity-selector-width);
+}
+
+#cart-drawer .cart-items .quantity-selector input {
+  width: 3.5ch;
+  max-width: none;
+  padding-inline: 0;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
 /* Les totaux du pied restent tabulaires. */
 #cart-drawer .cart-totals {
   font-family: var(--kn-font-ui);
