@@ -1139,3 +1139,93 @@
     grid-column: 1 / span 8;
   }
 }
+
+/* --------------------------------------------------------------------------
+   10. Pages restees a Horizon — on leur change la peau (DA §7.5)
+
+   L'accueil, la collection, la liste de collections et la fiche produit sont
+   ecrites en KINU. La recherche, la page 404 et le panier rendent encore leurs
+   listes avec le `product-card` de Horizon. Rien ne les reliait au systeme :
+   le nom d'un produit s'y ecrit en Montserrat 16 px casse normale quand le
+   catalogue l'ecrit en DM Sans capitale interlettree, et le prix perd ses
+   chiffres tabulaires. Deux vocabulaires pour le meme objet, a un clic l'un
+   de l'autre.
+
+   On ne reecrit pas ces sections, on leur change la peau — la meme methode
+   que pour le tiroir du panier. `product-card` ne croise jamais `.kn-card` :
+   aucune page KINU n'en rend un seul, la separation est nette.
+   -------------------------------------------------------------------------- */
+
+/* Nom du produit : meme voix que .kn-card__title. Horizon rend le nom visible
+   dans un bloc de texte, et garde un titre de niveau en double, masque, pour
+   sa vue compacte : on peint les deux. */
+product-card .text-block[class*="product_title"],
+product-card .text-block[class*="product_title"] > *,
+product-card .product-card__content h3,
+product-card .product-card__content h4,
+product-card .product-card__content .h4 {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-sm);
+  font-weight: var(--kn-fw-medium);
+  line-height: var(--kn-lh-tight);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
+  color: var(--kn-surface-fg);
+}
+
+/* Prix : meme corps que le nom, chiffres tabulaires — c'est la regle du
+   catalogue depuis l'amendement du 23 aout. */
+product-card product-price,
+product-card .price {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-sm);
+  font-weight: var(--kn-fw-regular);
+  letter-spacing: var(--kn-ls-label);
+  font-variant-numeric: tabular-nums;
+  color: var(--kn-surface-fg);
+}
+
+/* Le titre de la page de recherche arrivait en h3 de 48 px, c'est-a-dire ni
+   la taille ni le niveau d'un titre de page. On lui rend le traitement du H1
+   de collection ; le niveau du balisage, lui, se corrige dans le gabarit. */
+.search-page__header .text-block > :is(h1, h2, h3),
+.search-page__header h1,
+.search-page__header h2,
+.search-page__header h3 {
+  font-family: var(--kn-font-display);
+  font-size: var(--kn-fs-h1);
+  font-weight: var(--kn-fw-bold);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  text-transform: none;
+}
+
+/* Compteur, filtres et tri : les memes etiquettes que la barre d'outils du
+   catalogue, pas trois graisses de Montserrat. */
+.facets__filters-wrapper .facets__item > summary,
+.facets__filters-wrapper .facets__item > button,
+.products-count-wrapper,
+.sorting-filter summary,
+.sorting-filter button {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-label);
+  font-weight: var(--kn-fw-medium);
+  line-height: var(--kn-lh-tight);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
+}
+
+/* Le compteur et les etiquettes de facette passent par une variable de
+   Horizon, et la regle qui la lit est injectee section par section, apres nos
+   feuilles : la disputer au poids de selecteur serait perdu d'avance. On
+   reassigne la variable, c'est elle qui commande. */
+:root {
+  --facet-label-transform: uppercase;
+}
+
+/* Le champ de recherche reprend le filet unique des champs KINU : un trait
+   bas, pas une boite. */
+search-page-input-component {
+  border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
+  background-color: transparent;
+}
