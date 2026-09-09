@@ -1142,6 +1142,24 @@ body.kn-header--over-media
   padding-block: var(--kn-space-md);
 }
 
+/* La liste des articles n'avait aucune reserve a ses deux extremites. Releve
+   sur un panier de six pieces, fenetre de 900 px : l'en-tete finissait a 93 et
+   la premiere ligne demarrait a 93 exactement. La photographie du premier
+   article venait donc buter contre le filet de l'en-tete, et se lisait comme
+   une image coupee plutot que comme le haut d'une liste. Meme chose en bas,
+   ou la derniere ligne se tranchait net sur le bloc de total.
+
+   La reserve se pose a l'interieur du conteneur qui defile, pas autour : elle
+   n'apparait qu'aux deux bouts de la course, et disparait des qu'on fait
+   defiler. C'est le comportement d'un panier ordinaire.
+
+   Le confinement du rebond va avec : sans lui, arriver au bout de la liste
+   faisait defiler la page derriere le tiroir. */
+#cart-drawer .cart-drawer__items {
+  padding-block: var(--kn-space-md);
+  overscroll-behavior: contain;
+}
+
 /* Vignette : 72 px de large en 3:4, comme la DA §7.5 — elle arrivait en carre
    de 54 px, sans rapport avec le ratio des cartes du catalogue. */
 /* La vignette garde les dimensions natives de Horizon.
