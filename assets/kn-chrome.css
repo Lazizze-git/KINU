@@ -891,8 +891,35 @@ body.kn-header--over-media
    alors qu'il n'est pas une section de contenu mais une fin de page. Le
    rembourrage bas garde ses 30 px supplementaires : c'est la compensation de
    la bande de telemetrie fixe (DA §11.5). */
+/* Amendement du 09/09/2026 — le pied de page quitte l'encre.
+   Le §7.6 le posait sur la surface SOMBRE : un aplat noir de pleine largeur
+   au bas de chaque page. Demande du client de l'eclaircir, dans la foulee du
+   territoire Homme qui a quitte l'encre le meme jour. Le site n'a plus aucun
+   aplat noir : l'encre reste la couleur du texte et des boutons primaires.
+
+   La surface devient INONDEE, dont la gamme est deja concue pour de l'ivoire
+   sur du vert, et le fond descend d'un cran vers le vert profond. Ce n'est pas
+   une quatrieme surface, c'est le meme rapport que la sauge a la surface
+   claire : memes couleurs de texte, memes filets, un fond plus grave.
+
+   Pourquoi le cran plus sombre plutot que le foret standard : sous la page
+   Unisexe, elle-meme inondee, un pied de page du meme vert exact ferait
+   disparaitre la limite et la page n'aurait plus de fin lisible. Le contraste
+   y gagne aussi — l'ivoire passe de 8,84:1 a 11,50:1. */
 .kn-footer {
+  --kn-surface-bg: var(--kn-forest-deep);
+
   padding-block: var(--kn-space-3xl) var(--kn-space-xl);
+}
+
+/* La signature d'atelier collait ses deux mots : le Liquid rogne l'espace
+   entre le libelle et le nom, et « Site » « We Are Brothers » se lisait
+   « SITEWE ARE BROTHERS ». L'ecart se pose en flex, il ne depend plus d'un
+   blanc dans le gabarit. */
+.kn-footer__credit {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35em;
 }
 
 /* Premiere rangee : la lettre tient la gauche, les menus la droite. C'est ce
@@ -1225,13 +1252,26 @@ body.kn-header--over-media
   color: var(--kn-grey);
 }
 
-/* Prix unitaire : une precision, pas le montant a retenir. */
+/* Prix unitaire : une precision, pas le montant a retenir.
+
+   Le corps se pose aussi sur les descendants. Horizon ecrit
+   `.cart-items__details * { font-size: var(--font-size--sm); }` : la regle
+   touche directement le <span> qui porte le montant, pas seulement son
+   conteneur. Une declaration posee sur le seul conteneur ne descend donc
+   jamais jusqu'au texte — le prix unitaire ressortait a 14 px, soit le corps
+   du nom de l'article, et les deux montants de la ligne se ressemblaient.
+   La famille, la couleur et l'interlettrage, eux, s'heritent sans obstacle :
+   seul le corps a besoin d'etre repete. */
 #cart-drawer .cart-items__unit-price-wrapper {
   font-family: var(--kn-font-ui);
   font-size: var(--kn-fs-label);
   letter-spacing: var(--kn-ls-label);
   color: var(--kn-grey);
   font-variant-numeric: tabular-nums;
+}
+
+#cart-drawer .cart-items__unit-price-wrapper * {
+  font-size: var(--kn-fs-label);
 }
 
 /* Total de ligne : le chiffre qui compte. */

@@ -456,7 +456,7 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 
 ### 7.6 Footer
 
-- Surface **SOMBRE** (`#1B1A16`), texte `#F7F5F0`, liens `rgba(247,245,240,.7)` → `--kn-forest-soft` (`#6FA98C`) au survol. **Un seul bloc**, deux rangées séparées par un filet 1 px : lettre + menus, puis la ligne légale.
+- Surface **INONDÉE, variante profonde** (`#163A2C` — voir l'amendement du 09/09/2026 ci-dessous), texte `#F7F5F0`, liens `rgba(247,245,240,.7)` → `--kn-forest-soft` (`#6FA98C`) au survol. **Un seul bloc**, deux rangées séparées par un filet 1 px : lettre + menus, puis la ligne légale.
 - **Rangée 1 — lettre d'information à gauche (5/12), menus à droite (7/12).** Sur-titre `LETTRE`, titre à l'échelle H3, une phrase de promesse, puis le formulaire. Champ e-mail en filet ivoire 1 px sur fond transparent, bouton `S'INSCRIRE` ivoire. Le filet est un **contour**, pas un trait bas : à partir de 640 px, champ et bouton tiennent dans une seule boîte, l'aplat ivoire du bouton en fermant le bord droit. Boîte bornée à 34 rem. Empilés sous 640 px, champ à filet bas et bouton pleine largeur.
 - **Menus** : autant de colonnes que de menus réellement remplis (1 à 4), jamais quatre pistes figées — une colonne vide se voit. Accordéons repliés sur mobile. Ordre visé : Boutique · Aide (FAQ, Livraison, Retours) · Maison (À propos, Journal, Contact) · Légal (CGV, Confidentialité).
 - Bas de footer : réseaux sociaux en icônes 18 px trait 1,5 px, **sélecteur de langue FR / EN** en `--kn-fs-label` séparé par un filet vertical, mention `© KINŪ 2026`.
@@ -470,6 +470,31 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 > tout autant. Réunis, les deux blocs se remplissent l'un l'autre. La page
 > d'accueil perd son inondation 2 — R2 en tolère deux au maximum, une seule reste
 > conforme.
+
+> **Amendement du 09/09/2026 — le pied de page quitte l'encre.** Le footer était
+> un aplat noir pleine largeur au bas de chaque page. Demande du client de
+> l'éclaircir, le même jour que le territoire Homme. Le site n'a désormais plus
+> aucun aplat encre : l'encre reste la couleur du texte, des boutons primaires
+> et des filets, elle ne peint plus aucune surface.
+>
+> La surface passe à INONDÉE, dont la gamme est déjà conçue pour de l'ivoire sur
+> du vert, et le fond descend d'un cran vers `--kn-forest-deep`. Ce n'est pas une
+> quatrième surface : c'est le même rapport que la sauge à la surface claire,
+> mêmes couleurs de texte, mêmes filets, un fond plus grave.
+>
+> Le cran plus sombre plutôt que le forêt standard, pour deux raisons. Sous la
+> page Unisexe, elle-même inondée, un pied de page du même vert exact ferait
+> disparaître la limite et la page n'aurait plus de fin lisible. Et le contraste
+> y gagne : l'ivoire passe de 8,84:1 à 11,50:1. Relevé après changement, aucun
+> texte du footer sous le seuil, le plus faible étant le bouton `S'INSCRIRE` à
+> 8,84:1.
+>
+> **R2 et R12 restent à surveiller.** L'accueil retrouve une deuxième inondation
+> — le manifeste puis le footer — ce que R2 tolère au maximum. R12 interdit deux
+> surfaces colorées adjacentes : sur la page Unisexe, le champ forêt touche
+> désormais un footer forêt profond au lieu d'un footer encre. La règle visait
+> le heurt forêt/encre ; deux verts de la même famille ne produisent pas ce
+> heurt, mais la question mérite d'être retranchée si un troisième cas apparaît.
 
 ### 7.7 Page collection & page produit
 
