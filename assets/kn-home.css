@@ -338,26 +338,11 @@ body.kn-header--over-media .kn-hero {
   }
 }
 
-/* Trois portraits de meme taille poses sur une meme ligne se lisent comme un
-   tableau de bord, pas comme une devanture. Les blocs de rang pair descendent
-   d'un cran : la rangee prend un rythme au lieu d'un alignement, et l'oeil
-   entre par le premier au lieu de balayer les trois d'un coup.
-
-   La regle est systematique et non composee a la main : elle vaut pour deux
-   univers comme pour les six que la section accepte. Rien ne bouge sous
-   1024 px, ou la rangee n'existe pas.
-
-   Le §5.2 pose le fer a gauche, qui est une regle horizontale ; l'axe vertical
-   reste libre, et le §9 n'interdit ici ni cadre, ni ombre, ni rayon — le
-   decalage ne coute aucun de ces trois. */
+/* Le decalage vertical des blocs de rang pair, essaye le 10/09/2026, est
+   retire : le client l'a juge laid. La rangee reprend son alignement. */
 @media (min-width: 1024px) {
   .kn-universes__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    align-items: start;
-  }
-
-  .kn-universes__grid > .kn-universe:nth-child(even) {
-    margin-block-start: var(--kn-space-2xl);
   }
 }
 

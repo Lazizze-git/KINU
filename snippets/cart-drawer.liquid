@@ -40,8 +40,21 @@
     </div>
     {% endcapture %}
 
+  {%- comment -%}
+    `no-persist` — amendement KINU du 10/09/2026.
+
+    Horizon garde un tiroir ouvert d'une page a l'autre au-dela de 990 px :
+    c'est cense etre une colonne laterale qui repousse la page et qui suit le
+    visiteur pendant qu'il continue ses achats. Chez KINU le panier n'est pas
+    cette colonne — c'est un tiroir pose sur la page. Le retrouver ouvert a
+    chaque clic n'aide personne, et le client l'a signale comme un defaut.
+
+    L'attribut est l'echappatoire prevue par le composant lui-meme : le panier
+    cesse d'etre memorise, et le tiroir de dialogue (chat) garde son comportement.
+  {%- endcomment -%}
   <theme-drawer
     id="cart-drawer"
+    no-persist
     data-skip-node-update
   >
     <dialog

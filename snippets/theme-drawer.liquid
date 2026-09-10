@@ -37,6 +37,11 @@
       var drawer = document.getElementById(drawerIds[i]);
       if (!drawer) continue;
 
+      // Un tiroir marque `no-persist` ne se restaure pas non plus : sans ce
+      // garde, une cle deja ecrite avant le marquage le rouvrirait une
+      // derniere fois, et resterait ecrite tant qu'on n'y touche plus.
+      if (drawer.hasAttribute('no-persist')) continue;
+
       drawer.setAttribute('open', '');
 
       // Set [open] directly so the CSS slide-in applies without triggering
