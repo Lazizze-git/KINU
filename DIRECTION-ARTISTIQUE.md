@@ -339,7 +339,7 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 
 - Hauteur fixe : **56 px mobile / 72 px desktop**. Ne change jamais au scroll.
 - **Téléphone** : **[burger] — [logo KINŪ] — [recherche · compte · panier]**. La navigation vit dans le panneau.
-- **Ordinateur** : **[logo KINŪ] — [Femme · Homme · Unisexe] — [recherche · compte · panier]**. Les entrées de premier niveau du menu passent dans la barre, à l'échelle d'étiquette (11 px, capitales, chasse positive), zone cliquable 44 px. Survol : les autres entrées s'atténuent, la survolée reste nette (§3.6). L'entrée de la page courante porte `aria-current` et passe en accent.
+- **Ordinateur** : **[logo KINŪ] — [Femme · Homme · Unisexe · Toutes les collections] — [recherche · compte · panier]**. Les entrées de premier niveau du menu passent dans la barre, à l'échelle d'étiquette (11 px, capitales, chasse positive), zone cliquable 44 px. Survol : les autres entrées s'atténuent, la survolée reste nette (§3.6). L'entrée de la page courante porte `aria-current` et passe en accent.
 
 > **Amendement du 27 août 2026 — libellés dans la barre.** Le brief interdisait
 > tout libellé de menu visible : le burger tenait la navigation sur les deux
@@ -349,6 +349,16 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 > le voir. Le burger disparaît donc sur ordinateur, faute d'avoir encore quelque
 > chose à ouvrir, et reste la navigation du téléphone. Une seule source : le même
 > menu alimente la barre et le panneau.
+
+> **Amendement du 10 septembre 2026 — « Toutes les collections » dans la barre.**
+> La barre ne portait que les entrées du menu : le quatrième item de
+> l'arborescence du brief (§1 : Femme / Homme / Unisexe / **Toutes les
+> collections**) ne vivait que dans le panneau, hors de portée sur ordinateur où
+> le burger a disparu. Le lien de service ferme désormais la barre comme il ferme
+> le panneau (§7.2) : même libellé, même destination, réglés une seule fois dans
+> l'éditeur. Corps atténué en `--kn-surface-muted` et filet 1 px à hauteur de
+> texte pour le tenir à l'écart des univers ; il reprend la couleur pleine sous
+> le pointeur et l'accent sur sa propre page.
 - Logo : wordmark `KINŪ`, hauteur 20 px mobile / 24 px desktop, aligné à gauche sur desktop, centré sur mobile.
 - Icônes : trait **1,5 px**, taille 20 px, zone tactile 44 × 44 px, sans libellé. Le compteur du panier est une pastille verte de 16 px, chiffre 10 px DM Sans 500 en ivoire.
 - Comportement au scroll : voir **R5**. Header sticky, jamais masqué au scroll descendant.

@@ -1,8 +1,9 @@
 {%- comment -%}
   KINŪ — Header
   Telephone : [burger] — [logo] — [recherche · compte · panier].
-  Ordinateur : [logo] — [Femme · Homme · Unisexe] — [icones], le burger cede la
-  place aux libelles (amendement du 27 aout, DIRECTION-ARTISTIQUE.md §7.1).
+  Ordinateur : [logo] — [Femme · Homme · Unisexe · Toutes les collections] —
+  [icones], le burger cede la place aux libelles (amendements du 27 aout et du
+  10 septembre, DIRECTION-ARTISTIQUE.md §7.1).
   Hauteur constante, sticky, jamais masqué. Seule la couleur bouge au scroll
   (geste signature, DIRECTION-ARTISTIQUE.md §3.4 R5 et §7.1).
 {%- endcomment -%}
@@ -12,6 +13,15 @@
   assign kn_use_drawer = false
   if settings.cart_type == 'drawer' and template.name != 'cart'
     assign kn_use_drawer = true
+  endif
+
+  comment
+    Meme destination que la rangee « Toutes les collections » du panneau
+    (kn-nav-panel) : le reglage de l'editeur, sinon la liste de tous les produits.
+  endcomment
+  assign kn_all_url = section.settings.secondary_link
+  if kn_all_url == blank
+    assign kn_all_url = routes.all_products_collection_url
   endif
 -%}
 
@@ -106,6 +116,24 @@
               >{{ kn_link.title | escape }}</a>
             </li>
           {%- endfor -%}
+
+          {%- comment -%}
+            Amendement du 10 septembre : le lien de service ferme la barre comme
+            il ferme le panneau. C'est la quatrieme entree de l'arborescence du
+            brief (DIRECTION-ARTISTIQUE.md §1 : Femme / Homme / Unisexe / Toutes
+            les collections). Meme libelle, meme destination, regles une fois.
+          {%- endcomment -%}
+          {%- if section.settings.secondary_label != blank -%}
+            <li>
+              <a
+                class="kn-header__nav-link kn-header__nav-link--service"
+                href="{{ kn_all_url }}"
+                {% if request.path == kn_all_url %}
+                  aria-current="page"
+                {% endif %}
+              >{{ section.settings.secondary_label | escape }}</a>
+            </li>
+          {%- endif -%}
         </ul>
       </nav>
     {%- endif -%}
@@ -221,6 +249,7 @@
       "type": "text",
       "id": "secondary_label",
       "label": "Lien secondaire",
+      "info": "Ferme la barre sur ordinateur et la liste du panneau, après les univers.",
       "default": "Toutes les collections"
     },
     {

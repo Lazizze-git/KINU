@@ -330,6 +330,27 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
   color: var(--kn-surface-muted);
 }
 
+/* « Toutes les collections » ferme la barre comme il ferme le panneau (DA §1
+   et §7.2) : corps attenue, tenu a l'ecart des univers par un filet 1 px a
+   hauteur de texte. Il ne reprend la couleur pleine que sous le pointeur ;
+   la regle aria-current ci-dessous garde le dernier mot sur sa propre page. */
+.kn-header__nav-link--service {
+  gap: var(--kn-space-lg);
+  color: var(--kn-surface-muted);
+}
+
+.kn-header__nav-link--service::before {
+  content: '';
+  flex: none;
+  width: 1px;
+  height: 1em;
+  background-color: var(--kn-surface-line);
+}
+
+.kn-header__nav-link--service:hover {
+  color: var(--kn-surface-fg);
+}
+
 .kn-header__nav-link[aria-current='page'] {
   color: var(--kn-surface-accent);
 }
