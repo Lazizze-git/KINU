@@ -33,14 +33,17 @@
     if (!window.matchMedia('(min-width: 990px)').matches) return;
 
     var dialogs = [];
+    var refuses = [];
     for (var i = 0; i < drawerIds.length; i++) {
       var drawer = document.getElementById(drawerIds[i]);
       if (!drawer) continue;
 
-      // Un tiroir marque `no-persist` ne se restaure pas non plus : sans ce
-      // garde, une cle deja ecrite avant le marquage le rouvrirait une
-      // derniere fois, et resterait ecrite tant qu'on n'y touche plus.
-      if (drawer.hasAttribute('no-persist')) continue;
+      // Un tiroir marque `no-persist` ne se restaure pas. On note son
+      // identifiant : la cle qui le nomme sera effacee plus bas.
+      if (drawer.hasAttribute('no-persist')) {
+        refuses.push(drawerIds[i]);
+        continue;
+      }
 
       drawer.setAttribute('open', '');
 
@@ -61,6 +64,22 @@
       // Let each drawer type handle its own restore (e.g. shopify-chat mode).
       // Synchronous dispatch — listeners attached during earlier parsing run immediately.
       drawer.dispatchEvent(new CustomEvent('theme-drawer:restoring'));
+    }
+
+    // Une cle ecrite avant que le tiroir ne porte `no-persist` survivrait a
+    // toute la session : le garde ci-dessus l'ecarterait a chaque page sans
+    // jamais l'effacer. On la nettoie ici, une fois, pour que la session
+    // reparte propre.
+    if (refuses.length) {
+      var restants = [];
+      for (var k = 0; k < drawerIds.length; k++) {
+        if (refuses.indexOf(drawerIds[k]) === -1) restants.push(drawerIds[k]);
+      }
+      if (restants.length) {
+        sessionStorage.setItem('theme-drawer-open', restants.join(','));
+      } else {
+        sessionStorage.removeItem('theme-drawer-open');
+      }
     }
 
     // Apply squeeze immediately, bypassing the margin transition.

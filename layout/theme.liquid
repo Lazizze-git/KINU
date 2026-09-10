@@ -98,38 +98,6 @@
     class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}"
     {% if kn_territory != blank %}data-kn-territory="{{ kn_territory }}"{% endif %}
   >
-    <script>
-      /* TRACE TEMPORAIRE — diagnostic du panier qui s'ouvre au changement de
-         page. A retirer une fois la cause trouvee. */
-      (function () {
-        var t0 = performance.now();
-        window.__knTrace = [];
-        function note(what, node) {
-          window.__knTrace.push(
-            Math.round(performance.now() - t0) + 'ms ' + what +
-            ' <' + node.tagName.toLowerCase() + (node.id ? '#' + node.id : '') + '>' +
-            ' open=' + node.hasAttribute('open')
-          );
-        }
-        new MutationObserver(function (records) {
-          records.forEach(function (r) {
-            var n = r.target;
-            if (!(n instanceof Element)) return;
-            if (r.attributeName === 'open') note('attribut open', n);
-            if (r.attributeName === 'class' && n.classList.contains('page-wrapper')) {
-              window.__knTrace.push(
-                Math.round(performance.now() - t0) + 'ms page-wrapper class=' + n.className
-              );
-            }
-          });
-        }).observe(document.documentElement, {
-          subtree: true,
-          attributes: true,
-          attributeFilter: ['open', 'class']
-        });
-      })();
-    </script>
-
     {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
 
     {% render 'chat-drawer' %}
