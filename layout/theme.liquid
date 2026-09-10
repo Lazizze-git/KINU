@@ -98,6 +98,34 @@
     class="page-width-{{ settings.page_width }} card-hover-effect-{{ settings.card_hover_effect }}"
     {% if kn_territory != blank %}data-kn-territory="{{ kn_territory }}"{% endif %}
   >
+    {%- comment -%}
+      Premiere barriere — le panier ne suit pas le visiteur d'une page a l'autre.
+
+      Horizon rouvre volontairement, au-dela de 990 px, tout tiroir laisse
+      ouvert : un script synchrone relit `theme-drawer-open` pendant l'analyse
+      de la page et repose l'attribut `open` avant la premiere peinture. Chez
+      KINU le panier n'est pas une colonne qui accompagne les achats, c'est un
+      tiroir pose sur la page.
+
+      On efface la cle avant que ce script ne la lise. Ce bloc doit donc rester
+      le tout premier du corps : c'est la seule barriere qui precede toutes les
+      autres. Les autres tiroirs gardent leur memoire.
+    {%- endcomment -%}
+    <script>
+      try {
+        var knNoms = (sessionStorage.getItem('theme-drawer-open') || '').split(',');
+        var knGardes = [];
+        for (var knI = 0; knI < knNoms.length; knI++) {
+          if (knNoms[knI] && knNoms[knI] !== 'cart-drawer') knGardes.push(knNoms[knI]);
+        }
+        if (knGardes.length) {
+          sessionStorage.setItem('theme-drawer-open', knGardes.join(','));
+        } else {
+          sessionStorage.removeItem('theme-drawer-open');
+        }
+      } catch (knErr) {}
+    </script>
+
     {% render 'skip-to-content-link', href: '#MainContent', text: 'accessibility.skip_to_text' %}
 
     {% render 'chat-drawer' %}
@@ -194,6 +222,50 @@
 
     {% render 'cart-drawer', render_wrapper: true %}
     {% render 'theme-drawer' %}
+
+    {%- comment -%}
+      Seconde barriere — filet de securite.
+
+      La premiere couvre la cause connue. Celle-ci couvre les autres : si quoi
+      que ce soit a ouvert le panier pendant l'analyse de la page, on le
+      referme des que le composant devient disponible, et on retire le decalage
+      de page qui l'accompagne. Un panier ouvert au chargement n'est jamais
+      voulu ; seul un clic doit l'ouvrir.
+    {%- endcomment -%}
+    <script>
+      (function () {
+        function knFerme() {
+          var tiroir = document.getElementById('cart-drawer');
+          if (!tiroir) return;
+          var panneau = tiroir.querySelector('dialog');
+          var ouvert = tiroir.hasAttribute('open') || (panneau && panneau.hasAttribute('open'));
+          if (!ouvert) return;
+
+          tiroir.removeAttribute('open');
+          if (panneau) {
+            panneau.classList.remove(
+              'theme-drawer__dialog-instant',
+              'theme-drawer__dialog--opening',
+              'theme-drawer__dialog--opening-inline-start'
+            );
+            if (panneau.open) panneau.close();
+            else panneau.removeAttribute('open');
+          }
+          tiroir.style.removeProperty('--drawer-stack-order');
+
+          var enveloppe = document.querySelector('.page-wrapper');
+          if (enveloppe && !document.querySelector('theme-drawer[open]')) {
+            enveloppe.classList.remove('page-wrapper--drawer-open');
+          }
+        }
+
+        knFerme();
+        document.addEventListener('DOMContentLoaded', knFerme);
+        if (window.customElements) {
+          customElements.whenDefined('theme-drawer').then(knFerme);
+        }
+      })();
+    </script>
 
     {% render 'search-modal' %}
 

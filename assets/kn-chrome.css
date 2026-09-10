@@ -1147,6 +1147,20 @@ body.kn-header--over-media
    passage en caisse. On lui change sa peau.
    -------------------------------------------------------------------------- */
 
+/* Troisieme barriere, la seule qui agisse avant le premier pixel.
+
+   Le panneau est analyse tres tot ; `theme-drawer.js` est un module charge en
+   priorite basse. Entre les deux s'ouvre un intervalle ou l'attribut `open`
+   suffit a peindre le tiroir alors qu'aucun script n'est encore la pour le
+   refermer. C'est exactement la duree d'un scintillement.
+
+   Tant que l'element personnalise n'est pas defini, le panneau ne se dessine
+   pas. La regle cesse d'agir des que le composant existe, donc au premier
+   clic reel elle est deja levee. */
+#cart-drawer:not(:defined) .theme-drawer__dialog {
+  display: none;
+}
+
 #cart-drawer .theme-drawer__dialog {
   --theme-drawer-width: 100vw;
   --theme-drawer-padding: var(--kn-gutter);
