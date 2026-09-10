@@ -134,6 +134,15 @@
         {%- render 'kn-product-details', product: kn_product, opts: kn_s, section_id: section.id -%}
       </div>
     </div>
+
+    {%- comment -%}
+      Fiche technique. Elle sort de la grille a deux colonnes et prend toute la
+      largeur du conteneur : ses filets courent d'un bord a l'autre, ce qui la
+      designe comme une donnee de reference et non comme un paragraphe de plus
+      dans la colonne de lecture. Elle ne se dessine que si le client a rempli
+      au moins un champ.
+    {%- endcomment -%}
+    {%- render 'kn-product-spec', product: kn_product, opts: kn_s, section_id: section.id -%}
   </div>
 
   {%- render 'kn-product-lightbox', product: kn_product, opts: kn_s, section_id: section.id -%}
@@ -192,6 +201,9 @@
     { "type": "text", "id": "label_next", "label": "Visuel suivant", "default": "Visuel suivant" },
     { "type": "text", "id": "label_close", "label": "Fermer", "default": "Fermer" },
     { "type": "text", "id": "label_model", "label": "Étiquette modèle 3D", "default": "Modèle 3D" },
+
+    { "type": "header", "content": "Fiche technique" },
+    { "type": "text", "id": "spec_title", "label": "Titre du bloc", "default": "Fiche technique", "info": "Les libellés des lignes — Composition, Grammage, Coupe, Entretien, Origine — reprennent le nom des métachamps et ne sont pas modifiables ici, pour qu'ils ne puissent pas se désaccorder." },
 
     { "type": "header", "content": "Informations" },
     { "type": "text", "id": "title_description", "label": "Titre — Description", "default": "Description" },

@@ -1,0 +1,101 @@
+{%- doc -%}
+  Fiche technique de la page produit (DA §5.4, §7.7).
+
+  Un champ réglé : une ligne par donnée, un filet 1 px entre chacune, la clé en
+  étiquette capitale et la valeur en corps courant. Aucun fond, aucun cadre,
+  aucun rayon — le vocabulaire du reste du site.
+
+  Pourquoi ce bloc existe. La marque vend du vêtement technique et n’affichait
+  aucune donnée technique : la composition dormait dans un paragraphe d’accordéon,
+  le grammage et la coupe nulle part. Un visiteur qui compare deux t-shirts n’avait
+  rien à comparer. Les cinq lignes ci-dessous sont exactement les questions qu’on
+  pose avant d’acheter une pièce à 85 francs.
+
+  Chaque ligne vient d’un métachamp nommé en français dans l’admin. Une ligne
+  vide ne se dessine pas, et si les cinq sont vides le bloc entier disparaît :
+  le client peut donc remplir au fur et à mesure sans jamais montrer un trou.
+
+  @param {object} product
+  @param {object} opts
+  @param {string} section_id
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_mf = product.metafields.custom
+
+  comment
+    On compte avant de dessiner. Sans ce garde, un produit qui n’a rien de
+    renseigné afficherait un titre suivi de rien.
+  endcomment
+  assign kn_filled = 0
+  if kn_mf.composition != blank
+    assign kn_filled = kn_filled | plus: 1
+  endif
+  if kn_mf.grammage != blank
+    assign kn_filled = kn_filled | plus: 1
+  endif
+  if kn_mf.coupe != blank
+    assign kn_filled = kn_filled | plus: 1
+  endif
+  if kn_mf.entretien != blank
+    assign kn_filled = kn_filled | plus: 1
+  endif
+  if kn_mf.origine != blank
+    assign kn_filled = kn_filled | plus: 1
+  endif
+
+  assign kn_spec_title = opts.spec_title | default: 'Fiche technique'
+-%}
+
+{%- if kn_filled > 0 -%}
+  <section
+    class="kn-spec kn-reveal"
+    aria-labelledby="kn-spec-title-{{ section_id }}"
+  >
+    <h2 class="kn-label kn-spec__title" id="kn-spec-title-{{ section_id }}">
+      {{- kn_spec_title -}}
+    </h2>
+
+    {%- comment -%}
+      Les libellés de ligne ne sont pas des réglages : ce sont les termes du
+      métier, les mêmes que ceux des métachamps que le client remplit. Les
+      rendre éditables inviterait à les désaccorder.
+    {%- endcomment -%}
+    <dl class="kn-spec__list">
+      {%- if kn_mf.composition != blank -%}
+        <div class="kn-spec__row">
+          <dt class="kn-label kn-spec__key">Composition</dt>
+          <dd class="kn-spec__val">{{ kn_mf.composition }}</dd>
+        </div>
+      {%- endif -%}
+
+      {%- if kn_mf.grammage != blank -%}
+        <div class="kn-spec__row">
+          <dt class="kn-label kn-spec__key">Grammage</dt>
+          <dd class="kn-spec__val kn-spec__val--num">{{ kn_mf.grammage }}</dd>
+        </div>
+      {%- endif -%}
+
+      {%- if kn_mf.coupe != blank -%}
+        <div class="kn-spec__row">
+          <dt class="kn-label kn-spec__key">Coupe</dt>
+          <dd class="kn-spec__val">{{ kn_mf.coupe }}</dd>
+        </div>
+      {%- endif -%}
+
+      {%- if kn_mf.entretien != blank -%}
+        <div class="kn-spec__row">
+          <dt class="kn-label kn-spec__key">Entretien</dt>
+          <dd class="kn-spec__val">{{ kn_mf.entretien }}</dd>
+        </div>
+      {%- endif -%}
+
+      {%- if kn_mf.origine != blank -%}
+        <div class="kn-spec__row">
+          <dt class="kn-label kn-spec__key">Origine</dt>
+          <dd class="kn-spec__val">{{ kn_mf.origine }}</dd>
+        </div>
+      {%- endif -%}
+    </dl>
+  </section>
+{%- endif -%}

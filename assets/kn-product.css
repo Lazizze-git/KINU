@@ -1002,3 +1002,72 @@ body:has(.kn-sticky.is-visible) {
     transition: none;
   }
 }
+
+/* --------------------------------------------------------------------------
+   11. Fiche technique (DA §5.4, §7.7)
+
+   La marque vend du vetement technique et n'affichait aucune donnee technique :
+   la composition dormait dans un paragraphe d'accordeon, le grammage et la
+   coupe nulle part. Un visiteur qui compare deux t-shirts n'avait rien a
+   comparer. Le bloc repond aux cinq questions qu'on pose avant d'acheter une
+   piece a 85 francs.
+
+   Il ne prend sa presence ni d'un fond, ni d'un cadre, ni d'un trait epais —
+   le §5.4 n'autorise qu'une epaisseur, 1 px. Elle vient de la longueur des
+   filets, du rail des cles et du contraste entre l'etiquette capitale et le
+   corps courant. C'est le vocabulaire de la documentation technique, et c'est
+   precisement le registre de la marque.
+   -------------------------------------------------------------------------- */
+
+.kn-spec {
+  margin-block-start: var(--kn-space-3xl);
+}
+
+.kn-spec__title {
+  margin: 0 0 var(--kn-space-md);
+  color: var(--kn-surface-muted);
+}
+
+.kn-spec__list {
+  margin: 0;
+  display: grid;
+}
+
+/* Le filet ouvre la ligne, jamais ne la ferme : la derniere referme le champ,
+   sans quoi la liste resterait ouverte sur le vide — meme regle que la bande
+   du manifeste et que la liste du journal. */
+.kn-spec__row {
+  display: grid;
+  gap: var(--kn-space-3xs) var(--kn-space-lg);
+  padding-block: var(--kn-space-sm);
+  border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-spec__row:last-child {
+  border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+/* Le rail des cles tient a 12 rem : « Composition » y entre sans se couper, et
+   toutes les valeurs demarrent sur la meme verticale. Sous 560 px la cle passe
+   au-dessus de sa valeur — deux colonnes y donneraient une valeur de six
+   caracteres de large. */
+@media (min-width: 560px) {
+  .kn-spec__row {
+    grid-template-columns: 12rem minmax(0, 1fr);
+  }
+}
+
+.kn-spec__key {
+  color: var(--kn-surface-muted);
+  padding-block-start: 0.2em;
+}
+
+.kn-spec__val {
+  margin: 0;
+  max-width: var(--kn-measure);
+}
+
+/* Un grammage est un chiffre : il s'aligne comme un prix. */
+.kn-spec__val--num {
+  font-variant-numeric: tabular-nums;
+}
