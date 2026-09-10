@@ -1,0 +1,82 @@
+{%- doc -%}
+  Guide des tailles de la page produit (DA §5.4, §7.7).
+
+  Un tableau réglé dans un `<dialog>` natif : filets 1 px, en-tête en étiquette
+  capitale, chiffres tabulaires pour que les colonnes s’alignent au millimètre.
+  Même vocabulaire que la fiche technique — les deux blocs se lisent comme une
+  seule documentation.
+
+  Pourquoi ce bloc existe. Une boutique de vêtement sans guide des tailles
+  reporte la question sur le service client et sur les retours. C’était le
+  dernier manque de contenu de la fiche.
+
+  La donnée vient du métachamp « Guide des tailles », une liste de lignes dont
+  les colonnes sont séparées par une barre verticale. La première ligne sert
+  d’en-tête. Un nombre de colonnes quelconque fonctionne : une poitrine seule,
+  ou poitrine, taille, longueur et manche. Sans métachamp rempli, ni le lien ni
+  le panneau ne se dessinent.
+
+  `<dialog>` natif plutôt qu’un panneau maison : la fermeture par Échap, le
+  piège de focus et le voile de fond sont donnés par le navigateur, et ne
+  peuvent pas se désynchroniser d’un script.
+
+  @param {object} product
+  @param {object} opts
+  @param {string} section_id
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_rows = product.metafields.custom.guide_tailles.value
+  assign kn_title = opts.size_guide_title | default: 'Guide des tailles'
+-%}
+
+{%- if kn_rows != blank and kn_rows.size > 0 -%}
+  <dialog class="kn-sizes" id="kn-sizes-{{ section_id }}" aria-labelledby="kn-sizes-title-{{ section_id }}">
+    <div class="kn-sizes__panel">
+      <div class="kn-sizes__head">
+        <h2 class="kn-label kn-sizes__title" id="kn-sizes-title-{{ section_id }}">{{ kn_title }}</h2>
+        <button
+          type="button"
+          class="kn-sizes__close kn-tap"
+          data-kn-sizes-close
+          aria-label="{{ opts.label_close | default: 'Fermer' | escape }}"
+        >
+          {%- render 'kn-icon', name: 'close', size: 16 -%}
+        </button>
+      </div>
+
+      <div class="kn-sizes__scroll">
+        <table class="kn-sizes__table">
+          {%- for kn_row in kn_rows -%}
+            {%- assign kn_cells = kn_row | split: '|' -%}
+            {%- if forloop.first -%}
+              <thead>
+                <tr>
+                  {%- for kn_cell in kn_cells -%}
+                    <th class="kn-label kn-sizes__th" scope="col">{{ kn_cell | strip }}</th>
+                  {%- endfor -%}
+                </tr>
+              </thead>
+              <tbody>
+            {%- else -%}
+              <tr>
+                {%- for kn_cell in kn_cells -%}
+                  {%- if forloop.first -%}
+                    <th class="kn-label kn-sizes__rowkey" scope="row">{{ kn_cell | strip }}</th>
+                  {%- else -%}
+                    <td class="kn-sizes__td">{{ kn_cell | strip }}</td>
+                  {%- endif -%}
+                {%- endfor -%}
+              </tr>
+            {%- endif -%}
+          {%- endfor -%}
+          </tbody>
+        </table>
+      </div>
+
+      {%- if opts.size_guide_note != blank -%}
+        <div class="kn-sm kn-sizes__note">{{ opts.size_guide_note }}</div>
+      {%- endif -%}
+    </div>
+  </dialog>
+{%- endif -%}

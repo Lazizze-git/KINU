@@ -1071,3 +1071,129 @@ body:has(.kn-sticky.is-visible) {
 .kn-spec__val--num {
   font-variant-numeric: tabular-nums;
 }
+
+/* --------------------------------------------------------------------------
+   12. Guide des tailles (DA §5.4, §7.7)
+
+   Une boutique de vetement sans guide des tailles reporte la question sur le
+   service client et sur les retours. C'etait le dernier manque de contenu de
+   la fiche.
+
+   Meme vocabulaire que la fiche technique : filets 1 px, en-tete en etiquette
+   capitale, chiffres tabulaires. Les deux blocs se lisent comme une seule
+   documentation, ce qui est le registre de la marque.
+   -------------------------------------------------------------------------- */
+
+/* Le lien se pose au bout de la legende, la ou la question se pose. La legende
+   etait en `display: block` : elle passe en flex pour que le lien puisse tenir
+   le bord droit sans quitter la ligne du nom d'option. */
+.kn-opt__legend {
+  display: flex;
+  align-items: baseline;
+  gap: var(--kn-space-2xs);
+}
+
+.kn-opt__guide {
+  margin-inline-start: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--kn-surface-muted);
+  cursor: pointer;
+}
+
+/* Le voile de fond est la seule ombre que le §5.4 autorise, et c'est un fond,
+   pas une ombre. Le panneau ne porte donc ni ombre portee ni rayon : c'est le
+   voile qui le detache. */
+.kn-sizes {
+  width: min(46rem, calc(100vw - 2 * var(--kn-gutter)));
+  max-height: min(38rem, calc(100dvh - 2 * var(--kn-gutter)));
+  padding: 0;
+  border: var(--kn-stroke) solid var(--kn-line);
+  border-radius: var(--kn-radius);
+  background-color: var(--kn-ivory);
+  color: var(--kn-ink);
+  overflow: hidden;
+}
+
+.kn-sizes::backdrop {
+  background-color: var(--kn-scrim);
+}
+
+.kn-sizes__panel {
+  display: flex;
+  flex-direction: column;
+  max-height: inherit;
+}
+
+.kn-sizes__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--kn-space-md);
+  padding: var(--kn-space-md) var(--kn-space-lg);
+  border-block-end: var(--kn-stroke) solid var(--kn-line);
+}
+
+.kn-sizes__title {
+  margin: 0;
+  color: var(--kn-grey);
+}
+
+.kn-sizes__close {
+  margin-inline-end: var(--kn-icon-inset);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: currentcolor;
+  cursor: pointer;
+}
+
+/* Un tableau de mesures deborde vite en largeur : il defile dans sa propre
+   boite, jamais la page. */
+.kn-sizes__scroll {
+  overflow: auto;
+  overscroll-behavior: contain;
+  padding: var(--kn-space-lg);
+}
+
+.kn-sizes__table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.kn-sizes__th {
+  padding: 0 var(--kn-space-md) var(--kn-space-2xs) 0;
+  color: var(--kn-grey);
+  border-block-end: var(--kn-stroke) solid var(--kn-ink);
+  white-space: nowrap;
+}
+
+.kn-sizes__rowkey,
+.kn-sizes__td {
+  padding: var(--kn-space-2xs) var(--kn-space-md) var(--kn-space-2xs) 0;
+  border-block-end: var(--kn-stroke) solid var(--kn-line);
+  white-space: nowrap;
+}
+
+/* La colonne des tailles est une cle, pas une mesure : elle garde l'etiquette. */
+.kn-sizes__rowkey {
+  color: var(--kn-ink);
+}
+
+/* Des mesures se comparent colonne par colonne : elles s'alignent au chiffre. */
+.kn-sizes__td {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.kn-sizes__note {
+  padding: 0 var(--kn-space-lg) var(--kn-space-lg);
+  color: var(--kn-grey);
+  max-width: var(--kn-measure);
+}
+
+.kn-sizes__note > :first-child { margin-top: 0; }
+.kn-sizes__note > :last-child { margin-bottom: 0; }

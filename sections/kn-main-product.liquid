@@ -145,6 +145,8 @@
     {%- render 'kn-product-spec', product: kn_product, opts: kn_s, section_id: section.id -%}
   </div>
 
+  {%- render 'kn-product-sizes', product: kn_product, opts: kn_s, section_id: section.id -%}
+
   {%- render 'kn-product-lightbox', product: kn_product, opts: kn_s, section_id: section.id -%}
 
   {%- if kn_s.show_sticky_bar -%}
@@ -201,6 +203,11 @@
     { "type": "text", "id": "label_next", "label": "Visuel suivant", "default": "Visuel suivant" },
     { "type": "text", "id": "label_close", "label": "Fermer", "default": "Fermer" },
     { "type": "text", "id": "label_model", "label": "Étiquette modèle 3D", "default": "Modèle 3D" },
+
+    { "type": "header", "content": "Guide des tailles" },
+    { "type": "text", "id": "label_size_guide", "label": "Libellé du lien", "default": "Guide des tailles" },
+    { "type": "text", "id": "size_guide_title", "label": "Titre du panneau", "default": "Guide des tailles" },
+    { "type": "richtext", "id": "size_guide_note", "label": "Note sous le tableau", "info": "Par exemple la méthode de mesure. Le tableau lui-même se remplit produit par produit, dans le métachamp « Guide des tailles »." },
 
     { "type": "header", "content": "Fiche technique" },
     { "type": "text", "id": "spec_title", "label": "Titre du bloc", "default": "Fiche technique", "info": "Les libellés des lignes — Composition, Grammage, Coupe, Entretien, Origine — reprennent le nom des métachamps et ne sont pas modifiables ici, pour qu'ils ne puissent pas se désaccorder." },

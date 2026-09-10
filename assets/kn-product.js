@@ -567,6 +567,53 @@ var DESKTOP_QUERY = '(min-width: 768px)';
   }
 
   /* ------------------------------------------------------------------------
+     Guide des tailles
+     ---------------------------------------------------------------------- */
+
+  /**
+   * `<dialog>` natif : la fermeture par Echap, le piege de focus et le voile de
+   * fond viennent du navigateur. Le script n'a qu'a ouvrir et fermer, et a
+   * verrouiller le defilement de `.page-wrapper` — au-dela de 990 px c'est lui
+   * qui defile, pas la fenetre, donc `overflow: hidden` sur le document ne
+   * retiendrait rien.
+   * @param {HTMLElement} root
+   */
+  function createSizeGuide(root) {
+    var openers = all(root, '[data-kn-sizes-open]');
+    if (openers.length === 0) return;
+
+    var wrapper = document.querySelector('.page-wrapper');
+
+    openers.forEach(function (opener) {
+      var dialog = /** @type {HTMLDialogElement|null} */ (
+        document.getElementById(opener.getAttribute('data-kn-sizes-open') || '')
+      );
+      if (!dialog || typeof dialog.showModal !== 'function') return;
+
+      opener.addEventListener('click', function () {
+        dialog.showModal();
+        if (wrapper) wrapper.classList.add('kn-scroll-locked');
+      });
+
+      all(dialog, '[data-kn-sizes-close]').forEach(function (button) {
+        button.addEventListener('click', function () {
+          dialog.close();
+        });
+      });
+
+      // Clic sur le voile : la cible est le dialogue lui-meme, jamais son panneau.
+      dialog.addEventListener('click', function (event) {
+        if (event.target === dialog) dialog.close();
+      });
+
+      dialog.addEventListener('close', function () {
+        if (wrapper) wrapper.classList.remove('kn-scroll-locked');
+        opener.focus();
+      });
+    });
+  }
+
+  /* ------------------------------------------------------------------------
      Bandeau d'achat collant (mobile)
      ---------------------------------------------------------------------- */
 
@@ -611,6 +658,7 @@ var DESKTOP_QUERY = '(min-width: 768px)';
 
     createQuantity(root);
     createPicker(root, gallery);
+    createSizeGuide(root);
     createStickyBar(root);
   }
 

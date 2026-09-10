@@ -44,9 +44,36 @@
           data-kn-option-group
           data-kn-option-index="{{ kn_index }}"
         >
+          {%- comment -%}
+            Le lien vers le guide des tailles se pose dans la legende de
+            l'option concernee, la ou la question se pose. Il n'apparait que si
+            le client a rempli le metachamp : pas de lien vers un panneau vide.
+          {%- endcomment -%}
+          {%- liquid
+            assign kn_opt_lower = kn_option.name | downcase
+            assign kn_is_size = false
+            if kn_opt_lower contains 'taille'
+              assign kn_is_size = true
+            elsif kn_opt_lower contains 'size'
+              assign kn_is_size = true
+            endif
+            assign kn_has_guide = false
+            if kn_is_size and product.metafields.custom.guide_tailles != blank
+              assign kn_has_guide = true
+            endif
+          -%}
           <legend class="kn-opt__legend">
             <span class="kn-label kn-opt__name">{{ kn_option.name }}</span>
             <span class="kn-opt__value" data-kn-option-value>{{ kn_option.selected_value }}</span>
+            {%- if kn_has_guide -%}
+              <button
+                type="button"
+                class="kn-label kn-underline kn-opt__guide"
+                data-kn-sizes-open="kn-sizes-{{ section_id }}"
+              >
+                {{- opts.label_size_guide | default: 'Guide des tailles' -}}
+              </button>
+            {%- endif -%}
           </legend>
 
           <div class="kn-opt__list kn-opt__list--{{ kn_style }}">
