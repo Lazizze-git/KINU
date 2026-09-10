@@ -999,9 +999,21 @@
   display: none;
 }
 
-/* ---- Version enrichie : le panneau devient un drawer latéral -------------- */
+/* ---- Version enrichie : le panneau devient un drawer latéral --------------
 
-[data-kn-enhanced] .kn-facets {
+   Le commutateur est `[data-kn-js]`, posé sur <html> par un script synchrone
+   de l'en-tête, et non l'attribut que `kn-catalog.js` pose sur la section.
+   La différence est tout le bug : cet attribut arrive après l'analyse de la
+   page, si bien que le panneau se peignait d'abord en bloc statique, puis
+   glissait vers la droite en 560 ms — la transition ci-dessous s'appliquant à
+   un changement d'état que personne n'avait demandé. Avec le drapeau, le
+   panneau naît tiroir et la transition ne joue plus qu'au clic.
+
+   Sans JavaScript le drapeau est absent : le bloc statique reste, et son
+   formulaire fonctionne seul.
+   -------------------------------------------------------------------------- */
+
+[data-kn-js] .kn-facets {
   position: fixed;
   inset-block: 0;
   inset-inline-end: 0;
@@ -1016,33 +1028,33 @@
     visibility 0s linear var(--kn-dur-4);
 }
 
-[data-kn-enhanced] .kn-facets[data-kn-open="true"] {
+[data-kn-js] .kn-facets[data-kn-open="true"] {
   visibility: visible;
   transform: none;
   transition: transform var(--kn-dur-4) var(--kn-ease-out), visibility 0s;
 }
 
-[data-kn-enhanced] .kn-facets__form {
+[data-kn-js] .kn-facets__form {
   height: 100%;
   max-height: none;
 }
 
 /* Encoche et barre d'accueil : le bouton de validation doit rester atteignable. */
-[data-kn-enhanced] .kn-facets__foot {
+[data-kn-js] .kn-facets__foot {
   padding-bottom: max(var(--kn-space-md), env(safe-area-inset-bottom));
 }
 
-[data-kn-enhanced] .kn-facets__head,
-[data-kn-enhanced] .kn-facets__foot,
-[data-kn-enhanced] .kn-facets__body {
+[data-kn-js] .kn-facets__head,
+[data-kn-js] .kn-facets__foot,
+[data-kn-js] .kn-facets__body {
   padding-right: max(var(--kn-gutter), env(safe-area-inset-right));
 }
 
-[data-kn-enhanced] .kn-facets__close {
+[data-kn-js] .kn-facets__close {
   display: inline-flex;
 }
 
-[data-kn-enhanced] .kn-facets__scrim {
+[data-kn-js] .kn-facets__scrim {
   display: block;
   position: fixed;
   inset: 0;
@@ -1052,11 +1064,11 @@
   transition: opacity var(--kn-dur-2) var(--kn-ease-state);
 }
 
-[data-kn-enhanced] .kn-facets__scrim[hidden] {
+[data-kn-js] .kn-facets__scrim[hidden] {
   display: none;
 }
 
-[data-kn-enhanced] .kn-facets__scrim[data-kn-open="true"] {
+[data-kn-js] .kn-facets__scrim[data-kn-open="true"] {
   opacity: 1;
 }
 

@@ -6,6 +6,23 @@
   lang="{{ request.locale.iso_code }}"
 >
   <head>
+    {%- comment -%}
+      Ce drapeau doit etre pose avant la premiere peinture.
+
+      Plusieurs composants KINU sont ecrits pour rester utilisables sans
+      JavaScript : le panneau de filtres, par exemple, est d'abord un bloc
+      statique dans le flux de la page, et ne devient un tiroir lateral que
+      lorsque son script s'execute. Or ce script est differe. Entre l'analyse
+      de la page et son execution, le panneau se peignait donc en entier, puis
+      glissait vers la droite en 560 ms, a chaque chargement de page catalogue.
+
+      Un script synchrone place ici tranche la question avant le premier pixel :
+      le navigateur sait des le depart s'il execute du JavaScript, et le panneau
+      nait tiroir. Sans JavaScript, le drapeau est absent et le bloc statique
+      reste, avec son formulaire qui fonctionne seul.
+    {%- endcomment -%}
+    <script>document.documentElement.setAttribute('data-kn-js', '');</script>
+
     {%- if settings.favicon != blank -%}
       <link
         rel="icon"
