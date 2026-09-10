@@ -58,10 +58,18 @@
         <div class="kn-hero__scrim"></div>
         <div class="kn-hero__content">
           <div class="kn-container">
+            {%- comment -%}
+              Sequence d'ouverture. Le titre monte depuis son propre cadre, le
+              lien suit. Le masque n'existe que pour cette montee : il porte un
+              retrait vertical qu'une marge negative reprend, sans quoi il
+              couperait les jambages et l'accent du « a ».
+            {%- endcomment -%}
             <div class="kn-hero__inner">
-              <h1 class="kn-hero__title">{{ s.title | escape }}</h1>
+              <span class="kn-hero__mask">
+                <h1 class="kn-hero__title">{{ s.title | escape }}</h1>
+              </span>
               {%- if show_link -%}
-                <a class="kn-label kn-underline" href="{{ link_url }}">{{ s.link_label | escape }}</a>
+                <a class="kn-label kn-underline kn-hero__cta" href="{{ link_url }}">{{ s.link_label | escape }}</a>
               {%- endif -%}
             </div>
           </div>

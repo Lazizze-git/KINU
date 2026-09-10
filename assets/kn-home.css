@@ -244,6 +244,74 @@ body.kn-header--over-media .kn-hero {
   letter-spacing: var(--kn-ls-display);
 }
 
+/* --------------------------------------------------------------------------
+   Sequence d'ouverture (DA §8, points 3 et 2)
+
+   Le premier ecran ne bougeait pas d'un pixel. Le §8 accorde pourtant 560 ms et
+   `ease-out` a l'apparition d'une section, et 60 ms de decalage entre elements
+   d'un meme groupe : la banniere, qui est la section la plus importante du
+   site, n'en profitait pas.
+
+   Le titre monte depuis son propre cadre plutot que de se fondre. C'est le
+   geste le plus fort qu'autorise le §8 sans toucher aux interdits : ce n'est ni
+   du parallaxe, ni du zoom, ni une animation lettre par lettre — c'est un bloc
+   de texte qui entre, en une fois, dans la duree et la courbe du systeme.
+
+   Le masque porte un retrait vertical qu'une marge negative reprend : sans lui
+   il couperait les jambages du « g » et l'accent du « a », et la mise en page ne
+   bouge pas d'un pixel pour autant.
+   -------------------------------------------------------------------------- */
+
+.kn-hero__mask {
+  /* La reserve se calcule sur le corps du titre, pas sur celui du masque : un
+     `em` vaut ici 16 px alors que le titre en fait jusqu'a 112, et 2 px de
+     reserve auraient coupe les jambages du « g » et l'accent du « a ». */
+  --kn-mask-air: calc(var(--kn-fs-display) * 0.16);
+
+  display: block;
+  overflow: hidden;
+  padding-block: var(--kn-mask-air);
+  margin-block: calc(var(--kn-mask-air) * -1);
+}
+
+.kn-hero__title {
+  animation: kn-hero-monte var(--kn-dur-4) var(--kn-ease-out) 80ms both;
+}
+
+.kn-hero__cta {
+  animation: kn-hero-parait var(--kn-dur-4) var(--kn-ease-out) 320ms both;
+}
+
+.kn-hero__scrim {
+  animation: kn-hero-voile var(--kn-dur-2) var(--kn-ease-state) both;
+}
+
+@keyframes kn-hero-monte {
+  from { transform: translateY(105%); }
+  to   { transform: none; }
+}
+
+@keyframes kn-hero-parait {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+@keyframes kn-hero-voile {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Le §8 le demande sans ambiguite : sous mouvement reduit, le contenu est
+   visible d'emblee. Les durees tombent deja a 1 ms, mais un `both` conserverait
+   l'etat de depart pendant le delai — on coupe donc l'animation elle-meme. */
+@media (prefers-reduced-motion: reduce) {
+  .kn-hero__title,
+  .kn-hero__cta,
+  .kn-hero__scrim {
+    animation: none;
+  }
+}
+
 /* Sous mouvement réduit, la bannière EST son poster : rien ne joue, et
    kn-home.js ne pose aucune source dans le DOM — rien n'est téléchargé. */
 @media (prefers-reduced-motion: reduce) {
@@ -270,9 +338,26 @@ body.kn-header--over-media .kn-hero {
   }
 }
 
+/* Trois portraits de meme taille poses sur une meme ligne se lisent comme un
+   tableau de bord, pas comme une devanture. Les blocs de rang pair descendent
+   d'un cran : la rangee prend un rythme au lieu d'un alignement, et l'oeil
+   entre par le premier au lieu de balayer les trois d'un coup.
+
+   La regle est systematique et non composee a la main : elle vaut pour deux
+   univers comme pour les six que la section accepte. Rien ne bouge sous
+   1024 px, ou la rangee n'existe pas.
+
+   Le §5.2 pose le fer a gauche, qui est une regle horizontale ; l'axe vertical
+   reste libre, et le §9 n'interdit ici ni cadre, ni ombre, ni rayon — le
+   decalage ne coute aucun de ces trois. */
 @media (min-width: 1024px) {
   .kn-universes__grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+  }
+
+  .kn-universes__grid > .kn-universe:nth-child(even) {
+    margin-block-start: var(--kn-space-2xl);
   }
 }
 

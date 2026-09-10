@@ -36,7 +36,14 @@
   {%- if results.products.size > 0 -%}
     <ul class="kn-grid" role="list" data-kn-grid>
       {%- for kn_product in results.products -%}
-        <li class="kn-grid__item">
+        {%- comment -%}
+          Le §8 prevoit un decalage de 60 ms entre elements d'une meme grille.
+          Le champ produits, qui est la grille la plus visible du site, ne
+          l'appliquait pas : quarante vignettes apparaissaient d'un bloc. Le
+          decalage se compte sur ce qui entre ensemble, donc une cellule chargee
+          par « Voir plus » parait sans attendre son rang.
+        {%- endcomment -%}
+        <li class="kn-grid__item kn-reveal">
           {%- comment -%}
             `h2` : la grille suit directement le H1 de la collection, sauter au
             h3 casserait le plan de titres de la page.

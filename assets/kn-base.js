@@ -12,6 +12,11 @@
 
   /** Décalage entre deux éléments révélés d'une même grille, en ms (DA §8). */
   var REVEAL_STAGGER = 60;
+  // Au-dela, l'escalier devient une file d'attente : le dernier d'un plein
+  // ecran de vignettes paraitrait une demi-seconde apres le premier.
+  var REVEAL_STAGGER_MAX = 6;
+  // Au-dela de cette attente, on considere que l'observateur ne viendra pas.
+  var REVEAL_FAILSAFE = 1200;
 
   /** Part de l'élément visible avant déclenchement de la révélation. */
   var REVEAL_THRESHOLD = 0.15;
@@ -104,18 +109,31 @@
 
     var observer = new IntersectionObserver(
       function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
+        /*
+         * Le decalage se compte sur ce qui entre ensemble, pas sur le rang du
+         * frere. Une grille de quarante cellules donnait sinon 2,4 secondes
+         * d'attente a la derniere, et surtout : une cellule isolee qui entre
+         * en trentieme position aurait attendu son propre rang avant de
+         * paraitre, alors qu'elle est seule a l'ecran. Ce qui arrive ensemble
+         * s'echelonne ; ce qui arrive seul parait tout de suite.
+         */
+        var arrivals = entries.filter(function (entry) {
+          return entry.isIntersecting;
+        });
+        if (arrivals.length === 0) return;
 
+        // L'observateur ne garantit pas l'ordre du document : on le retablit,
+        // sans quoi l'escalier partirait au hasard dans la rangee.
+        arrivals.sort(function (a, b) {
+          var order = a.target.compareDocumentPosition(b.target);
+          if (order & Node.DOCUMENT_POSITION_FOLLOWING) return -1;
+          if (order & Node.DOCUMENT_POSITION_PRECEDING) return 1;
+          return 0;
+        });
+
+        arrivals.forEach(function (entry, index) {
           var el = /** @type {HTMLElement} */ (entry.target);
-          var siblings = el.parentElement
-            ? Array.prototype.filter.call(el.parentElement.children, function (child) {
-                return child.classList.contains('kn-reveal');
-              })
-            : [];
-          var index = siblings.indexOf(el);
-
-          el.style.setProperty('--kn-reveal-delay', Math.max(index, 0) * REVEAL_STAGGER + 'ms');
+          el.style.setProperty('--kn-reveal-delay', Math.min(index, REVEAL_STAGGER_MAX) * REVEAL_STAGGER + 'ms');
           el.classList.add('is-visible');
           observer.unobserve(el);
         });
@@ -126,6 +144,28 @@
     Array.prototype.forEach.call(targets, function (el) {
       observer.observe(el);
     });
+
+    /*
+     * Filet de securite. Depuis que la grille produits se revele elle aussi,
+     * une revelation qui ne se declenche pas ne coute plus un effet manque :
+     * elle cache le catalogue. L'observateur ne tire pas tant que la page n'est
+     * pas peinte — onglet ouvert en arriere-plan, fenetre reduite — et certains
+     * moteurs le retardent davantage.
+     *
+     * Passe le delai, tout ce qui est deja dans le cadre parait, avec ou sans
+     * escalier. Ce qui est plus bas garde son observateur : le filet repare une
+     * panne, il ne supprime pas la revelation au defilement.
+     */
+    window.setTimeout(function () {
+      Array.prototype.forEach.call(targets, function (el) {
+        if (el.classList.contains('is-visible')) return;
+        var box = el.getBoundingClientRect();
+        if (box.top < window.innerHeight && box.bottom > 0) {
+          el.classList.add('is-visible');
+          observer.unobserve(el);
+        }
+      });
+    }, REVEAL_FAILSAFE);
   }
 
   window.KN = {
