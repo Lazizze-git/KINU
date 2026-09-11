@@ -15,6 +15,13 @@
   @param {string} sort_label - Libellé accessible du tri.
   @param {string} clear_label - Libellé du lien « tout effacer ».
   @param {string} count_label - Gabarit du compte de résultats. Le jeton `[count]` est remplacé.
+  @param {string} sort_featured - Libellé court du tri « mise en avant ».
+  @param {string} sort_relevance - Libellé court du tri par pertinence.
+  @param {string} sort_best_selling - Libellé court du tri par ventes.
+  @param {string} sort_price_asc - Libellé court du tri prix croissant.
+  @param {string} sort_price_desc - Libellé court du tri prix décroissant.
+  @param {string} sort_newest - Libellé court du tri par nouveauté.
+  @param {string} sort_oldest - Libellé court du tri par ancienneté.
 {%- enddoc -%}
 
 {%- liquid
@@ -73,12 +80,45 @@
           avant, nouveautes, prix, meilleures ventes.
         {%- endcomment -%}
         {%- assign kn_sort_banned = 'title-ascending,title-descending' | split: ',' -%}
+
+        {%- comment -%}
+          Les libelles natifs de Shopify sont des phrases : « Date, de la plus
+          ancienne a la plus recente » tient sur deux lignes et fait deborder le
+          menu. On leur substitue les libelles courts regles dans l'editeur, qui
+          passent par le meme mecanisme de traduction que le reste de la page.
+          Si l'un d'eux n'est pas renseigne, on retombe sur le libelle Shopify :
+          la liste n'est jamais vide.
+        {%- endcomment -%}
         {%- for option in results.sort_options -%}
           {%- if kn_sort_banned contains option.value -%}
             {%- continue -%}
           {%- endif -%}
+
+          {%- liquid
+            assign kn_option_label = ''
+            case option.value
+              when 'manual'
+                assign kn_option_label = sort_featured
+              when 'relevance'
+                assign kn_option_label = sort_relevance
+              when 'best-selling'
+                assign kn_option_label = sort_best_selling
+              when 'price-ascending'
+                assign kn_option_label = sort_price_asc
+              when 'price-descending'
+                assign kn_option_label = sort_price_desc
+              when 'created-descending'
+                assign kn_option_label = sort_newest
+              when 'created-ascending'
+                assign kn_option_label = sort_oldest
+            endcase
+            if kn_option_label == blank
+              assign kn_option_label = option.name
+            endif
+          -%}
+
           <option value="{{ option.value }}" {% if option.value == kn_sort %}selected{% endif %}>
-            {{- option.name -}}
+            {{- kn_option_label -}}
           </option>
         {%- endfor -%}
       </select>
