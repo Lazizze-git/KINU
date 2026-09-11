@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -9,7 +18,7 @@
             "collection": "fluid-motion",
             "category": "Femme",
             "universe_name": "Fluid-Motion",
-            "intro": "La ligne la plus proche du geste : coupes suivies au millimètre, mailles qui reprennent leur forme."
+            "intro": "La ligne la plus proche du geste : coupes suivies au millimètre, mailles qui reprennent leur forme."
           }
         },
         "universe-homme": {
@@ -40,6 +49,13 @@
         "sort_label": "Trier",
         "clear_label": "Tout effacer",
         "count_label": "[count] produits",
+        "sort_featured": "En vedette",
+        "sort_relevance": "Pertinence",
+        "sort_best_selling": "Meilleures ventes",
+        "sort_price_asc": "Prix croissant",
+        "sort_price_desc": "Prix décroissant",
+        "sort_newest": "Nouveautés",
+        "sort_oldest": "Plus anciens",
         "filters_title": "Filtres",
         "apply_label": "Voir les résultats",
         "close_label": "Fermer les filtres",
