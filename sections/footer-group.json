@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "type": "footer",
   "name": "Footer",
@@ -22,7 +31,8 @@
         "column_maison": {
           "type": "kn_column",
           "settings": {
-            "title": "Maison"
+            "title": "Maison",
+            "menu": "maison"
           }
         },
         "column_legal": {
@@ -36,15 +46,20 @@
       "block_order": ["column_boutique", "column_aide", "column_maison", "column_legal"],
       "settings": {
         "show_newsletter": true,
+        "newsletter_tag": "Lettre",
         "newsletter_title": "Rester informé",
         "newsletter_text": "Nouveautés, réassorts et coulisses. Un message par mois, pas davantage.",
         "newsletter_placeholder": "Adresse e-mail",
         "newsletter_cta": "S’inscrire",
         "newsletter_success": "Merci, votre inscription est enregistrée.",
         "newsletter_error": "Cette adresse e-mail n’a pas pu être enregistrée.",
+        "social_instagram": "https://www.instagram.com/kinuathletics",
         "show_language": true,
         "language_label": "Choisir la langue",
-        "brand_name": "KINŪ"
+        "brand_name": "KINŪ",
+        "credit_label": "Site",
+        "credit_name": "We Are Brothers",
+        "credit_url": "https://wearebrothers.ch"
       }
     }
   },
