@@ -1,14 +1,14 @@
 {%- liquid
   comment
     Page collection KINŪ (DIRECTION-ARTISTIQUE.md §3.4 R3, §5.2, §7.7).
-    La surface vient du territoire posé sur <body> par layout/theme.liquid :
+    La surface vient du territoire posé sur <body> par layout/theme.liquid :
     on ne fait que peindre avec les jetons de surface hérités.
   endcomment
 
   assign kn_settings = section.settings
 
   comment
-    Univers de rattachement : la collection elle-même si un bloc la désigne,
+    Univers de rattachement : la collection elle-même si un bloc la désigne,
     sinon celle pointée par son métachamp `kn.universe`.
   endcomment
   assign kn_universe = collection
@@ -79,7 +79,7 @@
   endif
 
   comment
-    Nombre de filtres actifs, pour le libellé « FILTRER (2) ».
+    Nombre de filtres actifs, pour le libellé « FILTRER (2) ».
   endcomment
   assign kn_active = 0
   for kn_filter in collection.filters
@@ -114,11 +114,18 @@
     filter_label: kn_settings.filter_label,
     sort_label: kn_settings.sort_label,
     clear_label: kn_settings.clear_label,
-    count_label: kn_settings.count_label
+    count_label: kn_settings.count_label,
+    sort_featured: kn_settings.sort_featured,
+    sort_relevance: kn_settings.sort_relevance,
+    sort_best_selling: kn_settings.sort_best_selling,
+    sort_price_asc: kn_settings.sort_price_asc,
+    sort_price_desc: kn_settings.sort_price_desc,
+    sort_newest: kn_settings.sort_newest,
+    sort_oldest: kn_settings.sort_oldest
   -%}
 
   {%- comment -%}
-    Le panneau de filtres est placé avant la grille : sans JavaScript il reste
+    Le panneau de filtres est placé avant la grille : sans JavaScript il reste
     affiché en ligne, à l’endroit où on l’attend. `kn-catalog.js` en fait
     ensuite un drawer, et sa position dans le DOM n’a plus d’importance.
   {%- endcomment -%}
@@ -168,6 +175,14 @@
     { "type": "text", "id": "sort_label", "label": "Libellé du tri", "default": "Trier" },
     { "type": "text", "id": "clear_label", "label": "Tout effacer", "default": "Tout effacer" },
     { "type": "text", "id": "count_label", "label": "Compte de résultats", "default": "[count] produits", "info": "Lu par les lecteurs d’écran. Le jeton [count] est remplacé par le nombre de produits." },
+    { "type": "header", "content": "Libellés de tri", "info": "Les libellés natifs de Shopify sont des phrases entières qui font déborder le menu. Laisser vide pour revenir à celui de Shopify." },
+    { "type": "text", "id": "sort_featured", "label": "Mise en avant", "default": "En vedette" },
+    { "type": "text", "id": "sort_relevance", "label": "Pertinence", "default": "Pertinence" },
+    { "type": "text", "id": "sort_best_selling", "label": "Meilleures ventes", "default": "Meilleures ventes" },
+    { "type": "text", "id": "sort_price_asc", "label": "Prix croissant", "default": "Prix croissant" },
+    { "type": "text", "id": "sort_price_desc", "label": "Prix décroissant", "default": "Prix décroissant" },
+    { "type": "text", "id": "sort_newest", "label": "Nouveautés", "default": "Nouveautés" },
+    { "type": "text", "id": "sort_oldest", "label": "Plus anciens", "default": "Plus anciens" },
     { "type": "header", "content": "Panneau de filtres" },
     { "type": "text", "id": "filters_title", "label": "Titre du panneau", "default": "Filtres" },
     { "type": "text", "id": "apply_label", "label": "Bouton de validation", "default": "Voir les résultats" },
@@ -179,7 +194,7 @@
     { "type": "text", "id": "empty_filtered_action", "label": "Bouton — aucun résultat filtré", "default": "Effacer les filtres" },
     { "type": "text", "id": "empty_text", "label": "Collection vide", "default": "Cette collection n’a pas encore de pièces." },
     { "type": "text", "id": "empty_action", "label": "Bouton — collection vide", "default": "Voir toutes les collections" },
-    { "type": "url", "id": "empty_url", "label": "Destination du bouton", "info": "Par défaut, la page « Toutes les collections »." },
+    { "type": "url", "id": "empty_url", "label": "Destination du bouton", "info": "Par défaut, la page « Toutes les collections »." },
     { "type": "header", "content": "Pagination" },
     { "type": "text", "id": "more_label", "label": "Bouton « Voir plus »", "default": "Voir plus de pièces" },
     { "type": "text", "id": "progress_label", "label": "Compteur de progression", "default": "[shown] sur [total]", "info": "Les jetons [shown] et [total] sont remplacés par le nombre de pièces affichées et le total." },
@@ -193,7 +208,7 @@
       "name": "Univers",
       "settings": [
         { "type": "collection", "id": "collection", "label": "Collection d’univers" },
-        { "type": "text", "id": "category", "label": "Catégorie (titre H1)", "default": "Femme", "info": "Le besoin auquel répond l’univers : Femme, Homme, Unisexe." },
+        { "type": "text", "id": "category", "label": "Catégorie (titre H1)", "default": "Femme", "info": "Le besoin auquel répond l’univers : Femme, Homme, Unisexe." },
         { "type": "text", "id": "universe_name", "label": "Nom affiché de la collection", "info": "Par défaut, le titre de la collection choisie." },
         { "type": "textarea", "id": "intro", "label": "Phrase de contexte", "info": "Utilisée si la collection n’a pas de description." }
       ]
