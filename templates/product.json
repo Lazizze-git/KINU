@@ -1,12 +1,62 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
       "type": "kn-main-product",
-      "settings": {}
+      "settings": {
+        "show_breadcrumb": true,
+        "label_women": "Femme",
+        "label_men": "Homme",
+        "label_unisex": "Unisexe",
+        "label_add_to_cart": "Ajouter au panier",
+        "label_sold_out": "Épuisé",
+        "label_unavailable": "Indisponible",
+        "label_in_stock": "En stock",
+        "label_selected": "sélectionné",
+        "label_quantity": "Quantité",
+        "label_decrease": "Diminuer la quantité",
+        "label_increase": "Augmenter la quantité",
+        "label_option_unavailable": "indisponible",
+        "show_sticky_bar": true,
+        "tax_note": "<p>TVA incluse. Frais de livraison calculés au paiement.</p>",
+        "show_availability": true,
+        "label_availability": "Disponibilité",
+        "show_sku": true,
+        "label_sku": "Référence",
+        "show_pickup": true,
+        "label_pickup_available": "Retrait disponible",
+        "label_pickup_unavailable": "Retrait indisponible pour le moment",
+        "label_zoom": "Agrandir l’image",
+        "label_thumbnail": "Voir le visuel",
+        "label_prev": "Visuel précédent",
+        "label_next": "Visuel suivant",
+        "label_close": "Fermer",
+        "label_model": "Modèle 3D",
+        "label_size_guide": "Guide des tailles",
+        "size_guide_title": "Guide des tailles",
+        "size_guide_note": "<p>Mesures prises à plat, pièce non étirée. Entre deux tailles, choisissez la plus grande pour une coupe détendue.</p>",
+        "spec_title": "Fiche technique",
+        "title_description": "Description",
+        "title_material": "Matière & entretien",
+        "title_shipping": "Livraison & retours",
+        "text_shipping": "<p>Livraison standard en Suisse à 7 CHF, offerte dès 65 CHF d’achat. Livraison internationale à 15 CHF vers vingt-sept pays.</p>"
+      }
     },
     "recommendations": {
       "type": "kn-product-recommendations",
-      "settings": {}
+      "settings": {
+        "heading": "Vous aimerez aussi",
+        "recommendation_type": "related",
+        "products_to_show": 4
+      }
     }
   },
   "order": ["main", "recommendations"]
