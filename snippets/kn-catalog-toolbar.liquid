@@ -24,6 +24,14 @@
   @param {string} sort_oldest - Libellé court du tri par ancienneté.
 {%- enddoc -%}
 
+{%- comment -%}
+  Le panneau déroulant d'un <select> appartient au système d'exploitation :
+  aucune règle de style ne l'atteint. kn-sort.js le double d'une liste qu'on
+  maîtrise, et kn-sort.css ne masque le natif qu'une fois ce doublon en place.
+{%- endcomment -%}
+{{ 'kn-sort.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kn-sort.js' | asset_url }}" defer></script>
+
 {%- liquid
   assign kn_sort = results.sort_by | default: results.default_sort_by
   assign kn_form_id = 'KnFacetsForm-' | append: section_id
