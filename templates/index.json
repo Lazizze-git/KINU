@@ -91,9 +91,9 @@
       "settings": {
         "title": "Nouveautés",
         "count": 8,
-        "link_label": "VOIR TOUT",
+        "link_label": "Voir tout",
         "empty_text": "Les nouveautés de la saison arrivent très bientôt.",
-        "empty_link_label": "VOIR TOUS LES PRODUITS"
+        "empty_link_label": "Voir tous les produits"
       }
     }
   },

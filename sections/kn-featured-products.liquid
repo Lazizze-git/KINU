@@ -1,12 +1,23 @@
 {%- liquid
   assign s = section.settings
   assign target_collection = s.collection
+  assign kn_products = target_collection.products
+  assign kn_link_url = target_collection.url
+
+  comment
+    Sans collection choisie, la section montre les dernières pièces créées,
+    de la plus récente à la plus ancienne, et son lien ouvre la même liste
+    dans le même ordre. L'ordre par défaut de « tous les produits » est
+    alphabétique : une section intitulée Nouveautés s'ouvrait sur la lettre B.
+  endcomment
   if target_collection == blank
     assign target_collection = collections.all
+    assign kn_products = collections.all.products | sort: 'created_at' | reverse
+    assign kn_link_url = routes.all_products_collection_url | append: '?sort_by=created-descending'
   endif
   assign product_count = target_collection.products.size
   assign show_link = false
-  if s.link_label != blank and target_collection.url != blank
+  if s.link_label != blank and kn_link_url != blank
     assign show_link = true
   endif
 -%}
@@ -16,7 +27,7 @@
     <div class="kn-home-head">
       <h2 class="kn-home-head__title">{{ s.title | escape }}</h2>
       {%- if show_link -%}
-        <a class="kn-label kn-underline kn-home-head__link" href="{{ target_collection.url }}">
+        <a class="kn-label kn-underline kn-home-head__link" href="{{ kn_link_url }}">
           {{- s.link_label | escape -}}
         </a>
       {%- endif -%}
@@ -24,7 +35,7 @@
 
     {%- if product_count > 0 -%}
       <div class="kn-products__grid kn-home-body">
-        {%- for product in target_collection.products limit: s.count -%}
+        {%- for product in kn_products limit: s.count -%}
           <div class="kn-reveal">
             {%- render 'kn-product-card', product: product -%}
           </div>
@@ -57,7 +68,7 @@
       "type": "collection",
       "id": "collection",
       "label": "Collection affichée",
-      "info": "Si aucune collection n'est choisie, tous les produits de la boutique sont utilisés."
+      "info": "Si aucune collection n'est choisie : les dernières pièces créées, de la plus récente à la plus ancienne. Une collection choisie garde son propre ordre."
     },
     {
       "type": "range",
@@ -72,7 +83,7 @@
       "type": "text",
       "id": "link_label",
       "label": "Libellé du lien de la collection",
-      "default": "VOIR TOUT"
+      "default": "Voir tout"
     },
     {
       "type": "header",
@@ -88,7 +99,7 @@
       "type": "text",
       "id": "empty_link_label",
       "label": "Libellé du bouton",
-      "default": "VOIR TOUS LES PRODUITS"
+      "default": "Voir tous les produits"
     }
   ],
   "presets": [
