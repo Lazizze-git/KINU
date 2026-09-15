@@ -77,15 +77,31 @@
             {%- if kn_links.size == 0 -%}
               {%- continue -%}
             {%- endif -%}
+
+            {%- comment -%}
+              Une page dépubliée renvoie une 404, un journal sans article une
+              page vide : leurs liens disparaissent jusqu'à la publication
+              (kn-link-live). Une colonne qui n'en garde aucun disparaît aussi.
+            {%- endcomment -%}
+            {%- capture kn_items -%}
+              {%- for kn_link in kn_links -%}
+                {%- capture kn_live -%}{%- render 'kn-link-live', link: kn_link -%}{%- endcapture -%}
+                {%- if kn_live contains 'live' -%}
+                  <li><a class="kn-footer__link kn-sm" href="{{ kn_link.url }}">{{ kn_link.title | escape }}</a></li>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endcapture -%}
+            {%- if kn_items == blank -%}
+              {%- continue -%}
+            {%- endif -%}
+
             <details class="kn-footer__col" {{ block.shopify_attributes }}>
               <summary class="kn-footer__summary">
                 <span class="kn-label">{{ block.settings.title | escape }}</span>
                 <span class="kn-footer__chevron">{%- render 'kn-icon', name: 'chevron', size: 16 -%}</span>
               </summary>
               <ul class="kn-footer__links" role="list">
-                {%- for kn_link in kn_links -%}
-                  <li><a class="kn-footer__link kn-sm" href="{{ kn_link.url }}">{{ kn_link.title | escape }}</a></li>
-                {%- endfor -%}
+                {{- kn_items -}}
               </ul>
             </details>
           {%- endfor -%}

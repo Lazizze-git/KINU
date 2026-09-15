@@ -123,3 +123,14 @@ search-page-input-component {
   border-block-end-width: var(--kn-stroke-strong);
   border-block-end-color: var(--kn-surface-accent);
 }
+
+/* Le titre de la page vit dans la colonne de contenu d'Horizon, le formulaire
+   dans une section pleine largeur ou il occupait la moitie de la page, centre.
+   Les deux colonnes n'avaient pas la meme largeur : le formulaire commencait
+   36 px a droite du titre. Il reprend la largeur de la colonne du titre, et
+   donc son bord gauche, sur tous les formats. */
+main[data-template='page.contact'] .contact-form {
+  width: 100%;
+  max-width: var(--normal-content-width);
+  margin-inline: auto;
+}

@@ -1,0 +1,32 @@
+{%- doc -%}
+  KINŪ — Écrit « live » si une entrée de menu mène à une page que le visiteur
+  peut ouvrir.
+
+  Une page, une collection, un produit ou un article dépublié renvoie une
+  page 404, et un journal sans article une page vide : le lien n'écrit alors
+  rien, et reparaît de lui-même à la publication. Les autres liens (adresse
+  externe, accueil, catalogue, recherche) sont toujours vivants.
+
+  @param {object} link - Entrée de menu.
+
+  @example
+  {%- capture kn_live -%}{%- render 'kn-link-live', link: kn_link -%}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_live = true
+  case link.type
+    when 'page_link', 'collection_link', 'product_link', 'article_link', 'policy_link', 'metaobject_link'
+      if link.object == blank
+        assign kn_live = false
+      endif
+    when 'blog_link'
+      if link.object == blank or link.object.articles_count == 0
+        assign kn_live = false
+      endif
+  endcase
+
+  if kn_live
+    echo 'live'
+  endif
+-%}
