@@ -359,6 +359,9 @@
       shut(item);
       header.classList.remove('is-menu-open');
       header.removeAttribute('data-kn-menu-mode');
+      /* Une bascule dont les images n'ont jamais ete peintes (onglet cache)
+         ne doit pas priver la fermeture suivante de sa transition. */
+      header.removeAttribute('data-kn-menu-instant');
 
       document.removeEventListener('keydown', onKeydown);
       document.removeEventListener('pointerdown', onPointerDown, true);

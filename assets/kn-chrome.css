@@ -572,8 +572,11 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
     color: var(--kn-surface-fg);
   }
 
+  /* Fond d'attente de la photographie : le vert profond du plan, jamais
+     l'ivoire du jeton global, qui dessinait une carte vide sur le vert. */
   .kn-menu__frame {
     --kn-ratio: var(--kn-ratio-portrait);
+    --kn-media-bg: var(--kn-forest-deep);
   }
 
   /* Fondu croise vers la photographie de la ligne visee (DA §6, 320 ms). */
