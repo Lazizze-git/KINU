@@ -449,13 +449,21 @@
   margin-block-start: var(--kn-space-md);
 }
 
+/* 16 px d'intervalle sur telephone : les cinq entrees de Femme tiennent sur
+   une ligne des 375 px, au lieu d'en laisser une seule orpheline dessous. */
 .kn-rayons__list {
   display: flex;
   flex-wrap: wrap;
-  column-gap: var(--kn-space-md);
+  column-gap: var(--kn-space-sm);
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+@media (min-width: 640px) {
+  .kn-rayons__list {
+    column-gap: var(--kn-space-md);
+  }
 }
 
 .kn-rayons__link {
