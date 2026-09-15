@@ -391,7 +391,10 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
     justify-content: center;
     width: var(--kn-space-md);
     min-height: var(--kn-tap);
-    margin-inline-end: calc(var(--kn-space-md) * -1);
+    /* 4 px d'air entre le mot et l'anneau de focus, repris par la marge
+       negative : la rubrique suivante ne bouge pas. */
+    margin-inline-start: var(--kn-space-3xs);
+    margin-inline-end: calc((var(--kn-space-md) + var(--kn-space-3xs)) * -1);
     padding: 0;
     border: 0;
     background: none;
