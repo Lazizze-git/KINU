@@ -121,6 +121,11 @@
             collections se rangent sous leur univers.
           {%- endcomment -%}
           {%- for kn_link in kn_utility -%}
+            {%- comment -%} Une page dépubliée ou un journal vide n'ouvre qu'une impasse (kn-link-live). {%- endcomment -%}
+            {%- capture kn_live -%}{%- render 'kn-link-live', link: kn_link -%}{%- endcapture -%}
+            {%- unless kn_live contains 'live' -%}
+              {%- continue -%}
+            {%- endunless -%}
             <li class="kn-nav__entry kn-nav__entry--service">
               <a class="kn-nav__level1" href="{{ kn_link.url }}">
                 <span class="kn-nav__name">{{ kn_link.title | escape }}</span>
@@ -149,6 +154,10 @@
           <ul class="kn-nav__legal" role="list">
             {%- if kn_legal.size > 0 -%}
               {%- for kn_link in kn_legal -%}
+                {%- capture kn_live -%}{%- render 'kn-link-live', link: kn_link -%}{%- endcapture -%}
+                {%- unless kn_live contains 'live' -%}
+                  {%- continue -%}
+                {%- endunless -%}
                 <li>
                   <a class="kn-nav__legal-link" href="{{ kn_link.url }}">{{ kn_link.title | escape }}</a>
                 </li>

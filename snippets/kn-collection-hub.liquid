@@ -77,10 +77,13 @@
         endfor
       endif
       assign kn_cover = kn_cover | default: collection.products.first.featured_image
-      assign kn_note = collection.description | strip_html | truncatewords: 14
     -%}
+    {%- comment -%}
+      Un nom, comme les vignettes des catégories. La phrase de la collection
+      redisait, coupée à quatorze mots, celle de l'en-tête juste au-dessus.
+    {%- endcomment -%}
     <li>
-      {%- render 'kn-hub-tile', url: kn_all_url, image: kn_cover, title: collection.title, note: kn_note -%}
+      {%- render 'kn-hub-tile', url: kn_all_url, image: kn_cover, title: collection.title -%}
     </li>
 
     {%- for kn_child in link.links -%}
@@ -89,10 +92,9 @@
           {%- liquid
             assign kn_other = kn_child.object
             assign kn_cover = kn_other.image | default: kn_other.products.first.featured_image
-            assign kn_note = kn_other.description | strip_html | truncatewords: 14
           -%}
           <li>
-            {%- render 'kn-hub-tile', url: kn_other.url, image: kn_cover, title: kn_child.title, note: kn_note -%}
+            {%- render 'kn-hub-tile', url: kn_other.url, image: kn_cover, title: kn_child.title -%}
           </li>
         {%- endif -%}
       {%- endif -%}
