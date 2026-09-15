@@ -143,7 +143,7 @@
     "duties_included_taxes_at_checkout_shipping_at_checkout_without_policy": "Frais de douane inclus. Taxes, réductions et frais d’expédition calculés à l’étape du paiement.",
     "taxes_at_checkout_shipping_at_checkout_with_policy_html": "Taxes, réductions et <a href=\"{{ link }}\">frais d’expédition</a> calculés à l’étape du paiement.",
     "taxes_at_checkout_shipping_at_checkout_without_policy": "Taxes, réductions et frais d’expédition calculés à l’étape du paiement.",
-    "checkout": "Payer",
+    "checkout": "Passer commande",
     "cart_title": "Panier",
     "price": "Prix",
     "price_regular": "Prix régulier",
@@ -178,7 +178,7 @@
       "other": "{{ count }} produits",
       "many": "{{ count }} produits"
     },
-    "recently_viewed_products": "Récemment consulté(s)",
+    "recently_viewed_products": "Vus récemment",
     "unavailable": "Indisponible",
     "collection_placeholder": "Titre de la collection",
     "product_card_placeholder": "Titre du produit",
