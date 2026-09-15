@@ -428,6 +428,15 @@ Niveau 1 en `--kn-fs-h4` DM Sans 500, capitales, chasse positive, ivoire ; nivea
 > d'elle-même et revient à la première publication. Un univers sans catégorie
 > ni collection rattachée garde son lien direct.
 
+> **Complément du 15 septembre 2026 — Unisexe en trois rayons.** Même demande
+> client : Unisexe se lit dans l'ordre Accessoires (chaussettes, tote bag),
+> T-shirts, puis Tracksuits. L'ordre se règle dans le menu Shopify, sous
+> Unisexe. La sous-entrée « Tracksuits », filtrée par le tag `Tracksuit`,
+> s'ajoute avec les premières pièces : le filtre par tag du menu s'appuie sur
+> les tags que portent déjà les produits. Un rayon sans pièce en ligne resterait
+> de toute façon masqué. La vignette Unisexe de l'accueil annonce déjà les
+> trois rayons.
+
 > **Correction du 10/08/2026 (implémentation).** Ce sur-titre était prévu en
 > `--kn-faint-invert` (45 % d'ivoire). À 11 px sur l'aplat vert, cela donne 3,1:1 —
 > sous le seuil AA de 4,5:1 annoncé au §3.2. Il passe à `--kn-muted-invert` (70 %,
