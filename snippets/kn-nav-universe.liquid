@@ -1,0 +1,124 @@
+{%- doc -%}
+  KINŪ — Une entrée d'univers dans le panneau de navigation.
+
+  Demande client du 15 septembre 2026 : chaque univers porte sa hiérarchie,
+  et « Toutes les collections » quitte le header pour se ranger sous chacun.
+  Une entrée qui a des catégories ou des collections se déplie :
+
+    Tout voir            → la page d'univers (les pièces, puis les collections)
+    Brassières, Leggings → les catégories qui ont au moins une pièce en ligne
+    COLLECTIONS
+      Fluid-Motion       → toutes les pièces de l'univers
+      (autres collections rattachées dans le menu)
+
+  Tout vient du menu Shopify. Une sous-entrée filtrée par tag est une
+  catégorie ; une sous-entrée qui mène à une collection entière est une
+  collection de cet univers. Les autres liens (page, blog) restent des
+  rangées ordinaires. Sans rien à déplier, l'entrée garde son lien direct.
+
+  @param {object} link - Entrée de premier niveau du menu.
+  @param {string} aside - Sur-titre déjà mis en forme, affiché à droite.
+  @param {string} view_all_label - Libellé de la première ligne dépliée.
+  @param {string} collections_label - Intitulé du groupe de collections.
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_rows = 0
+  assign kn_extra = 0
+  assign kn_self = nil
+  if link.type == 'collection_link' and link.object != blank
+    assign kn_self = link.object
+  endif
+-%}
+
+{%- capture kn_categories -%}
+  {%- for kn_child in link.links -%}
+    {%- liquid
+      assign kn_show = true
+      if kn_child.type == 'collection_link' and kn_child.object != blank
+        if kn_child.url == kn_child.object.url
+          assign kn_show = false
+        else
+          capture kn_rank
+            render 'kn-category-lead', link: kn_child
+          endcapture
+          assign kn_rank = kn_rank | strip
+          if kn_rank == blank
+            assign kn_show = false
+          endif
+        endif
+      endif
+    -%}
+    {%- if kn_show -%}
+      {%- assign kn_rows = kn_rows | plus: 1 -%}
+      <li>
+        <a class="kn-nav__level2" href="{{ kn_child.url }}">{{ kn_child.title | escape }}</a>
+      </li>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- capture kn_collections -%}
+  {%- for kn_child in link.links -%}
+    {%- if kn_child.type == 'collection_link' and kn_child.object != blank and kn_child.url == kn_child.object.url -%}
+      {%- if kn_self == nil or kn_child.object.handle != kn_self.handle -%}
+        {%- assign kn_extra = kn_extra | plus: 1 -%}
+        <li>
+          <a class="kn-nav__level2" href="{{ kn_child.url }}">{{ kn_child.title | escape }}</a>
+        </li>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if kn_rows > 0 or kn_extra > 0 -%}
+  <details class="kn-nav__fold">
+    <summary class="kn-nav__level1 kn-nav__summary">
+      <span class="kn-nav__name">{{ link.title | escape }}</span>
+      {{ aside }}
+      <span class="kn-nav__chevron" aria-hidden="true">
+        {%- render 'kn-icon', name: 'chevron', size: 16 -%}
+      </span>
+    </summary>
+
+    <ul class="kn-nav__sub" role="list">
+      <li>
+        <a class="kn-nav__level2 kn-nav__level2--all" href="{{ link.url }}">
+          {{- view_all_label | escape -}}
+        </a>
+      </li>
+      {{ kn_categories }}
+
+      {%- comment -%}
+        L'univers est lui-même la première de ses collections. Sa page
+        montre désormais les catégories : la rangée qui le nomme mène donc à
+        la liste complète de ses pièces, par le tri par défaut.
+      {%- endcomment -%}
+      <li class="kn-nav__group">
+        <p class="kn-nav__group-label">{{ collections_label | escape }}</p>
+        <ul class="kn-nav__sub kn-nav__sub--group" role="list">
+          {%- if kn_self != nil -%}
+            <li>
+              <a
+                class="kn-nav__level2"
+                href="{{ kn_self.url }}?sort_by={{ kn_self.default_sort_by }}"
+                translate="no"
+              >
+                {{- kn_self.title | escape -}}
+              </a>
+            </li>
+          {%- endif -%}
+          {{ kn_collections }}
+        </ul>
+      </li>
+    </ul>
+  </details>
+{%- else -%}
+  <a class="kn-nav__level1" href="{{ link.url }}">
+    <span class="kn-nav__name">{{ link.title | escape }}</span>
+    {{ aside }}
+    <span class="kn-nav__arrow" aria-hidden="true">
+      {%- render 'kn-icon', name: 'arrow-right', size: 18 -%}
+    </span>
+  </a>
+{%- endif -%}

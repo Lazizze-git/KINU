@@ -155,7 +155,11 @@
 
       var clear = root.querySelector('[data-kn-toolbar-clear]');
       var nextClear = incoming.querySelector('[data-kn-toolbar-clear]');
-      if (clear && nextClear) clear.toggleAttribute('hidden', nextClear.hasAttribute('hidden'));
+      if (clear && nextClear) {
+        clear.toggleAttribute('hidden', nextClear.hasAttribute('hidden'));
+        // Le lien garde le tri courant : il change donc avec lui.
+        clear.setAttribute('href', nextClear.getAttribute('href') || '');
+      }
 
       var sort = root.querySelector('[data-kn-sort]');
       var nextSort = incoming.querySelector('[data-kn-sort]');

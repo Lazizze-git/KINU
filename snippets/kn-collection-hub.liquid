@@ -1,0 +1,108 @@
+{%- doc -%}
+  KINŪ — Page d'univers à étages (demande client du 15 septembre 2026).
+
+  En arrivant sur Femme, le visiteur voyait d'emblée toutes les pièces. Il voit
+  désormais d'abord les catégories (Brassières, Leggings…), puis les
+  collections de l'univers. Une catégorie mène à ses pièces — la brassière
+  Everyday et la Performance ; une collection mène à toutes les siennes.
+
+  Tout vient de l'entrée du menu qui pointe vers la collection :
+  - une sous-entrée filtrée par tag est une catégorie. Elle n'apparaît que si
+    au moins une pièce est en ligne, et prend la photo de la première ;
+  - l'univers est la première de ses collections, suivi de toute sous-entrée
+    qui mène à une collection entière.
+
+  N'écrit rien si aucune catégorie n'a de pièce en ligne : la section affiche
+  alors la grille, comme avant. La liste complète reste joignable par le tri
+  par défaut (`?sort_by=`), qui la distingue de la page à étages.
+
+  @param {object} link - Entrée de premier niveau du menu qui mène à la collection.
+  @param {string} pieces_title - Titre du bloc des catégories.
+  @param {string} all_label - Lien vers la liste complète des pièces.
+  @param {string} collections_title - Titre du bloc des collections.
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_all_url = collection.url | append: '?sort_by=' | append: collection.default_sort_by
+  assign kn_tiles = 0
+-%}
+
+{%- capture kn_categories -%}
+  {%- for kn_child in link.links -%}
+    {%- capture kn_rank -%}{%- render 'kn-category-lead', link: kn_child -%}{%- endcapture -%}
+    {%- assign kn_rank = kn_rank | strip -%}
+    {%- if kn_rank != blank -%}
+      {%- liquid
+        assign kn_offset = kn_rank | plus: 0
+        assign kn_eager = false
+        if kn_tiles < 2
+          assign kn_eager = true
+        endif
+        assign kn_tiles = kn_tiles | plus: 1
+      -%}
+      {%- for kn_lead in kn_child.object.products offset: kn_offset limit: 1 -%}
+        <li>
+          {%- render 'kn-hub-tile',
+            url: kn_child.url,
+            image: kn_lead.featured_image,
+            image_hover: kn_lead.images[1],
+            title: kn_child.title,
+            eager: kn_eager
+          -%}
+        </li>
+      {%- endfor -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if kn_tiles > 0 -%}
+  {%- capture kn_collections -%}
+    {%- liquid
+      assign kn_cover = collection.image | default: collection.products.first.featured_image
+      assign kn_note = collection.description | strip_html | truncatewords: 14
+    -%}
+    <li>
+      {%- render 'kn-hub-tile', url: kn_all_url, image: kn_cover, title: collection.title, note: kn_note -%}
+    </li>
+
+    {%- for kn_child in link.links -%}
+      {%- if kn_child.type == 'collection_link' and kn_child.object != blank -%}
+        {%- if kn_child.url == kn_child.object.url and kn_child.object.handle != collection.handle -%}
+          {%- liquid
+            assign kn_other = kn_child.object
+            assign kn_cover = kn_other.image | default: kn_other.products.first.featured_image
+            assign kn_note = kn_other.description | strip_html | truncatewords: 14
+          -%}
+          <li>
+            {%- render 'kn-hub-tile', url: kn_other.url, image: kn_cover, title: kn_child.title, note: kn_note -%}
+          </li>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endcapture -%}
+
+  <div class="kn-hub">
+    <section class="kn-container kn-hub__part" aria-labelledby="KnHubPieces">
+      <div class="kn-home-head">
+        <h2 class="kn-home-head__title" id="KnHubPieces">{{ pieces_title | escape }}</h2>
+        {%- if all_label != blank -%}
+          <a class="kn-label kn-underline kn-home-head__link" href="{{ kn_all_url }}">
+            {{- all_label | escape -}}
+          </a>
+        {%- endif -%}
+      </div>
+      <ul class="kn-hub__grid kn-home-body" role="list">
+        {{- kn_categories -}}
+      </ul>
+    </section>
+
+    <section class="kn-container kn-hub__part" aria-labelledby="KnHubCollections">
+      <div class="kn-home-head">
+        <h2 class="kn-home-head__title" id="KnHubCollections">{{ collections_title | escape }}</h2>
+      </div>
+      <ul class="kn-hub__grid kn-home-body" role="list">
+        {{- kn_collections -}}
+      </ul>
+    </section>
+  </div>
+{%- endif -%}

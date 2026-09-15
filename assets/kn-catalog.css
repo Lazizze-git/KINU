@@ -1169,3 +1169,66 @@
     grid-column: 1 / span 8;
   }
 }
+
+/* --------------------------------------------------------------------------
+   9. Page d'univers à étages — les pièces, puis les collections
+   Demande client du 15/09/2026. Les vignettes reprennent la colonne des
+   univers de l'accueil (.kn-universe, kn-home.css) au format des cartes
+   produit : c'est une photographie de vêtement, pas une bannière.
+   -------------------------------------------------------------------------- */
+
+.kn-hub {
+  padding-block: var(--kn-space-lg) var(--kn-section-y);
+}
+
+.kn-hub__part + .kn-hub__part {
+  margin-block-start: var(--kn-section-y);
+}
+
+/* 2 colonnes sur téléphone, jamais une (DA §5.2) : on compare d'un regard. */
+.kn-hub__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--kn-grid-gap);
+  row-gap: var(--kn-space-xl);
+  margin-inline: 0;
+  padding: 0;
+  list-style: none;
+}
+
+@media (min-width: 768px) {
+  .kn-hub__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .kn-hub__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.kn-hub__tile .kn-universe__frame {
+  --kn-ratio: var(--kn-ratio-card);
+
+  background-color: var(--kn-media-bg);
+}
+
+/* Un nom, pas un titre éditorial : l'échelle h4 tient dans une colonne de
+   téléphone sans couper le mot « Brassières ». */
+.kn-hub__name {
+  margin: 0;
+  font-size: var(--kn-fs-h4);
+  font-weight: var(--kn-fw-medium);
+  line-height: var(--kn-lh-tight);
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-hub__tile:hover .kn-hub__name,
+.kn-hub__tile:focus-visible .kn-hub__name {
+  color: var(--kn-surface-accent);
+}
+
+.kn-hub .kn-universe__note {
+  margin: 0;
+}

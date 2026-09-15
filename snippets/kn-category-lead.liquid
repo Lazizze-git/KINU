@@ -1,0 +1,52 @@
+{%- doc -%}
+  KINŪ — Rang de la pièce qui représente une catégorie du menu.
+
+  Une catégorie est une sous-entrée du menu qui filtre une collection par tag
+  (« Leggings » → /collections/fluid-motion/Legging). Ce snippet écrit le rang,
+  dans `link.object.products`, du premier produit en ligne qui porte ce tag. Il
+  n'écrit rien si la sous-entrée n'est pas une catégorie, ou si aucune de ses
+  pièces n'est en ligne.
+
+  Les brouillons ne figurent pas dans `products` : une catégorie dont toutes
+  les pièces sont en brouillon disparaît d'elle-même du panneau et de la page
+  d'univers, et revient à la première publication. Aucune page vide n'est
+  jamais proposée au visiteur.
+
+  Les tags sont comparés par handle : le menu écrit « Brassi%C3%A8re » ou
+  « T-shirt », les produits « Brassière » ou « T-shirt ». Hors pagination,
+  Shopify ne parcourt que les 50 premiers produits de la collection.
+
+  @param {object} link - Sous-entrée de menu.
+
+  @example
+  {%- capture kn_rank -%}{%- render 'kn-category-lead', link: kn_child -%}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_rank = ''
+
+  if link.type == 'collection_link' and link.object != blank
+    assign kn_base = link.object.url | append: '/'
+    assign kn_path = link.url | split: '?' | first
+    assign kn_head = kn_path | slice: 0, kn_base.size
+
+    if kn_head == kn_base
+      assign kn_wanted = kn_path | remove_first: kn_base | url_decode | handleize
+
+      for kn_product in link.object.products
+        for kn_tag in kn_product.tags
+          assign kn_have = kn_tag | handleize
+          if kn_have == kn_wanted
+            assign kn_rank = forloop.parentloop.index0
+            break
+          endif
+        endfor
+        if kn_rank != ''
+          break
+        endif
+      endfor
+    endif
+  endif
+
+  echo kn_rank
+-%}

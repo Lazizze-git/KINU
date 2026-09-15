@@ -9,7 +9,8 @@
   (niveau 1 = entrées de premier niveau, niveau 2 = leurs enfants).
   Les sur-titres d'univers viennent des blocs de la section, appariés au
   libellé de l'entrée de premier niveau. Si aucun menu n'est configuré,
-  on retombe sur les blocs seuls.
+  on retombe sur les blocs seuls. Le dépli de chaque univers — catégories,
+  puis ses collections — est rendu par kn-nav-universe.
 
   @param {object} section - La section kn-header qui porte les réglages.
 
@@ -20,10 +21,6 @@
 {%- liquid
   assign kn_links = linklists[section.settings.menu].links
   assign kn_utility = linklists[section.settings.utility_menu].links
-  assign kn_all_url = section.settings.secondary_link
-  if kn_all_url == blank
-    assign kn_all_url = routes.all_products_collection_url
-  endif
 -%}
 
 <div class="kn-nav" id="kn-nav" data-kn-nav>
@@ -83,43 +80,12 @@
               {%- endcapture -%}
 
               <li class="kn-nav__entry">
-                {%- if kn_link.links.size > 0 -%}
-                  {%- comment -%}
-                    Un univers qui a des categories se deplie sur place : le
-                    chevron remplace la fleche, et la collection entiere reste
-                    joignable par la premiere ligne de la liste.
-                  {%- endcomment -%}
-                  <details class="kn-nav__fold">
-                    <summary class="kn-nav__level1 kn-nav__summary">
-                      <span class="kn-nav__name">{{ kn_link.title | escape }}</span>
-                      {{ kn_row_aside }}
-                      <span class="kn-nav__chevron" aria-hidden="true">
-                        {%- render 'kn-icon', name: 'chevron', size: 16 -%}
-                      </span>
-                    </summary>
-
-                    <ul class="kn-nav__sub" role="list">
-                      <li>
-                        <a class="kn-nav__level2 kn-nav__level2--all" href="{{ kn_link.url }}">
-                          {{- section.settings.label_view_all | escape -}}
-                        </a>
-                      </li>
-                      {%- for kn_child in kn_link.links -%}
-                        <li>
-                          <a class="kn-nav__level2" href="{{ kn_child.url }}">{{ kn_child.title | escape }}</a>
-                        </li>
-                      {%- endfor -%}
-                    </ul>
-                  </details>
-                {%- else -%}
-                  <a class="kn-nav__level1" href="{{ kn_link.url }}">
-                    <span class="kn-nav__name">{{ kn_link.title | escape }}</span>
-                    {{ kn_row_aside }}
-                    <span class="kn-nav__arrow" aria-hidden="true">
-                      {%- render 'kn-icon', name: 'arrow-right', size: 18 -%}
-                    </span>
-                  </a>
-                {%- endif -%}
+                {%- render 'kn-nav-universe',
+                  link: kn_link,
+                  aside: kn_row_aside,
+                  view_all_label: section.settings.label_view_all,
+                  collections_label: section.settings.label_collections
+                -%}
               </li>
             {%- endfor -%}
           {%- else -%}
@@ -151,16 +117,9 @@
           {%- comment -%}
             Les liens de service ferment la meme liste : meme rangee, meme
             filet, corps attenue. Rien ne pend plus sous la navigation.
+            « Toutes les collections » en est sorti le 15 septembre : les
+            collections se rangent sous leur univers.
           {%- endcomment -%}
-          <li class="kn-nav__entry kn-nav__entry--service">
-            <a class="kn-nav__level1" href="{{ kn_all_url }}">
-              <span class="kn-nav__name">{{ section.settings.secondary_label | escape }}</span>
-              <span class="kn-nav__arrow" aria-hidden="true">
-                {%- render 'kn-icon', name: 'arrow-right', size: 18 -%}
-              </span>
-            </a>
-          </li>
-
           {%- for kn_link in kn_utility -%}
             <li class="kn-nav__entry kn-nav__entry--service">
               <a class="kn-nav__level1" href="{{ kn_link.url }}">

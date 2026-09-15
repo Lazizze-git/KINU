@@ -37,6 +37,16 @@
   assign kn_form_id = 'KnFacetsForm-' | append: section_id
   assign kn_panel_id = 'KnFacets-' | append: section_id
   assign kn_count = count_label | replace: '[count]', results.products_count
+
+  comment
+    Effacer les filtres garde le tri. Sur un univers à étages, l’adresse nue
+    ramène aux catégories : sans le tri, « Tout effacer » ferait quitter la
+    liste des pièces au lieu de la vider de ses filtres.
+  endcomment
+  assign kn_clear_url = results.url
+  if results.sort_by != blank
+    assign kn_clear_url = results.url | append: '?sort_by=' | append: results.sort_by
+  endif
 -%}
 
 <div class="kn-toolbar">
@@ -63,7 +73,7 @@
 
       <a
         class="kn-label kn-underline kn-toolbar__clear"
-        href="{{ results.url }}"
+        href="{{ kn_clear_url }}"
         data-kn-clear
         data-kn-toolbar-clear
         {% if active_count == 0 %}hidden{% endif %}

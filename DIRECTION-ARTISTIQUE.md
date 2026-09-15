@@ -339,7 +339,7 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 
 - Hauteur fixe : **56 px mobile / 72 px desktop**. Ne change jamais au scroll.
 - **Téléphone** : **[burger] — [logo KINŪ] — [recherche · compte · panier]**. La navigation vit dans le panneau.
-- **Ordinateur** : **[logo KINŪ] — [Femme · Homme · Unisexe · Toutes les collections] — [recherche · compte · panier]**. Les entrées de premier niveau du menu passent dans la barre, à l'échelle d'étiquette (11 px, capitales, chasse positive), zone cliquable 44 px. Survol : les autres entrées s'atténuent, la survolée reste nette (§3.6). L'entrée de la page courante porte `aria-current` et passe en accent.
+- **Ordinateur** : **[logo KINŪ] — [Femme · Homme · Unisexe] — [recherche · compte · panier]**. Les entrées de premier niveau du menu passent dans la barre, à l'échelle d'étiquette (11 px, capitales, chasse positive), zone cliquable 44 px. Survol : les autres entrées s'atténuent, la survolée reste nette (§3.6). L'entrée de la page courante porte `aria-current` et passe en accent.
 
 > **Amendement du 27 août 2026 — libellés dans la barre.** Le brief interdisait
 > tout libellé de menu visible : le burger tenait la navigation sur les deux
@@ -359,6 +359,14 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 > l'éditeur. Corps atténué en `--kn-surface-muted` et filet 1 px à hauteur de
 > texte pour le tenir à l'écart des univers ; il reprend la couleur pleine sous
 > le pointeur et l'accent sur sa propre page.
+
+> **Amendement du 15 septembre 2026 — « Toutes les collections » quitte la
+> barre.** Demande client : les collections se consultent par univers, pas en
+> vrac. Qui veut voir les collections femme va chez Femme. Le lien de service
+> sort de la barre et du panneau, et ses réglages (`secondary_label`,
+> `secondary_link`) du schéma du header. La page « Toutes les collections »
+> reste dans le thème ; le bouton de la bannière d'accueil y mène toujours.
+> Voir §7.2 et §7.7 pour ce qui la remplace.
 - Logo : wordmark `KINŪ`, hauteur 20 px mobile / 24 px desktop, aligné à gauche sur desktop, centré sur mobile.
 - Icônes : trait **1,5 px**, taille 20 px, zone tactile 44 × 44 px, sans libellé. Le compteur du panier est une pastille verte de 16 px, chiffre 10 px DM Sans 500 en ivoire.
 - Comportement au scroll : voir **R5**. Header sticky, jamais masqué au scroll descendant.
@@ -408,6 +416,17 @@ Niveau 1 en `--kn-fs-h4` DM Sans 500, capitales, chasse positive, ivoire ; nivea
 > l'écran : elles doivent se trouver, pas se lire. Sans menu réglé dans
 > l'éditeur, elles reprennent les politiques renseignées dans Shopify, si bien
 > qu'une politique non rédigée n'expose jamais de page morte.
+
+> **Amendement du 15 septembre 2026 — un niveau de plus.** Chaque univers
+> déplié enchaîne : « Tout voir » (sa page à étages, §7.7), ses catégories, puis
+> un groupe **COLLECTIONS** sous un filet, intitulé à l'échelle d'étiquette en
+> `--kn-muted-invert`. L'univers y figure en premier — sa rangée mène à la liste
+> complète de ses pièces — suivi de toute collection rattachée dans le menu.
+> Tout se règle dans le menu Shopify : une sous-entrée filtrée par tag est une
+> catégorie, une sous-entrée qui mène à une collection entière est une
+> collection. Une catégorie sans pièce en ligne (toutes en brouillon) disparaît
+> d'elle-même et revient à la première publication. Un univers sans catégorie
+> ni collection rattachée garde son lien direct.
 
 > **Correction du 10/08/2026 (implémentation).** Ce sur-titre était prévu en
 > `--kn-faint-invert` (45 % d'ivoire). À 11 px sur l'aplat vert, cela donne 3,1:1 —
@@ -509,6 +528,7 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 ### 7.7 Page collection & page produit
 
 - **Collection** : en-tête sur la surface du territoire (R3) avec `H1` = la catégorie (`Femme`, en casse normale — le §4.2 et le §9 interdisent les titres éditoriaux en capitales, et c'est cette règle-là qui prime ; le libellé reste éditable si le client préfère les majuscules), sur-titre = la collection (`FLUID-MOTION`), une phrase de contexte max 68ch. Filtres dans un drawer latéral (pas de sidebar permanente), déclenché par `FILTRER (2)` en `--kn-fs-label`. Tri à droite. Filet 1 px sous la barre.
+- **Page d'univers à étages** (amendement du 15 septembre 2026, demande client) : en arrivant sur Femme, on ne voit plus toutes les pièces. Sous l'en-tête viennent **Les pièces** — une vignette 3:4 par catégorie du menu, photographiée par sa première pièce en ligne, fondu croisé au survol — puis **Les collections** de l'univers, au même format. Une catégorie mène à ses pièces (Brassière Everyday, Brassière Performance) ; « Voir toutes les pièces » et la vignette de l'univers mènent à la grille complète, reconnue au tri explicite (`?sort_by=`). Trier, filtrer ou choisir une catégorie rend la main à la grille ; « Tout effacer » y garde le tri. Grille des vignettes : 2 colonnes téléphone, 3 tablette, 4 ordinateur. Sans catégorie en ligne (Homme aujourd'hui), la page reste la grille.
 - **Fil d'Ariane** : `Accueil / Femme / T-shirts` en `--kn-fs-label` `--kn-grey`, séparateur `/`, présent sur collection et produit (exigence du brief).
 - **Produit** : **deux colonnes desktop** — galerie 7/12 à gauche, colonne de lecture 5/12 à droite qui enchaîne achat puis caractéristiques ; une colonne mobile (galerie plein cadre, puis achat, puis caractéristiques). Le placement est explicite en grille : l'ordre du DOM reste galerie / achat / caractéristiques, qui est l'ordre de lecture juste sur petit écran et au clavier. Les accordéons se replient sur les deux formats, Description ouverte par défaut. Sélecteurs de taille en carrés de 44 px, filet 1 px, sélection = remplissage encre. La quantité est un choix comme les autres : même étiquette en capitales grises que `COULEUR` et `TAILLE`, contrôle dessous, puis le bouton d'ajout pleine largeur — jamais un bloc sans nom posé à côté du bouton. Accordéons (Description / Matière & entretien / Livraison) en filets 1 px, sans fond, chevrons 12 px.
 

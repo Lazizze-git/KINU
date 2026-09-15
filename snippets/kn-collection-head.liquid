@@ -1,0 +1,88 @@
+{%- doc -%}
+  KINŪ — En-tête d'une page collection : choisit ce que disent le sur-titre,
+  le H1 et la phrase de contexte, puis les passe à `kn-catalog-header`
+  (DIRECTION-ARTISTIQUE.md §3.4 R3, §7.7).
+
+  @param {object[]} blocks - Les blocs « Univers » de la section collection.
+  @param {boolean} show_breadcrumb - Affiche le fil d'Ariane.
+{%- enddoc -%}
+
+{%- liquid
+  comment
+    Univers de rattachement : la collection elle-même si un bloc la désigne,
+    sinon celle pointée par son métachamp `kn.universe`.
+  endcomment
+  assign kn_universe = collection
+  if collection.metafields.kn.universe != blank
+    assign kn_universe = collection.metafields.kn.universe.value
+  endif
+
+  assign kn_category = ''
+  assign kn_universe_name = ''
+  assign kn_universe_intro = ''
+  for kn_block in blocks
+    if kn_block.settings.collection.handle == kn_universe.handle
+      assign kn_category = kn_block.settings.category
+      assign kn_universe_name = kn_block.settings.universe_name | default: kn_block.settings.collection.title
+      assign kn_universe_intro = kn_block.settings.intro
+      break
+    endif
+  endfor
+
+  comment
+    Sur la page de l’univers, le H1 EST la catégorie et le sur-titre le nom de
+    collection. Sur une sous-collection, le H1 est son propre titre et le
+    sur-titre rappelle l’univers.
+  endcomment
+  assign kn_is_universe = false
+  if kn_universe.handle == collection.handle and kn_category != blank
+    assign kn_is_universe = true
+  endif
+
+  if kn_is_universe
+    assign kn_title = kn_category
+    assign kn_eyebrow = kn_universe_name
+    assign kn_intro = collection.description | default: kn_universe_intro
+  else
+    assign kn_title = collection.title
+    assign kn_eyebrow = ''
+    if kn_category != blank
+      assign kn_eyebrow = kn_category | append: ' — ' | append: kn_universe_name
+    endif
+    assign kn_intro = collection.description
+  endif
+
+  comment
+    Vue filtrée par tag. Le menu Femme mène à « Leggings », « Shorts »,
+    « T-shirts »… : autant d’adresses distinctes qui affichaient toutes le
+    titre, le sur-titre et la phrase de l’univers entier. Deux leggings se
+    présentaient donc sous un H1 « Femme » et sous une phrase qui en annonce
+    cinq, sans rien pour dire au visiteur où il venait d’arriver. Le §7.7
+    attend d’ailleurs « Accueil / Femme / T-shirts » au fil d’Ariane.
+
+    Le tag prend le H1, l’univers passe en sur-titre, et la phrase de contexte
+    s’efface : elle décrit la collection, pas la sélection.
+  endcomment
+  assign kn_tag = ''
+  if current_tags.size > 0
+    assign kn_tag = current_tags | join: ', '
+  endif
+
+  if kn_tag != blank
+    if kn_is_universe
+      assign kn_eyebrow = kn_category
+      if kn_universe_name != blank
+        assign kn_eyebrow = kn_category | append: ' — ' | append: kn_universe_name
+      endif
+    endif
+    assign kn_title = kn_tag
+    assign kn_intro = ''
+  endif
+-%}
+
+{%- render 'kn-catalog-header',
+  eyebrow: kn_eyebrow,
+  title: kn_title,
+  intro: kn_intro,
+  show_breadcrumb: show_breadcrumb
+-%}

@@ -65,7 +65,6 @@
         "transparent_over_media": true,
         "menu": "main-menu",
         "utility_menu": "aide",
-        "secondary_label": "Toutes les collections",
         "nav_open_label": "Ouvrir la navigation",
         "nav_close_label": "Fermer la navigation",
         "nav_dialog_label": "Navigation principale",

@@ -8,77 +8,6 @@
   assign kn_settings = section.settings
 
   comment
-    Univers de rattachement : la collection elle-même si un bloc la désigne,
-    sinon celle pointée par son métachamp `kn.universe`.
-  endcomment
-  assign kn_universe = collection
-  if collection.metafields.kn.universe != blank
-    assign kn_universe = collection.metafields.kn.universe.value
-  endif
-
-  assign kn_category = ''
-  assign kn_universe_name = ''
-  assign kn_universe_intro = ''
-  for kn_block in section.blocks
-    if kn_block.settings.collection.handle == kn_universe.handle
-      assign kn_category = kn_block.settings.category
-      assign kn_universe_name = kn_block.settings.universe_name | default: kn_block.settings.collection.title
-      assign kn_universe_intro = kn_block.settings.intro
-      break
-    endif
-  endfor
-
-  comment
-    Sur la page de l’univers, le H1 EST la catégorie et le sur-titre le nom de
-    collection. Sur une sous-collection, le H1 est son propre titre et le
-    sur-titre rappelle l’univers.
-  endcomment
-  assign kn_is_universe = false
-  if kn_universe.handle == collection.handle and kn_category != blank
-    assign kn_is_universe = true
-  endif
-
-  if kn_is_universe
-    assign kn_title = kn_category
-    assign kn_eyebrow = kn_universe_name
-    assign kn_intro = collection.description | default: kn_universe_intro
-  else
-    assign kn_title = collection.title
-    assign kn_eyebrow = ''
-    if kn_category != blank
-      assign kn_eyebrow = kn_category | append: ' — ' | append: kn_universe_name
-    endif
-    assign kn_intro = collection.description
-  endif
-
-  comment
-    Vue filtrée par tag. Le menu Femme mène à « Leggings », « Shorts »,
-    « T-shirts »… : autant d’adresses distinctes qui affichaient toutes le
-    titre, le sur-titre et la phrase de l’univers entier. Deux leggings se
-    présentaient donc sous un H1 « Femme » et sous une phrase qui en annonce
-    cinq, sans rien pour dire au visiteur où il venait d’arriver. Le §7.7
-    attend d’ailleurs « Accueil / Femme / T-shirts » au fil d’Ariane.
-
-    Le tag prend le H1, l’univers passe en sur-titre, et la phrase de contexte
-    s’efface : elle décrit la collection, pas la sélection.
-  endcomment
-  assign kn_tag = ''
-  if current_tags.size > 0
-    assign kn_tag = current_tags | join: ', '
-  endif
-
-  if kn_tag != blank
-    if kn_is_universe
-      assign kn_eyebrow = kn_category
-      if kn_universe_name != blank
-        assign kn_eyebrow = kn_category | append: ' — ' | append: kn_universe_name
-      endif
-    endif
-    assign kn_title = kn_tag
-    assign kn_intro = ''
-  endif
-
-  comment
     Nombre de filtres actifs, pour le libellé « FILTRER (2) ».
   endcomment
   assign kn_active = 0
@@ -93,71 +22,96 @@
   endfor
 
   assign kn_empty_url = kn_settings.empty_url | default: routes.collections_url
+
+  comment
+    Univers à étages (demande client du 15 septembre 2026). Une collection vers
+    laquelle pointe une entrée du menu montre d'abord ses catégories, puis ses
+    collections — voir snippets/kn-collection-hub.liquid. Dès qu'un visiteur
+    trie, filtre ou choisit une catégorie, il demande des pièces : la grille
+    reprend la main.
+  endcomment
+  assign kn_hub = ''
+  if kn_active == 0 and current_tags.size == 0 and collection.sort_by == blank
+    for kn_link in linklists[kn_settings.menu].links
+      if kn_link.type == 'collection_link' and kn_link.url == collection.url
+        capture kn_hub
+          render 'kn-collection-hub', link: kn_link, pieces_title: kn_settings.hub_pieces_title, all_label: kn_settings.hub_all_label, collections_title: kn_settings.hub_collections_title
+        endcapture
+        break
+      endif
+    endfor
+  endif
+  assign kn_hub = kn_hub | strip
 -%}
 
+{%- comment -%}
+  La page à étages n'a ni filtres ni grille : elle ne porte pas les attributs
+  qui réveillent kn-catalog.js, qui n'y trouverait rien à piloter.
+{%- endcomment -%}
 <div
   class="kn-catalog kn-collection"
-  data-kn-collection
-  data-kn-section-id="{{ section.id }}"
+  {% if kn_hub == blank %}
+    data-kn-collection
+    data-kn-section-id="{{ section.id }}"
+  {% endif %}
 >
-  {%- render 'kn-catalog-header',
-    eyebrow: kn_eyebrow,
-    title: kn_title,
-    intro: kn_intro,
-    show_breadcrumb: kn_settings.show_breadcrumb
-  -%}
+  {%- render 'kn-collection-head', blocks: section.blocks, show_breadcrumb: kn_settings.show_breadcrumb -%}
 
-  {%- render 'kn-catalog-toolbar',
-    section_id: section.id,
-    results: collection,
-    active_count: kn_active,
-    filter_label: kn_settings.filter_label,
-    sort_label: kn_settings.sort_label,
-    clear_label: kn_settings.clear_label,
-    count_label: kn_settings.count_label,
-    sort_featured: kn_settings.sort_featured,
-    sort_relevance: kn_settings.sort_relevance,
-    sort_best_selling: kn_settings.sort_best_selling,
-    sort_price_asc: kn_settings.sort_price_asc,
-    sort_price_desc: kn_settings.sort_price_desc,
-    sort_newest: kn_settings.sort_newest,
-    sort_oldest: kn_settings.sort_oldest
-  -%}
-
-  {%- comment -%}
-    Le panneau de filtres est placé avant la grille : sans JavaScript il reste
-    affiché en ligne, à l’endroit où on l’attend. `kn-catalog.js` en fait
-    ensuite un drawer, et sa position dans le DOM n’a plus d’importance.
-  {%- endcomment -%}
-  {%- render 'kn-catalog-facets',
-    section_id: section.id,
-    results: collection,
-    title: kn_settings.filters_title,
-    apply_label: kn_settings.apply_label,
-    clear_label: kn_settings.clear_label,
-    close_label: kn_settings.close_label,
-    price_min_label: kn_settings.price_min_label,
-    price_max_label: kn_settings.price_max_label
-  -%}
-
-  {%- paginate collection.products by kn_settings.products_per_page -%}
-    {%- render 'kn-catalog-grid',
+  {%- if kn_hub != blank -%}
+    {{ kn_hub }}
+  {%- else -%}
+    {%- render 'kn-catalog-toolbar',
+      section_id: section.id,
       results: collection,
-      paginate: paginate,
       active_count: kn_active,
-      show_universe: kn_settings.show_universe,
-      empty_filtered_text: kn_settings.empty_filtered_text,
-      empty_filtered_action: kn_settings.empty_filtered_action,
-      empty_text: kn_settings.empty_text,
-      empty_action: kn_settings.empty_action,
-      empty_url: kn_empty_url,
-      more_label: kn_settings.more_label,
-      progress_label: kn_settings.progress_label,
-      prev_label: kn_settings.prev_label,
-      next_label: kn_settings.next_label,
-      pagination_label: kn_settings.pagination_label
+      filter_label: kn_settings.filter_label,
+      sort_label: kn_settings.sort_label,
+      clear_label: kn_settings.clear_label,
+      count_label: kn_settings.count_label,
+      sort_featured: kn_settings.sort_featured,
+      sort_relevance: kn_settings.sort_relevance,
+      sort_best_selling: kn_settings.sort_best_selling,
+      sort_price_asc: kn_settings.sort_price_asc,
+      sort_price_desc: kn_settings.sort_price_desc,
+      sort_newest: kn_settings.sort_newest,
+      sort_oldest: kn_settings.sort_oldest
     -%}
-  {%- endpaginate -%}
+
+    {%- comment -%}
+      Le panneau de filtres est placé avant la grille : sans JavaScript il reste
+      affiché en ligne, à l’endroit où on l’attend. `kn-catalog.js` en fait
+      ensuite un drawer, et sa position dans le DOM n’a plus d’importance.
+    {%- endcomment -%}
+    {%- render 'kn-catalog-facets',
+      section_id: section.id,
+      results: collection,
+      title: kn_settings.filters_title,
+      apply_label: kn_settings.apply_label,
+      clear_label: kn_settings.clear_label,
+      close_label: kn_settings.close_label,
+      price_min_label: kn_settings.price_min_label,
+      price_max_label: kn_settings.price_max_label
+    -%}
+
+    {%- paginate collection.products by kn_settings.products_per_page -%}
+      {%- render 'kn-catalog-grid',
+        results: collection,
+        paginate: paginate,
+        active_count: kn_active,
+        show_universe: kn_settings.show_universe,
+        empty_filtered_text: kn_settings.empty_filtered_text,
+        empty_filtered_action: kn_settings.empty_filtered_action,
+        empty_text: kn_settings.empty_text,
+        empty_action: kn_settings.empty_action,
+        empty_url: kn_empty_url,
+        more_label: kn_settings.more_label,
+        progress_label: kn_settings.progress_label,
+        prev_label: kn_settings.prev_label,
+        next_label: kn_settings.next_label,
+        pagination_label: kn_settings.pagination_label
+      -%}
+    {%- endpaginate -%}
+  {%- endif -%}
 </div>
 
 {% schema %}
@@ -170,6 +124,11 @@
     { "type": "checkbox", "id": "show_breadcrumb", "label": "Afficher le fil d’Ariane", "default": true },
     { "type": "checkbox", "id": "show_universe", "label": "Sur-titre d’univers sur les cartes", "default": true, "info": "Masqué automatiquement sur la page de l’univers concerné." },
     { "type": "range", "id": "products_per_page", "label": "Produits par page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "header", "content": "Page d’univers", "info": "Une collection vers laquelle pointe une entrée du menu, et dont les sous-entrées filtrent par tag, montre d’abord ses catégories puis ses collections. Une catégorie sans pièce en ligne est masquée." },
+    { "type": "link_list", "id": "menu", "label": "Menu des univers", "default": "main-menu", "info": "Le même que celui du header." },
+    { "type": "text", "id": "hub_pieces_title", "label": "Titre des catégories", "default": "Les pièces" },
+    { "type": "text", "id": "hub_all_label", "label": "Lien vers toutes les pièces", "default": "Voir toutes les pièces" },
+    { "type": "text", "id": "hub_collections_title", "label": "Titre des collections", "default": "Les collections" },
     { "type": "header", "content": "Barre d’outils" },
     { "type": "text", "id": "filter_label", "label": "Bouton filtres", "default": "Filtrer" },
     { "type": "text", "id": "sort_label", "label": "Libellé du tri", "default": "Trier" },

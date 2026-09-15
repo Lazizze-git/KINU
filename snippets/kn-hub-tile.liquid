@@ -1,0 +1,56 @@
+{%- doc -%}
+  KINŪ — Vignette d'une page d'univers : une photographie, un nom, au plus une
+  ligne de contexte.
+
+  Reprend la colonne des univers de l'accueil (`.kn-universe`, kn-home.css)
+  — même fondu croisé au survol, même rythme de texte — au format des cartes
+  produit (3:4, DA §6) : c'est un vêtement qu'on montre, pas une bannière.
+  L'image est décorative : le nom, dans le lien, dit déjà où il mène.
+
+  @param {string} url - Destination.
+  @param {object} image - Image principale.
+  @param {object} [image_hover] - Image révélée au survol.
+  @param {string} title - Nom affiché.
+  @param {string} [note] - Ligne de contexte, en texte brut.
+  @param {boolean} [eager] - Charge l'image sans attendre (premières vignettes).
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_sizes = '(min-width: 1560px) 366px, (min-width: 1024px) calc(25vw - 40px), (min-width: 768px) calc(33.333vw - 36px), calc(50vw - 24px)'
+  assign kn_widths = '240,320,400,500,640,760,900,1100'
+  assign kn_loading = 'lazy'
+  if eager
+    assign kn_loading = 'eager'
+  endif
+-%}
+
+<a class="kn-universe kn-hub__tile kn-reveal" href="{{ url }}">
+  <div class="kn-ratio kn-universe__frame">
+    {%- if image != blank -%}
+      {{
+        image
+        | image_url: width: 1100
+        | image_tag: widths: kn_widths, sizes: kn_sizes, class: 'kn-img', alt: '', loading: kn_loading
+      }}
+      {%- if image_hover != blank -%}
+        {{
+          image_hover
+          | image_url: width: 1100
+          | image_tag:
+            widths: kn_widths,
+            sizes: kn_sizes,
+            class: 'kn-img kn-universe__img--alt',
+            alt: '',
+            loading: 'lazy'
+        }}
+      {%- endif -%}
+    {%- endif -%}
+  </div>
+
+  <div class="kn-universe__text">
+    <h3 class="kn-hub__name">{{ title | escape }}</h3>
+    {%- if note != blank -%}
+      <p class="kn-sm kn-universe__note">{{ note | escape }}</p>
+    {%- endif -%}
+  </div>
+</a>
