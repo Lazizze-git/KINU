@@ -15,6 +15,17 @@
   endif
 
   comment
+    Amendement du 15 septembre 2026 : on entre dans le site par son genre. Les
+    rubriques du menu choisi remplacent le lien unique, qui menait à toutes
+    les pièces mélangées.
+  endcomment
+  assign kn_entries = linklists[s.links_menu].links
+  assign show_entries = false
+  if has_text and kn_entries.size > 0
+    assign show_entries = true
+  endif
+
+  comment
     Maquette : voir snippets/kn-demo-grid.liquid. Sans media reglee, la
     banniere ne s'affichait pas du tout — la page d'accueil s'ouvrait donc sur
     sa deuxieme section, et le header ne pouvait pas basculer (DA R5), faute
@@ -68,7 +79,17 @@
               <span class="kn-hero__mask">
                 <h1 class="kn-hero__title">{{ s.title | escape }}</h1>
               </span>
-              {%- if show_link -%}
+              {%- if show_entries -%}
+                <ul class="kn-hero__entries" role="list">
+                  {%- for kn_entry in kn_entries -%}
+                    <li>
+                      <a class="kn-label kn-underline kn-hero__cta" href="{{ kn_entry.url }}">
+                        {{- kn_entry.title | escape -}}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- elsif show_link -%}
                 <a class="kn-label kn-underline kn-hero__cta" href="{{ link_url }}">{{ s.link_label | escape }}</a>
               {%- endif -%}
             </div>
@@ -145,15 +166,21 @@
       "info": "Laissez vide pour une bannière purement visuelle, sans voile."
     },
     {
+      "type": "link_list",
+      "id": "links_menu",
+      "label": "Entrées sous le titre",
+      "info": "Les rubriques de premier niveau du menu, Femme, Homme et Unisexe, s’affichent sous le titre : on entre dans le site par son genre. Sans menu choisi, le lien unique ci-dessous prend le relais."
+    },
+    {
       "type": "text",
       "id": "link_label",
-      "label": "Libellé du lien",
-      "default": "VOIR TOUTES LES COLLECTIONS"
+      "label": "Libellé du lien unique",
+      "info": "Utilisé seulement si aucun menu n’est choisi ci-dessus."
     },
     {
       "type": "url",
       "id": "link_url",
-      "label": "Destination du lien"
+      "label": "Destination du lien unique"
     },
     {
       "type": "range",

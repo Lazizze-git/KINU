@@ -8,12 +8,11 @@
   pièces n'est en ligne.
 
   Les brouillons ne figurent pas dans `products` : une catégorie dont toutes
-  les pièces sont en brouillon disparaît d'elle-même du panneau et de la page
-  d'univers, et revient à la première publication. Aucune page vide n'est
-  jamais proposée au visiteur.
+  les pièces sont en brouillon disparaît d'elle-même du panneau, de la barre et
+  de la page d'univers, et revient à la première publication. Aucune page vide
+  n'est jamais proposée au visiteur.
 
-  Les tags sont comparés par handle : le menu écrit « Brassi%C3%A8re » ou
-  « T-shirt », les produits « Brassière » ou « T-shirt ». Hors pagination,
+  Les tags sont comparés par handle, voir kn-link-tag. Hors pagination,
   Shopify ne parcourt que les 50 premiers produits de la collection.
 
   @param {object} link - Sous-entrée de menu.
@@ -22,30 +21,25 @@
   {%- capture kn_rank -%}{%- render 'kn-category-lead', link: kn_child -%}{%- endcapture -%}
 {%- enddoc -%}
 
+{%- capture kn_wanted -%}{%- render 'kn-link-tag', link: link -%}{%- endcapture -%}
+
 {%- liquid
+  assign kn_wanted = kn_wanted | strip
   assign kn_rank = ''
 
-  if link.type == 'collection_link' and link.object != blank
-    assign kn_base = link.object.url | append: '/'
-    assign kn_path = link.url | split: '?' | first
-    assign kn_head = kn_path | slice: 0, kn_base.size
-
-    if kn_head == kn_base
-      assign kn_wanted = kn_path | remove_first: kn_base | url_decode | handleize
-
-      for kn_product in link.object.products
-        for kn_tag in kn_product.tags
-          assign kn_have = kn_tag | handleize
-          if kn_have == kn_wanted
-            assign kn_rank = forloop.parentloop.index0
-            break
-          endif
-        endfor
-        if kn_rank != ''
+  if kn_wanted != blank
+    for kn_product in link.object.products
+      for kn_tag in kn_product.tags
+        assign kn_have = kn_tag | handleize
+        if kn_have == kn_wanted
+          assign kn_rank = forloop.parentloop.index0
           break
         endif
       endfor
-    endif
+      if kn_rank != ''
+        break
+      endif
+    endfor
   endif
 
   echo kn_rank

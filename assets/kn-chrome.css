@@ -244,6 +244,7 @@ a.kn-announce__item:hover {
    s'inverse, aucun composant n'a besoin de connaître son fond. */
 .kn-header.is-scrolled,
 .kn-header.is-nav-open,
+.kn-header.is-menu-open,
 body.kn-header--over-media .kn-header[data-kn-header-transparent='true'].is-nav-open {
   --kn-surface-bg: var(--kn-forest);
   --kn-surface-fg: var(--kn-ivory);
@@ -254,7 +255,7 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true'].is-nav-
   --kn-bubble-fg: var(--kn-forest);
 }
 
-body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is-scrolled):not(.is-nav-open) {
+body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is-scrolled):not(.is-nav-open):not(.is-menu-open) {
   --kn-surface-bg: transparent;
   --kn-surface-fg: var(--kn-ivory);
   --kn-surface-line: transparent;
@@ -326,11 +327,14 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
 
 /* DA §3.6 : au survol d'une entree, les autres s'attenuent — la survolee reste
    nette. C'est le geste tranche du brief, pas un soulignement. */
-.kn-header__nav-list:hover .kn-header__nav-link:not(:hover) {
+/* Une rubrique ouverte reste nette tant que son panneau est parcouru. */
+.kn-header__nav-list:hover .kn-header__nav-item:not(:hover):not(.is-open) > .kn-header__nav-link,
+.kn-header__nav-list:hover .kn-header__nav-item:not(:hover):not(.is-open) > .kn-header__nav-toggle {
   color: var(--kn-surface-muted);
 }
 
-.kn-header__nav-link[aria-current='page'] {
+/* `page` sur l'univers lui-même, `true` sur ses catégories et ses pièces. */
+.kn-header__nav-link[aria-current] {
   color: var(--kn-surface-accent);
 }
 
@@ -356,6 +360,242 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
      le seul acces a la navigation. */
   .kn-header__row:has(.kn-header__nav) .kn-header__lead {
     display: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4 bis. Panneaux des univers, sur ordinateur (amendement du 15/09/2026)
+   Sur telephone, le burger deplie chaque univers. Dans la barre, les univers
+   n'ouvraient rien : chacun deroule maintenant un plan vert pleine largeur
+   sous le header (R6), categories et collections en colonnes, et la
+   photographie de la ligne visee (DA §6). Ouverture 240 ms, fermeture 160 ms :
+   un panneau survole des dizaines de fois par visite ne peut pas prendre les
+   560 ms d'un tiroir.
+   -------------------------------------------------------------------------- */
+
+.kn-header__nav-item {
+  display: flex;
+  align-items: center;
+}
+
+.kn-header__nav-toggle,
+.kn-header__scrim,
+.kn-menu {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  /* Le chevron colle a son libelle : une seule rubrique a l'oeil, deux cibles
+     a la main. Sa zone deborde sur l'intervalle, pas sur le mot. */
+  .kn-header__nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--kn-space-md);
+    min-height: var(--kn-tap);
+    margin-inline-end: calc(var(--kn-space-2xs) * -1);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--kn-surface-fg);
+    cursor: pointer;
+    transition: color var(--kn-dur-2) var(--kn-ease-state);
+  }
+
+  .kn-header__nav-toggle .kn-icon {
+    opacity: 0.7;
+    transition: transform var(--kn-dur-1) var(--kn-ease-state),
+      opacity var(--kn-dur-2) var(--kn-ease-state);
+  }
+
+  .kn-header__nav-item:hover .kn-header__nav-toggle .kn-icon,
+  .kn-header__nav-item.is-open .kn-header__nav-toggle .kn-icon,
+  .kn-header__nav-toggle:focus-visible .kn-icon {
+    opacity: 1;
+  }
+
+  .kn-header__nav-item.is-open .kn-header__nav-toggle .kn-icon {
+    transform: rotate(180deg);
+  }
+
+  .kn-header__nav-link[aria-current] + .kn-header__nav-toggle {
+    color: var(--kn-surface-accent);
+  }
+
+  /* Le voile est fixe : il ne rallonge jamais la page, et kn-chrome.js le cale
+     sous le bas reel du header, barre d'annonce comprise. */
+  .kn-header__scrim {
+    position: fixed;
+    inset: var(--kn-menu-top, var(--kn-nav-top)) 0 0;
+    z-index: 0;
+    display: block;
+    background-color: var(--kn-scrim);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity var(--kn-dur-2) var(--kn-ease-state),
+      visibility 0s linear var(--kn-dur-2);
+  }
+
+  .kn-header.is-menu-open .kn-header__scrim {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  /* Ouvert au clic ou au clavier, le panneau se referme d'un clic a cote. */
+  .kn-header[data-kn-menu-mode='click'] .kn-header__scrim {
+    pointer-events: auto;
+  }
+
+  .kn-menu {
+    position: absolute;
+    inset-inline: 0;
+    inset-block-start: 100%;
+    z-index: 1;
+    max-height: calc(100dvh - var(--kn-menu-top, var(--kn-nav-top)));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    opacity: 0;
+    clip-path: inset(0 0 100% 0);
+    transition: opacity var(--kn-dur-1) var(--kn-ease-state),
+      clip-path var(--kn-dur-1) var(--kn-ease-state),
+      display var(--kn-dur-1) allow-discrete;
+  }
+
+  .kn-header__nav-item.is-open > .kn-menu {
+    display: block;
+    opacity: 1;
+    clip-path: inset(0);
+    transition-duration: var(--kn-dur-2);
+    transition-timing-function: var(--kn-ease-out);
+  }
+
+  @starting-style {
+    .kn-header__nav-item.is-open > .kn-menu {
+      opacity: 0;
+      clip-path: inset(0 0 100% 0);
+    }
+  }
+
+  /* D'un univers a l'autre, le panneau change sans rejouer son ouverture. */
+  .kn-header[data-kn-menu-instant] .kn-menu,
+  .kn-header[data-kn-menu-instant] .kn-header__scrim {
+    transition: none;
+  }
+
+  /* Sans JavaScript, le survol et le focus suffisent a derouler le panneau. */
+  html:not([data-kn-js]) .kn-header__nav-item:is(:hover, :focus-within) > .kn-menu {
+    display: block;
+    opacity: 1;
+    clip-path: none;
+  }
+
+  .kn-menu__inner {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--kn-grid-gap);
+    align-items: start;
+    padding-block: var(--kn-space-xl) var(--kn-space-2xl);
+  }
+
+  .kn-menu__intro {
+    grid-column: 1 / span 3;
+    display: grid;
+    justify-items: start;
+    gap: var(--kn-space-sm);
+  }
+
+  .kn-menu__group--pieces {
+    grid-column: 5 / span 3;
+  }
+
+  .kn-menu__group--collections {
+    grid-column: 8 / span 2;
+  }
+
+  .kn-menu__inner:not(:has(.kn-menu__group--pieces)) .kn-menu__group--collections {
+    grid-column: 5 / span 3;
+  }
+
+  .kn-menu__media {
+    grid-column: 11 / span 2;
+  }
+
+  .kn-menu__overline,
+  .kn-menu__label,
+  .kn-menu__note {
+    margin: 0;
+    color: var(--kn-surface-muted);
+  }
+
+  .kn-menu__label {
+    margin-block-end: var(--kn-space-sm);
+  }
+
+  .kn-menu__note {
+    max-width: 34ch;
+  }
+
+  .kn-menu__all {
+    margin-block-start: var(--kn-space-2xs);
+  }
+
+  .kn-menu__list {
+    display: grid;
+    justify-items: start;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Un nom de rayon, pas un titre : casse normale, a l'echelle h3, comme les
+     vignettes de la page d'univers. */
+  .kn-menu__link {
+    display: inline-block;
+    padding-block: var(--kn-space-3xs);
+    font-family: var(--kn-font-ui);
+    font-size: var(--kn-fs-h3);
+    font-weight: var(--kn-fw-medium);
+    line-height: var(--kn-lh-tight);
+    letter-spacing: -0.015em;
+    color: var(--kn-surface-fg);
+    transition: color var(--kn-dur-2) var(--kn-ease-state);
+  }
+
+  /* R7 — la ligne visee reste nette, les autres s'effacent. */
+  .kn-menu__list:focus-within .kn-menu__link {
+    color: var(--kn-faint-invert);
+  }
+
+  .kn-menu__list:focus-within .kn-menu__link:focus-visible {
+    color: var(--kn-surface-fg);
+  }
+
+  .kn-menu__frame {
+    --kn-ratio: var(--kn-ratio-portrait);
+  }
+
+  /* Fondu croise vers la photographie de la ligne visee (DA §6, 320 ms). */
+  .kn-menu__img {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity var(--kn-dur-3) var(--kn-ease-state);
+  }
+
+  .kn-menu__img.is-active {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+  .kn-menu__list:hover .kn-menu__link {
+    color: var(--kn-faint-invert);
+  }
+
+  .kn-menu__list:hover .kn-menu__link:hover {
+    color: var(--kn-surface-fg);
   }
 }
 
@@ -403,6 +643,7 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
 /* La permutation n'a lieu que si une version claire a bien été fournie :
    sinon le logo sombre disparaîtrait purement et simplement sur fond vert. */
 .kn-header.is-scrolled [data-kn-logo-pair] .kn-header__logo-img--dark,
+.kn-header.is-menu-open [data-kn-logo-pair] .kn-header__logo-img--dark,
 .kn-header.is-nav-open [data-kn-logo-pair] .kn-header__logo-img--dark,
 body.kn-header--over-media
   .kn-header[data-kn-header-transparent='true']
@@ -412,6 +653,7 @@ body.kn-header--over-media
 }
 
 .kn-header.is-scrolled [data-kn-logo-pair] .kn-header__logo-img--light,
+.kn-header.is-menu-open [data-kn-logo-pair] .kn-header__logo-img--light,
 .kn-header.is-nav-open [data-kn-logo-pair] .kn-header__logo-img--light,
 body.kn-header--over-media
   .kn-header[data-kn-header-transparent='true']

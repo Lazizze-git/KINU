@@ -1,0 +1,66 @@
+{%- doc -%}
+  KINŪ — Les catégories d'un univers, en une ligne, au-dessus de la grille.
+
+  Sur une catégorie (Brassières) comme sur la liste complète d'un univers, le
+  visiteur passe d'une catégorie à l'autre sans remonter à la page d'univers.
+  « Tout » mène à la liste complète. L'entrée de la page courante porte
+  `aria-current`. Seules les catégories qui ont une pièce en ligne figurent,
+  comme dans le burger, dans la barre et sur la page d'univers.
+
+  @param {object} link - Entrée de premier niveau du menu qui mène à la collection.
+  @param {string} all_label - Libellé de la liste complète.
+  @param {string} all_url - Adresse de la liste complète.
+  @param {string} label - Nom accessible de la navigation.
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_count = 0
+  assign kn_current = ''
+  if current_tags.size == 1
+    assign kn_current = current_tags | join: '' | handleize
+  endif
+-%}
+
+{%- capture kn_items -%}
+  {%- for kn_child in link.links -%}
+    {%- capture kn_rank -%}{%- render 'kn-category-lead', link: kn_child -%}{%- endcapture -%}
+    {%- assign kn_rank = kn_rank | strip -%}
+    {%- if kn_rank != blank -%}
+      {%- capture kn_tag -%}{%- render 'kn-link-tag', link: kn_child -%}{%- endcapture -%}
+      {%- liquid
+        assign kn_tag = kn_tag | strip
+        assign kn_count = kn_count | plus: 1
+      -%}
+      <li>
+        <a
+          class="kn-label kn-rayons__link"
+          href="{{ kn_child.url }}"
+          {% if kn_current != blank and kn_tag == kn_current %}
+            aria-current="page"
+          {% endif %}
+        >
+          {{- kn_child.title | escape -}}
+        </a>
+      </li>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+
+{%- if kn_count > 0 -%}
+  <nav class="kn-rayons" aria-label="{{ label | escape }}">
+    <ul class="kn-rayons__list" role="list">
+      <li>
+        <a
+          class="kn-label kn-rayons__link"
+          href="{{ all_url }}"
+          {% if current_tags == blank %}
+            aria-current="page"
+          {% endif %}
+        >
+          {{- all_label | escape -}}
+        </a>
+      </li>
+      {{- kn_items -}}
+    </ul>
+  </nav>
+{%- endif -%}

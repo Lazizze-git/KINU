@@ -331,6 +331,13 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 > défilement et `vh` laisserait un décalage permanent. Le titre reste ancré en
 > bas de cadre, ce qui suffit à signaler qu'il y a une suite.
 
+> **Amendement du 15 septembre 2026 — on entre par son genre.** Le lien
+> « Voir toutes les collections » menait à toutes les pièces mélangées, alors
+> que le client veut qu'on consulte les collections par genre. Les rubriques
+> du menu, Femme, Homme et Unisexe, le remplacent sous le titre, à la même
+> échelle, avec le même soulignement révélé, décalées de 60 ms. Le réglage
+> « Entrées sous le titre » choisit le menu ; sans menu, le lien unique revient.
+
 ---
 
 ## 7. Composants clés
@@ -365,8 +372,26 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 > vrac. Qui veut voir les collections femme va chez Femme. Le lien de service
 > sort de la barre et du panneau, et ses réglages (`secondary_label`,
 > `secondary_link`) du schéma du header. La page « Toutes les collections »
-> reste dans le thème ; le bouton de la bannière d'accueil y mène toujours.
+> reste dans le thème ; le bouton de la bannière d'accueil, qui y menait, a
+> cédé la place aux rubriques du menu (§6).
 > Voir §7.2 et §7.7 pour ce qui la remplace.
+
+> **Amendement du 15 septembre 2026 — un panneau par univers sur ordinateur.**
+> Sur téléphone, le burger déplie chaque univers en catégories puis en
+> collections. Sur ordinateur, la barre ne donnait qu'un lien direct : aucun
+> niveau de plus, et les collections de chaque genre restaient hors de vue.
+> Chaque rubrique qui a des catégories ou des collections porte désormais un
+> chevron et déroule sous le header un plan vert pleine largeur (R6) : le nom
+> de sa collection, sa phrase et « Tout voir », ses catégories, ses
+> collections, et la photographie de la ligne visée en fondu croisé (§6). Le
+> survol l'ouvre après 90 ms et le referme 180 ms après la sortie ; le chevron
+> l'ouvre au clic, donc au tactile et au clavier, et Échap le referme. Le
+> header passe au vert pendant l'ouverture, comme au scroll. Ouverture en
+> 240 ms, fermeture en 160 ms : un panneau survolé des dizaines de fois par
+> visite ne peut pas prendre les 560 ms d'un tiroir. La rubrique de l'univers
+> courant passe en accent sur ses catégories et sur ses pièces, pas seulement
+> sur sa propre page.
+
 - Logo : wordmark `KINŪ`, hauteur 20 px mobile / 24 px desktop, aligné à gauche sur desktop, centré sur mobile.
 - Icônes : trait **1,5 px**, taille 20 px, zone tactile 44 × 44 px, sans libellé. Le compteur du panier est une pastille verte de 16 px, chiffre 10 px DM Sans 500 en ivoire.
 - Comportement au scroll : voir **R5**. Header sticky, jamais masqué au scroll descendant.
@@ -538,6 +563,7 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 
 - **Collection** : en-tête sur la surface du territoire (R3) avec `H1` = la catégorie (`Femme`, en casse normale — le §4.2 et le §9 interdisent les titres éditoriaux en capitales, et c'est cette règle-là qui prime ; le libellé reste éditable si le client préfère les majuscules), sur-titre = la collection (`FLUID-MOTION`), une phrase de contexte max 68ch. Filtres dans un drawer latéral (pas de sidebar permanente), déclenché par `FILTRER (2)` en `--kn-fs-label`. Tri à droite. Filet 1 px sous la barre.
 - **Page d'univers à étages** (amendement du 15 septembre 2026, demande client) : en arrivant sur Femme, on ne voit plus toutes les pièces. Sous l'en-tête viennent **Les pièces** — une vignette 3:4 par catégorie du menu, photographiée par sa première pièce en ligne, fondu croisé au survol — puis **Les collections** de l'univers, au même format. Une catégorie mène à ses pièces (Brassière Everyday, Brassière Performance) ; « Voir toutes les pièces » et la vignette de l'univers mènent à la grille complète, reconnue au tri explicite (`?sort_by=`). Trier, filtrer ou choisir une catégorie rend la main à la grille ; « Tout effacer » y garde le tri. Grille des vignettes : 2 colonnes téléphone, 3 tablette, 4 ordinateur. Sans catégorie en ligne (Homme aujourd'hui), la page reste la grille. Une catégorie porte, en titre comme au fil d'Ariane, le nom de son entrée de menu (« Brassières ») plutôt que celui de son tag (« Brassière »). Sans image de collection, la vignette de l'univers prend la première pièce qu'aucune catégorie ne montre déjà.
+- **Ligne de catégories et fil de la fiche** (amendement du 15 septembre 2026) : sur une catégorie comme sur la liste complète d'un univers, une ligne « Tout · Leggings · Shorts · T-shirts · Brassières » passe sous l'en-tête, à l'échelle d'étiquette. La page courante reprend la couleur du texte et un filet de 1 px. Sur la fiche produit, le fil d'Ariane s'arrête à la catégorie de la pièce, en lien : « Accueil / Femme / Brassières », comme l'exemple du paragraphe suivant le prévoyait déjà. Le nom de la pièce est le titre juste en dessous.
 - **Fil d'Ariane** : `Accueil / Femme / T-shirts` en `--kn-fs-label` `--kn-grey`, séparateur `/`, présent sur collection et produit (exigence du brief).
 - **Produit** : **deux colonnes desktop** — galerie 7/12 à gauche, colonne de lecture 5/12 à droite qui enchaîne achat puis caractéristiques ; une colonne mobile (galerie plein cadre, puis achat, puis caractéristiques). Le placement est explicite en grille : l'ordre du DOM reste galerie / achat / caractéristiques, qui est l'ordre de lecture juste sur petit écran et au clavier. Les accordéons se replient sur les deux formats, Description ouverte par défaut. Sélecteurs de taille en carrés de 44 px, filet 1 px, sélection = remplissage encre. La quantité est un choix comme les autres : même étiquette en capitales grises que `COULEUR` et `TAILLE`, contrôle dessous, puis le bouton d'ajout pleine largeur — jamais un bloc sans nom posé à côté du bouton. Accordéons (Description / Matière & entretien / Livraison) en filets 1 px, sans fond, chevrons 12 px.
 

@@ -14,6 +14,7 @@
   @param {string} [home_label] - Libellé du premier maillon. Défaut « Accueil ».
   @param {string} [nav_label] - Libellé accessible du `<nav>`. Défaut « Fil d’Ariane ».
   @param {string} [class] - Classes supplémentaires sur le `<nav>`.
+  @param {object[]} [nav_links] - Entrées de premier niveau du menu. Par défaut, le menu principal.
 
   @example
   {% render 'kn-breadcrumb', rule: true %}
@@ -69,6 +70,9 @@
   assign kn_mid_url = ''
   assign kn_last_label = current_title
   assign kn_last_url = ''
+  assign kn_leaf_link = false
+  assign kn_rayon_label = ''
+  assign kn_rayon_url = ''
 
   if product != blank
     assign kn_last_label = kn_last_label | default: product.title
@@ -76,6 +80,51 @@
     if kn_category != blank
       assign kn_mid_label = kn_category
       assign kn_mid_url = kn_universe.url
+
+      comment
+        Amendement du 15 septembre : la pièce remonte à sa catégorie, comme le
+        veut le §7.7 — « Accueil / Femme / Brassières ». La catégorie est la
+        sous-entrée du menu de l'univers dont la pièce porte le tag ; dans le
+        fil, c'est un lien. Le nom de la pièce est déjà le titre de la page,
+        juste en dessous. Sans catégorie trouvée, le fil garde ce nom.
+      endcomment
+      if current_title == blank
+        assign kn_nav = nav_links
+        if kn_nav == blank
+          assign kn_nav = linklists['main-menu'].links
+        endif
+        for kn_top in kn_nav
+          if kn_top.type != 'collection_link' or kn_top.object.handle != kn_universe.handle
+            continue
+          endif
+          for kn_child in kn_top.links
+            capture kn_child_tag
+              render 'kn-link-tag', link: kn_child
+            endcapture
+            assign kn_child_tag = kn_child_tag | strip
+            if kn_child_tag == blank
+              continue
+            endif
+            for kn_tag in product.tags
+              assign kn_have = kn_tag | handleize
+              if kn_have == kn_child_tag
+                assign kn_rayon_label = kn_child.title
+                assign kn_rayon_url = kn_child.url
+                break
+              endif
+            endfor
+            if kn_rayon_label != blank
+              break
+            endif
+          endfor
+          break
+        endfor
+        if kn_rayon_label != blank
+          assign kn_last_label = kn_rayon_label
+          assign kn_last_url = kn_rayon_url
+          assign kn_leaf_link = true
+        endif
+      endif
     endif
   elsif collection != blank
     assign kn_last_url = collection.url
@@ -125,7 +174,11 @@
         </li>
       {%- endif -%}
       <li class="kn-breadcrumb__item kn-label">
-        <span class="kn-breadcrumb__current" aria-current="page">{{ kn_last_label }}</span>
+        {%- if kn_leaf_link -%}
+          <a class="kn-breadcrumb__link" href="{{ kn_last_url }}">{{ kn_last_label }}</a>
+        {%- else -%}
+          <span class="kn-breadcrumb__current" aria-current="page">{{ kn_last_label }}</span>
+        {%- endif -%}
       </li>
     </ol>
     {%- if rule -%}
@@ -157,6 +210,14 @@
             "name": {{ kn_last_label | json }},
             "item": {{ request.origin | append: kn_last_url | json }}
           }
+          {%- if kn_leaf_link -%}
+            ,{
+              "@type": "ListItem",
+              "position": 4,
+              "name": {{ product.title | json }},
+              "item": {{ request.origin | append: product.url | json }}
+            }
+          {%- endif -%}
         {%- else -%}
           ,{
             "@type": "ListItem",

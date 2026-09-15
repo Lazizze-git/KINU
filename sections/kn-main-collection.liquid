@@ -35,18 +35,34 @@
     étages ne s'affichait donc nulle part.
   endcomment
   assign kn_nav_links = linklists[kn_settings.menu].links
+  assign kn_universe_link = nil
+  for kn_link in kn_nav_links
+    if kn_link.type == 'collection_link' and kn_link.url == collection.url
+      assign kn_universe_link = kn_link
+      break
+    endif
+  endfor
+
   assign kn_hub = ''
-  if kn_active == 0 and current_tags == blank and collection.sort_by == blank
-    for kn_link in kn_nav_links
-      if kn_link.type == 'collection_link' and kn_link.url == collection.url
-        capture kn_hub
-          render 'kn-collection-hub', link: kn_link, pieces_title: kn_settings.hub_pieces_title, all_label: kn_settings.hub_all_label, collections_title: kn_settings.hub_collections_title
-        endcapture
-        break
-      endif
-    endfor
+  if kn_universe_link != nil and kn_active == 0 and current_tags == blank and collection.sort_by == blank
+    capture kn_hub
+      render 'kn-collection-hub', link: kn_universe_link, pieces_title: kn_settings.hub_pieces_title, all_label: kn_settings.hub_all_label, collections_title: kn_settings.hub_collections_title
+    endcapture
   endif
   assign kn_hub = kn_hub | strip
+
+  comment
+    Hors de la page à étages, la grille d'un univers garde ses catégories à
+    portée : « Tout · Leggings · Shorts… » sous l'en-tête, pour passer de
+    l'une à l'autre sans remonter. Voir snippets/kn-category-strip.liquid.
+  endcomment
+  assign kn_rayons = ''
+  if kn_universe_link != nil and kn_hub == blank
+    assign kn_all_url = collection.url | append: '?sort_by=' | append: collection.default_sort_by
+    capture kn_rayons
+      render 'kn-category-strip', link: kn_universe_link, all_label: kn_settings.rayons_all_label, all_url: kn_all_url, label: kn_settings.hub_pieces_title
+    endcapture
+  endif
 -%}
 
 {%- comment -%}
@@ -63,7 +79,8 @@
   {%- render 'kn-collection-head',
     blocks: section.blocks,
     show_breadcrumb: kn_settings.show_breadcrumb,
-    nav_links: kn_nav_links
+    nav_links: kn_nav_links,
+    rayons: kn_rayons
   -%}
 
   {%- if kn_hub != blank -%}
@@ -138,6 +155,7 @@
     { "type": "text", "id": "hub_pieces_title", "label": "Titre des catégories", "default": "Les pièces" },
     { "type": "text", "id": "hub_all_label", "label": "Lien vers toutes les pièces", "default": "Voir toutes les pièces" },
     { "type": "text", "id": "hub_collections_title", "label": "Titre des collections", "default": "Les collections" },
+    { "type": "text", "id": "rayons_all_label", "label": "Premier lien de la ligne de catégories", "default": "Tout", "info": "Sur une catégorie ou sur la liste complète d’un univers, la ligne de catégories s’ouvre sur ce lien vers toutes les pièces." },
     { "type": "header", "content": "Barre d’outils" },
     { "type": "text", "id": "filter_label", "label": "Bouton filtres", "default": "Filtrer" },
     { "type": "text", "id": "sort_label", "label": "Libellé du tri", "default": "Trier" },

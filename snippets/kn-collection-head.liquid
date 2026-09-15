@@ -6,6 +6,7 @@
   @param {object[]} blocks - Les blocs « Univers » de la section collection.
   @param {boolean} show_breadcrumb - Affiche le fil d'Ariane.
   @param {object[]} [nav_links] - Entrées de premier niveau du menu des univers.
+  @param {string} [rayons] - Ligne de catégories déjà rendue, posée sous le titre.
 {%- enddoc -%}
 
 {%- liquid
@@ -86,22 +87,20 @@
       Le fil d'Ariane reprend le même nom.
     endcomment
     if current_tags.size == 1
-      assign kn_base = collection.url | append: '/'
       assign kn_wanted = kn_tag | handleize
       for kn_top in nav_links
         if kn_top.url != collection.url
           continue
         endif
         for kn_child in kn_top.links
-          assign kn_path = kn_child.url | split: '?' | first
-          assign kn_head = kn_path | slice: 0, kn_base.size
-          if kn_head == kn_base
-            assign kn_have = kn_path | remove_first: kn_base | url_decode | handleize
-            if kn_have == kn_wanted
-              assign kn_title = kn_child.title
-              assign kn_crumb = kn_child.title
-              break
-            endif
+          capture kn_have
+            render 'kn-link-tag', link: kn_child
+          endcapture
+          assign kn_have = kn_have | strip
+          if kn_have != blank and kn_have == kn_wanted
+            assign kn_title = kn_child.title
+            assign kn_crumb = kn_child.title
+            break
           endif
         endfor
         break
@@ -115,5 +114,6 @@
   title: kn_title,
   intro: kn_intro,
   show_breadcrumb: show_breadcrumb,
-  current_title: kn_crumb
+  current_title: kn_crumb,
+  rayons: rayons
 -%}

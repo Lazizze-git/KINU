@@ -1,0 +1,25 @@
+{%- doc -%}
+  KINŪ — Tag d'une entrée de menu filtrée par tag, écrit en handle.
+
+  « Brassières » → /collections/fluid-motion/Brassi%C3%A8re → `brassiere`.
+  N'écrit rien si l'entrée ne mène pas à une collection filtrée par tag.
+  Le résultat se compare au handle d'un tag de produit (`tag | handleize`) :
+  le menu et les fiches n'écrivent pas toujours le tag de la même façon
+  (« T shirt » contre « T-shirt »), leur handle est le même.
+
+  @param {object} link - Entrée de menu.
+
+  @example
+  {%- capture kn_tag -%}{%- render 'kn-link-tag', link: kn_child -%}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  if link.type == 'collection_link' and link.object != blank
+    assign kn_base = link.object.url | append: '/'
+    assign kn_path = link.url | split: '?' | first
+    assign kn_head = kn_path | slice: 0, kn_base.size
+    if kn_head == kn_base
+      echo kn_path | remove_first: kn_base | url_decode | handleize
+    endif
+  endif
+-%}

@@ -8,6 +8,7 @@
   @param {string} intro - Phrase de contexte. Peut être vide.
   @param {boolean} show_breadcrumb - Affiche le fil d’Ariane.
   @param {string} [current_title] - Dernier maillon du fil d’Ariane, quand il diffère du calcul par défaut.
+  @param {string} [rayons] - Ligne de catégories déjà rendue, posée sous la phrase de contexte.
 {%- enddoc -%}
 
 {%- comment -%}
@@ -29,4 +30,6 @@
   {%- if intro != blank -%}
     <div class="kn-lead kn-collection__intro">{{ intro }}</div>
   {%- endif -%}
+
+  {{- rayons -}}
 </header>

@@ -5,8 +5,7 @@
       "settings": {
         "image_alt": "Coureuse en veste technique KINŪ sur une route de montagne suisse",
         "title": "Le vêtement technique, à l’échelle du geste.",
-        "link_label": "VOIR TOUTES LES COLLECTIONS",
-        "link_url": "shopify://collections/all",
+        "links_menu": "main-menu",
         "scrim": 30
       }
     },

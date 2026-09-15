@@ -4,7 +4,9 @@
   Ordinateur : [logo] — [Femme · Homme · Unisexe] — [icones], le burger cede la
   place aux libelles (amendement du 27 aout, DIRECTION-ARTISTIQUE.md §7.1).
   « Toutes les collections » a quitte la barre le 15 septembre : les
-  collections se rangent desormais sous chaque univers.
+  collections se rangent desormais sous chaque univers. Chaque univers qui a
+  des categories ou des collections deroule son panneau sous le header
+  (kn-header-menu, amendement du 15 septembre).
   Hauteur constante, sticky, jamais masqué. Seule la couleur bouge au scroll
   (geste signature, DIRECTION-ARTISTIQUE.md §3.4 R5 et §7.1).
 {%- endcomment -%}
@@ -98,14 +100,75 @@
       <nav class="kn-header__nav" aria-label="{{ section.settings.nav_dialog_label | escape }}">
         <ul class="kn-header__nav-list" role="list">
           {%- for kn_link in kn_nav_links -%}
-            <li>
+            {%- liquid
+              comment
+                Rubrique courante : la page de l'univers, l'une de ses
+                catégories, ou une pièce qui lui appartient. `page` pour
+                l'adresse exacte, `true` pour tout ce qui se range dessous.
+              endcomment
+              assign kn_current = ''
+              if kn_link.current
+                assign kn_current = 'page'
+              elsif kn_link.type == 'collection_link' and kn_link.object != blank
+                if collection.handle == kn_link.object.handle
+                  assign kn_current = 'true'
+                elsif product != blank
+                  for kn_group in product.collections
+                    if kn_group.handle == kn_link.object.handle
+                      assign kn_current = 'true'
+                      break
+                    endif
+                  endfor
+                endif
+              endif
+
+              assign kn_overline = ''
+              assign kn_key = kn_link.title | downcase | strip
+              for kn_block in section.blocks
+                assign kn_block_key = kn_block.settings.label | downcase | strip
+                if kn_block_key == kn_key
+                  assign kn_overline = kn_block.settings.overline
+                  break
+                endif
+              endfor
+
+              assign kn_menu_id = 'KnMenu-' | append: section.id | append: '-' | append: forloop.index
+            -%}
+            {%- capture kn_menu -%}
+              {%- render 'kn-header-menu',
+                link: kn_link,
+                id: kn_menu_id,
+                overline: kn_overline,
+                view_all_label: section.settings.label_view_all,
+                pieces_label: section.settings.label_pieces,
+                collections_label: section.settings.label_collections
+              -%}
+            {%- endcapture -%}
+            {%- assign kn_menu = kn_menu | strip -%}
+
+            <li class="kn-header__nav-item"{% if kn_menu != blank %} data-kn-menu{% endif %}>
               <a
                 class="kn-header__nav-link"
                 href="{{ kn_link.url }}"
-                {% if kn_link.current %}
-                  aria-current="page"
+                {% if kn_current != blank %}
+                  aria-current="{{ kn_current }}"
                 {% endif %}
               >{{ kn_link.title | escape }}</a>
+              {%- if kn_menu != blank -%}
+                <button
+                  type="button"
+                  class="kn-header__nav-toggle"
+                  aria-expanded="false"
+                  aria-controls="{{ kn_menu_id }}"
+                  data-kn-menu-toggle
+                >
+                  {%- render 'kn-icon', name: 'chevron', size: 14 -%}
+                  <span class="kn-visually-hidden">
+                    {{- kn_link.title | escape }}, {{ section.settings.label_menu_toggle | escape -}}
+                  </span>
+                </button>
+                {{ kn_menu }}
+              {%- endif -%}
             </li>
           {%- endfor -%}
         </ul>
@@ -161,6 +224,9 @@
       {%- endif -%}
     </div>
   </div>
+
+  {%- comment -%} Voile du panneau déroulant, sous le header (DA §3.4 R6). {%- endcomment -%}
+  <div class="kn-header__scrim" data-kn-menu-scrim aria-hidden="true"></div>
 </div>
 
 {%- render 'kn-nav-panel', section: section -%}
@@ -234,6 +300,13 @@
       "default": "Collections"
     },
     {
+      "type": "text",
+      "id": "label_pieces",
+      "label": "Intitulé des catégories d’un univers",
+      "info": "Sur ordinateur, colonne des catégories dans le panneau déroulant de chaque univers.",
+      "default": "Pièces"
+    },
+    {
       "type": "link_list",
       "id": "legal_menu",
       "label": "Mentions légales du panneau",
@@ -266,6 +339,13 @@
       "id": "nav_dialog_label",
       "label": "Nom du panneau de navigation",
       "default": "Navigation principale"
+    },
+    {
+      "type": "text",
+      "id": "label_menu_toggle",
+      "label": "Chevron d’un univers dans la barre",
+      "info": "Lu par les lecteurs d’écran après le nom de l’univers.",
+      "default": "pièces et collections"
     },
     {
       "type": "text",

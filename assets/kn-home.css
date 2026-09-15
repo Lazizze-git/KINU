@@ -282,6 +282,34 @@ body.kn-header--over-media .kn-hero {
   animation: kn-hero-parait var(--kn-dur-4) var(--kn-ease-out) 320ms both;
 }
 
+/* Amendement du 15/09/2026 : les rubriques du menu remplacent le lien unique.
+   Meme echelle, meme soulignement revele, entrees decalees de 60 ms (DA §8).
+   Le lien mesure 13 px de haut : un pseudo-element porte sa zone tactile a
+   45 px sans deplacer la ligne, comme dans le fil d'Ariane. */
+.kn-hero__entries {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--kn-space-lg);
+  row-gap: var(--kn-space-sm);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kn-hero__entries .kn-hero__cta::before {
+  content: "";
+  position: absolute;
+  inset: -16px calc(var(--kn-space-lg) / -2);
+}
+
+.kn-hero__entries li:nth-child(2) .kn-hero__cta {
+  animation-delay: 380ms;
+}
+
+.kn-hero__entries li:nth-child(n + 3) .kn-hero__cta {
+  animation-delay: 440ms;
+}
+
 .kn-hero__scrim {
   animation: kn-hero-voile var(--kn-dur-2) var(--kn-ease-state) both;
 }

@@ -440,6 +440,47 @@
   margin-bottom: 0;
 }
 
+/* Ligne de categories (amendement du 15/09/2026). Sous l'en-tete d'une
+   categorie ou de la liste complete d'un univers : on passe de l'une a
+   l'autre sans remonter. Echelle d'etiquette, comme le fil d'Ariane. Les
+   autres entrees restent attenuees ; la page courante reprend la couleur du
+   texte et un filet de 1 px, qui la designe sans rien deplacer. */
+.kn-rayons {
+  margin-block-start: var(--kn-space-md);
+}
+
+.kn-rayons__list {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--kn-space-md);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kn-rayons__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--kn-tap);
+  color: var(--kn-surface-muted);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: var(--kn-stroke);
+  text-underline-offset: 6px;
+  transition: color var(--kn-dur-2) var(--kn-ease-state),
+    text-decoration-color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-rayons__link:hover,
+.kn-rayons__link:focus-visible {
+  color: var(--kn-surface-fg);
+}
+
+.kn-rayons__link[aria-current] {
+  color: var(--kn-surface-fg);
+  text-decoration-color: currentColor;
+}
+
 /* --------------------------------------------------------------------------
    4. Barre d'outils (DA §7.7) — filet bord à bord, pas de sidebar
    -------------------------------------------------------------------------- */
