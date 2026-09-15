@@ -25,6 +25,7 @@
 {%- liquid
   assign kn_all_url = collection.url | append: '?sort_by=' | append: collection.default_sort_by
   assign kn_tiles = 0
+  assign kn_used = ','
 -%}
 
 {%- capture kn_categories -%}
@@ -41,6 +42,7 @@
         assign kn_tiles = kn_tiles | plus: 1
       -%}
       {%- for kn_lead in kn_child.object.products offset: kn_offset limit: 1 -%}
+        {%- assign kn_used = kn_used | append: kn_lead.id | append: ',' -%}
         <li>
           {%- render 'kn-hub-tile',
             url: kn_child.url,
@@ -58,7 +60,23 @@
 {%- if kn_tiles > 0 -%}
   {%- capture kn_collections -%}
     {%- liquid
-      assign kn_cover = collection.image | default: collection.products.first.featured_image
+      comment
+        Sans image de collection, la vignette de l'univers prend la première
+        pièce qu'aucune catégorie ne montre déjà : deux fois la même
+        photographie l'une sous l'autre ne disent pas deux choses.
+      endcomment
+      assign kn_cover = collection.image
+      if kn_cover == blank
+        for kn_product in collection.products
+          assign kn_key = ',' | append: kn_product.id | append: ','
+          if kn_used contains kn_key or kn_product.featured_image == blank
+            continue
+          endif
+          assign kn_cover = kn_product.featured_image
+          break
+        endfor
+      endif
+      assign kn_cover = kn_cover | default: collection.products.first.featured_image
       assign kn_note = collection.description | strip_html | truncatewords: 14
     -%}
     <li>

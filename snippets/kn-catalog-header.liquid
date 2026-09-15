@@ -7,6 +7,7 @@
   @param {string} title - Titre H1, ex. « Femme ».
   @param {string} intro - Phrase de contexte. Peut être vide.
   @param {boolean} show_breadcrumb - Affiche le fil d’Ariane.
+  @param {string} [current_title] - Dernier maillon du fil d’Ariane, quand il diffère du calcul par défaut.
 {%- enddoc -%}
 
 {%- comment -%}
@@ -16,7 +17,7 @@
 {%- endcomment -%}
 <header class="kn-container kn-collection__head">
   {%- if show_breadcrumb -%}
-    {%- render 'kn-breadcrumb' -%}
+    {%- render 'kn-breadcrumb', current_title: current_title -%}
   {%- endif -%}
 
   {%- if eyebrow != blank -%}

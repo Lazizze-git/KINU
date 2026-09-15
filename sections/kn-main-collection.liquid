@@ -34,9 +34,10 @@
     blank. Sa taille, nil elle aussi, n'est jamais égale à zéro, et la page à
     étages ne s'affichait donc nulle part.
   endcomment
+  assign kn_nav_links = linklists[kn_settings.menu].links
   assign kn_hub = ''
   if kn_active == 0 and current_tags == blank and collection.sort_by == blank
-    for kn_link in linklists[kn_settings.menu].links
+    for kn_link in kn_nav_links
       if kn_link.type == 'collection_link' and kn_link.url == collection.url
         capture kn_hub
           render 'kn-collection-hub', link: kn_link, pieces_title: kn_settings.hub_pieces_title, all_label: kn_settings.hub_all_label, collections_title: kn_settings.hub_collections_title
@@ -59,7 +60,11 @@
     data-kn-section-id="{{ section.id }}"
   {% endif %}
 >
-  {%- render 'kn-collection-head', blocks: section.blocks, show_breadcrumb: kn_settings.show_breadcrumb -%}
+  {%- render 'kn-collection-head',
+    blocks: section.blocks,
+    show_breadcrumb: kn_settings.show_breadcrumb,
+    nav_links: kn_nav_links
+  -%}
 
   {%- if kn_hub != blank -%}
     {{ kn_hub }}
