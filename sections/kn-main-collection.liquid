@@ -29,9 +29,13 @@
     collections — voir snippets/kn-collection-hub.liquid. Dès qu'un visiteur
     trie, filtre ou choisit une catégorie, il demande des pièces : la grille
     reprend la main.
+
+    `current_tags` vaut nil tant qu'aucun tag n'est choisi : on le compare à
+    blank. Sa taille, nil elle aussi, n'est jamais égale à zéro, et la page à
+    étages ne s'affichait donc nulle part.
   endcomment
   assign kn_hub = ''
-  if kn_active == 0 and current_tags.size == 0 and collection.sort_by == blank
+  if kn_active == 0 and current_tags == blank and collection.sort_by == blank
     for kn_link in linklists[kn_settings.menu].links
       if kn_link.type == 'collection_link' and kn_link.url == collection.url
         capture kn_hub
