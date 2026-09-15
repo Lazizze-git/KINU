@@ -17,6 +17,17 @@
   if settings.cart_type == 'drawer' and template.name != 'cart'
     assign kn_use_drawer = true
   endif
+
+  comment
+    Libellés : le réglage de l'éditeur s'il est rempli, sinon celui du thème,
+    traduit dans chaque langue (locales, espace « kinu »).
+  endcomment
+  assign kn_label_pieces = 'kinu.nav.pieces' | t
+  assign kn_label_pieces = section.settings.label_pieces | default: kn_label_pieces
+  assign kn_label_collections = 'kinu.nav.collections' | t
+  assign kn_label_collections = section.settings.label_collections | default: kn_label_collections
+  assign kn_label_menu_toggle = 'kinu.nav.menu_toggle' | t
+  assign kn_label_menu_toggle = section.settings.label_menu_toggle | default: kn_label_menu_toggle
 -%}
 
 {%- comment -%}
@@ -96,6 +107,49 @@
       la navigation.
     {%- endcomment -%}
     {%- assign kn_nav_links = linklists[section.settings.menu].links -%}
+    {%- liquid
+      comment
+        Univers de la page. Sur une collection : l'entrée de la barre qui y
+        mène, ou celle qui la range parmi ses collections. Sur une pièce, ou
+        sur une collection qui n'est dans aucun univers : la première des
+        collections de la pièce qui figure dans la barre. Une pièce rangée dans
+        deux univers n'en allume qu'un, celui que nomme aussi le fil d'Ariane.
+      endcomment
+      assign kn_here = ''
+      if collection != blank
+        for kn_top in kn_nav_links
+          if kn_top.type != 'collection_link'
+            continue
+          endif
+          if kn_top.object.handle == collection.handle
+            assign kn_here = kn_top.object.handle
+            break
+          endif
+          for kn_child in kn_top.links
+            if kn_child.type == 'collection_link' and kn_child.object.handle == collection.handle
+              assign kn_here = kn_top.object.handle
+              break
+            endif
+          endfor
+          if kn_here != blank
+            break
+          endif
+        endfor
+      endif
+      if kn_here == blank and product != blank
+        for kn_group in product.collections
+          for kn_top in kn_nav_links
+            if kn_top.type == 'collection_link' and kn_top.object.handle == kn_group.handle
+              assign kn_here = kn_group.handle
+              break
+            endif
+          endfor
+          if kn_here != blank
+            break
+          endif
+        endfor
+      endif
+    -%}
     {%- if kn_nav_links.size > 0 -%}
       <nav class="kn-header__nav" aria-label="{{ section.settings.nav_dialog_label | escape }}">
         <ul class="kn-header__nav-list" role="list">
@@ -109,17 +163,8 @@
               assign kn_current = ''
               if kn_link.current
                 assign kn_current = 'page'
-              elsif kn_link.type == 'collection_link' and kn_link.object != blank
-                if collection.handle == kn_link.object.handle
-                  assign kn_current = 'true'
-                elsif product != blank
-                  for kn_group in product.collections
-                    if kn_group.handle == kn_link.object.handle
-                      assign kn_current = 'true'
-                      break
-                    endif
-                  endfor
-                endif
+              elsif kn_here != blank and kn_link.type == 'collection_link' and kn_link.object.handle == kn_here
+                assign kn_current = 'true'
               endif
 
               assign kn_menu_id = 'KnMenu-' | append: section.id | append: '-' | append: forloop.index
@@ -128,8 +173,8 @@
               {%- render 'kn-header-menu',
                 link: kn_link,
                 id: kn_menu_id,
-                pieces_label: section.settings.label_pieces,
-                collections_label: section.settings.label_collections
+                pieces_label: kn_label_pieces,
+                collections_label: kn_label_collections
               -%}
             {%- endcapture -%}
             {%- assign kn_menu = kn_menu | strip -%}
@@ -152,7 +197,7 @@
                 >
                   {%- render 'kn-icon', name: 'chevron', size: 14 -%}
                   <span class="kn-visually-hidden">
-                    {{- kn_link.title | escape }}, {{ section.settings.label_menu_toggle | escape -}}
+                    {{- kn_link.title | escape }}, {{ kn_label_menu_toggle | escape -}}
                   </span>
                 </button>
                 {{ kn_menu }}
@@ -267,29 +312,26 @@
       "type": "link_list",
       "id": "menu",
       "label": "Menu du panneau",
-      "info": "Les entrées de premier niveau deviennent les univers. Une sous-entrée filtrée par tag est une catégorie ; une sous-entrée qui mène à une collection entière se range sous « Collections ».",
+      "info": "Les entrées de premier niveau deviennent les univers. Une sous-entrée filtrée par tag est une catégorie ; une sous-entrée qui mène à une collection entière se range sous « Collections ». Une sous-entrée qui filtre par plusieurs tags à la fois n’est pas reconnue comme catégorie.",
       "default": "main-menu"
     },
     {
       "type": "text",
       "id": "label_view_all",
       "label": "Lien « tout voir » d’un univers",
-      "info": "Première ligne de chaque liste dépliée : elle mène à la page de l’univers.",
-      "default": "Tout voir"
+      "info": "Première ligne de chaque liste dépliée : elle mène à la page de l’univers. Vide : le libellé du thème, traduit dans chaque langue."
     },
     {
       "type": "text",
       "id": "label_collections",
       "label": "Intitulé des collections d’un univers",
-      "info": "Groupe placé sous les catégories de chaque liste dépliée.",
-      "default": "Collections"
+      "info": "Groupe placé sous les catégories de chaque liste dépliée. Vide : le libellé du thème, traduit dans chaque langue."
     },
     {
       "type": "text",
       "id": "label_pieces",
       "label": "Intitulé des catégories d’un univers",
-      "info": "Sur ordinateur, colonne des catégories dans le panneau déroulant de chaque univers.",
-      "default": "Pièces"
+      "info": "Sur ordinateur, colonne des catégories dans le panneau déroulant de chaque univers. Vide : le libellé du thème, traduit dans chaque langue."
     },
     {
       "type": "link_list",
@@ -329,8 +371,7 @@
       "type": "text",
       "id": "label_menu_toggle",
       "label": "Chevron d’un univers dans la barre",
-      "info": "Lu par les lecteurs d’écran après le nom de l’univers.",
-      "default": "pièces et collections"
+      "info": "Lu par les lecteurs d’écran après le nom de l’univers. Vide : le libellé du thème, traduit dans chaque langue."
     },
     {
       "type": "text",

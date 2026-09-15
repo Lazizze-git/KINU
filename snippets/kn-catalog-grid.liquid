@@ -24,6 +24,7 @@
   @param {string} prev_label - Libellé du lien de page précédente.
   @param {string} next_label - Libellé du lien de page suivante.
   @param {string} pagination_label - Libellé accessible de la pagination.
+  @param {string} [clear_url] - Adresse de « effacer les filtres ».
 {%- enddoc -%}
 
 {%- liquid
@@ -121,7 +122,7 @@
     <div class="kn-container kn-empty">
       {%- if active_count > 0 -%}
         <p class="kn-lead kn-empty__text">{{ empty_filtered_text }}</p>
-        <a class="kn-btn kn-btn--secondary" href="{{ results.url }}" data-kn-clear>
+        <a class="kn-btn kn-btn--secondary" href="{{ clear_url | default: results.url }}" data-kn-clear>
           {{- empty_filtered_action -}}
         </a>
       {%- else -%}

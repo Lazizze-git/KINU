@@ -11,6 +11,8 @@
 
   @param {string} section_id - Identifiant de la section hôte.
   @param {object} results - `collection`.
+  @param {string} [form_action] - Adresse du formulaire. Sur une catégorie, le chemin courant garde son tag.
+  @param {string} [clear_url] - Adresse de « tout effacer ».
   @param {string} title - Titre du panneau.
   @param {string} apply_label - Libellé du bouton de validation.
   @param {string} clear_label - Libellé du lien « tout effacer ».
@@ -39,7 +41,7 @@
     class="kn-facets__form"
     id="{{ kn_form_id }}"
     method="get"
-    action="{{ results.url }}"
+    action="{{ form_action | default: results.url }}"
     data-kn-facets-form
   >
     <div class="kn-facets__head">
@@ -161,7 +163,7 @@
     </div>
 
     <div class="kn-facets__foot">
-      <a class="kn-label kn-underline kn-facets__reset" href="{{ results.url }}" data-kn-clear>
+      <a class="kn-label kn-underline kn-facets__reset" href="{{ clear_url | default: results.url }}" data-kn-clear>
         {{- clear_label -}}
       </a>
       <button type="submit" class="kn-btn kn-btn--primary kn-facets__apply">{{ apply_label }}</button>

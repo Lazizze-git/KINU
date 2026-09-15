@@ -86,6 +86,7 @@
     {%- endif -%}
   {%- endfor -%}
 {%- endcapture -%}
+{%- assign kn_collections_html = kn_collections_html | strip -%}
 
 {%- if kn_pieces > 0 or kn_extra > 0 -%}
   <div class="kn-menu" id="{{ id }}" data-kn-menu-panel>
@@ -99,12 +100,14 @@
         </div>
       {%- endif -%}
 
-      <div class="kn-menu__group">
-        <p class="kn-label kn-menu__label">{{ collections_label | escape }}</p>
-        <ul class="kn-menu__list" role="list">
-          {{- kn_collections_html -}}
-        </ul>
-      </div>
+      {%- if kn_collections_html != blank -%}
+        <div class="kn-menu__group">
+          <p class="kn-label kn-menu__label">{{ collections_label | escape }}</p>
+          <ul class="kn-menu__list" role="list">
+            {{- kn_collections_html -}}
+          </ul>
+        </div>
+      {%- endif -%}
     </div>
   </div>
 {%- endif -%}

@@ -161,6 +161,11 @@
         clear.setAttribute('href', nextClear.getAttribute('href') || '');
       }
 
+      // Le lien du panneau vit hors des regions echangees : il suit aussi le tri.
+      var reset = root.querySelector('.kn-facets__reset');
+      var nextReset = incoming.querySelector('.kn-facets__reset');
+      if (reset && nextReset) reset.setAttribute('href', nextReset.getAttribute('href') || '');
+
       var sort = root.querySelector('[data-kn-sort]');
       var nextSort = incoming.querySelector('[data-kn-sort]');
       if (sort instanceof HTMLSelectElement && nextSort instanceof HTMLSelectElement) {
@@ -173,6 +178,20 @@
       }
 
       if (window.KN && typeof window.KN.initReveal === 'function') window.KN.initReveal();
+    }
+
+    /**
+     * Navigation classique vers `url`. Au retour arriere, l'historique pointe
+     * deja sur cette adresse : on la recharge sans empiler une entree de plus.
+     * @param {string} url
+     * @param {{ push?: boolean }} opts
+     */
+    function leave(url, opts) {
+      if (opts.push === false) {
+        window.location.replace(url);
+      } else {
+        window.location.assign(url);
+      }
     }
 
     /**
@@ -195,7 +214,14 @@
         })
         .then(function (html) {
           if (ticket !== requestId) return;
-          swap(new DOMParser().parseFromString(html, 'text/html'));
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          // Sans grille dans la reponse, la page demandee est la page a
+          // etages d'un univers : rien a echanger, on y va vraiment.
+          if (!doc.querySelector('[data-kn-results]')) {
+            leave(url, opts);
+            return;
+          }
+          swap(doc);
           if (opts.push !== false) window.history.pushState({ knCatalog: true }, '', url);
           if (opts.scroll) {
             var anchor = root.querySelector('.kn-toolbar');
@@ -206,7 +232,7 @@
         .catch(function () {
           if (ticket !== requestId) return;
           // Repli : une navigation classique donne le même résultat, en moins fluide.
-          window.location.assign(url);
+          leave(url, opts);
         });
     }
 

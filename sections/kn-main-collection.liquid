@@ -24,6 +24,15 @@
   assign kn_empty_url = kn_settings.empty_url | default: routes.collections_url
 
   comment
+    Une seule adresse pour « tout effacer », dans la barre, le panneau de
+    filtres et l'état vide. Elle part du chemin courant, qui garde le tag
+    d'une catégorie et le préfixe de langue, et porte toujours un tri : sur
+    un univers, l'adresse nue ramène aux vignettes au lieu de vider la grille.
+  endcomment
+  assign kn_sort_current = collection.sort_by | default: collection.default_sort_by
+  assign kn_clear_url = request.path | append: '?sort_by=' | append: kn_sort_current
+
+  comment
     Univers à étages (demande client du 15 septembre 2026). Une collection vers
     laquelle pointe une entrée du menu montre d'abord ses catégories, puis ses
     collections — voir snippets/kn-collection-hub.liquid. Dès qu'un visiteur
@@ -34,6 +43,19 @@
     blank. Sa taille, nil elle aussi, n'est jamais égale à zéro, et la page à
     étages ne s'affichait donc nulle part.
   endcomment
+  comment
+    Libellés de la page d'univers et de la ligne de catégories : le réglage
+    s'il est rempli, sinon celui du thème, traduit dans chaque langue.
+  endcomment
+  assign kn_hub_pieces = 'kinu.hub.pieces' | t
+  assign kn_hub_pieces = kn_settings.hub_pieces_title | default: kn_hub_pieces
+  assign kn_hub_all = 'kinu.hub.all' | t
+  assign kn_hub_all = kn_settings.hub_all_label | default: kn_hub_all
+  assign kn_hub_collections = 'kinu.hub.collections' | t
+  assign kn_hub_collections = kn_settings.hub_collections_title | default: kn_hub_collections
+  assign kn_strip_all = 'kinu.hub.strip_all' | t
+  assign kn_strip_all = kn_settings.rayons_all_label | default: kn_strip_all
+
   assign kn_nav_links = linklists[kn_settings.menu].links
   assign kn_universe_link = nil
   for kn_link in kn_nav_links
@@ -46,7 +68,7 @@
   assign kn_hub = ''
   if kn_universe_link != nil and kn_active == 0 and current_tags == blank and collection.sort_by == blank
     capture kn_hub
-      render 'kn-collection-hub', link: kn_universe_link, pieces_title: kn_settings.hub_pieces_title, all_label: kn_settings.hub_all_label, collections_title: kn_settings.hub_collections_title
+      render 'kn-collection-hub', link: kn_universe_link, pieces_title: kn_hub_pieces, all_label: kn_hub_all, collections_title: kn_hub_collections
     endcapture
   endif
   assign kn_hub = kn_hub | strip
@@ -60,7 +82,7 @@
   if kn_universe_link != nil and kn_hub == blank
     assign kn_all_url = collection.url | append: '?sort_by=' | append: collection.default_sort_by
     capture kn_rayons
-      render 'kn-category-strip', link: kn_universe_link, all_label: kn_settings.rayons_all_label, all_url: kn_all_url, label: kn_settings.hub_pieces_title
+      render 'kn-category-strip', link: kn_universe_link, all_label: kn_strip_all, all_url: kn_all_url, label: kn_hub_pieces
     endcapture
   endif
 -%}
@@ -89,6 +111,7 @@
     {%- render 'kn-catalog-toolbar',
       section_id: section.id,
       results: collection,
+      clear_url: kn_clear_url,
       active_count: kn_active,
       filter_label: kn_settings.filter_label,
       sort_label: kn_settings.sort_label,
@@ -111,6 +134,8 @@
     {%- render 'kn-catalog-facets',
       section_id: section.id,
       results: collection,
+      form_action: request.path,
+      clear_url: kn_clear_url,
       title: kn_settings.filters_title,
       apply_label: kn_settings.apply_label,
       clear_label: kn_settings.clear_label,
@@ -122,6 +147,7 @@
     {%- paginate collection.products by kn_settings.products_per_page -%}
       {%- render 'kn-catalog-grid',
         results: collection,
+        clear_url: kn_clear_url,
         paginate: paginate,
         active_count: kn_active,
         show_universe: kn_settings.show_universe,
@@ -152,10 +178,10 @@
     { "type": "range", "id": "products_per_page", "label": "Produits par page", "min": 8, "max": 48, "step": 4, "default": 24 },
     { "type": "header", "content": "Page d’univers", "info": "Une collection vers laquelle pointe une entrée du menu, et dont les sous-entrées filtrent par tag, montre d’abord ses catégories puis ses collections. Une catégorie sans pièce en ligne est masquée." },
     { "type": "link_list", "id": "menu", "label": "Menu des univers", "default": "main-menu", "info": "Le même que celui du header." },
-    { "type": "text", "id": "hub_pieces_title", "label": "Titre des catégories", "default": "Les pièces" },
-    { "type": "text", "id": "hub_all_label", "label": "Lien vers toutes les pièces", "default": "Voir toutes les pièces" },
-    { "type": "text", "id": "hub_collections_title", "label": "Titre des collections", "default": "Les collections" },
-    { "type": "text", "id": "rayons_all_label", "label": "Premier lien de la ligne de catégories", "default": "Tout", "info": "Sur une catégorie ou sur la liste complète d’un univers, la ligne de catégories s’ouvre sur ce lien vers toutes les pièces." },
+    { "type": "text", "id": "hub_pieces_title", "label": "Titre des catégories", "info": "Vide : le libellé du thème, traduit dans chaque langue." },
+    { "type": "text", "id": "hub_all_label", "label": "Lien vers toutes les pièces", "info": "Vide : le libellé du thème, traduit dans chaque langue." },
+    { "type": "text", "id": "hub_collections_title", "label": "Titre des collections", "info": "Vide : le libellé du thème, traduit dans chaque langue." },
+    { "type": "text", "id": "rayons_all_label", "label": "Premier lien de la ligne de catégories", "info": "Sur une catégorie ou sur la liste complète d’un univers, la ligne de catégories s’ouvre sur ce lien vers toutes les pièces. Vide : le libellé du thème, traduit dans chaque langue." },
     { "type": "header", "content": "Barre d’outils" },
     { "type": "text", "id": "filter_label", "label": "Bouton filtres", "default": "Filtrer" },
     { "type": "text", "id": "sort_label", "label": "Libellé du tri", "default": "Trier" },

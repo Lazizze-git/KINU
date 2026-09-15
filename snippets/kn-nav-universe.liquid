@@ -94,6 +94,7 @@
         montre désormais les catégories : la rangée qui le nomme mène donc à
         la liste complète de ses pièces, par le tri par défaut.
       {%- endcomment -%}
+      {%- if kn_self != nil or kn_extra > 0 -%}
       <li class="kn-nav__group">
         <p class="kn-nav__group-label">{{ collections_label | escape }}</p>
         <ul class="kn-nav__sub kn-nav__sub--group" role="list">
@@ -111,6 +112,7 @@
           {{ kn_collections }}
         </ul>
       </li>
+      {%- endif -%}
     </ul>
   </details>
 {%- else -%}

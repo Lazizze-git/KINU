@@ -8,6 +8,24 @@
  * ------------------------------------------------------------
  */
 {
+  "kinu": {
+    "breadcrumb": {
+      "home": "Home",
+      "label": "Breadcrumb"
+    },
+    "nav": {
+      "view_all": "View all",
+      "pieces": "Pieces",
+      "collections": "Collections",
+      "menu_toggle": "pieces and collections"
+    },
+    "hub": {
+      "pieces": "Pieces",
+      "all": "View all pieces",
+      "collections": "Collections",
+      "strip_all": "All"
+    }
+  },
   "accessibility": {
     "account": "Account",
     "active_filters": "Active filters:",

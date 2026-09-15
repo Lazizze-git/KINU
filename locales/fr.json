@@ -1,4 +1,22 @@
 {
+  "kinu": {
+    "breadcrumb": {
+      "home": "Accueil",
+      "label": "Fil d’Ariane"
+    },
+    "nav": {
+      "view_all": "Tout voir",
+      "pieces": "Pièces",
+      "collections": "Collections",
+      "menu_toggle": "pièces et collections"
+    },
+    "hub": {
+      "pieces": "Les pièces",
+      "all": "Voir toutes les pièces",
+      "collections": "Les collections",
+      "strip_all": "Tout"
+    }
+  },
   "blocks": {
     "load_video": "Charger la vidéo : {{ description }}",
     "sold_out": "Épuisé",

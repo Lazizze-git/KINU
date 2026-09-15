@@ -21,8 +21,13 @@
 {%- enddoc -%}
 
 {%- liquid
-  assign kn_home = home_label | default: 'Accueil'
-  assign kn_nav_label = "Fil d’Ariane"
+  assign kn_home = 'kinu.breadcrumb.home' | t
+  assign kn_home = home_label | default: kn_home
+  assign kn_nav_label = 'kinu.breadcrumb.label' | t
+  assign kn_nav = nav_links
+  if kn_nav == blank
+    assign kn_nav = linklists['main-menu'].links
+  endif
   assign kn_universes = 'fluid-motion,crossover,amplitude' | split: ','
 
   comment
@@ -60,6 +65,18 @@
           assign kn_category = kn_universe.title
       endcase
     endif
+
+    comment
+      Le nom de la catégorie suit l'entrée du menu qui mène à l'univers :
+      c'est celui que le visiteur lit dans la barre, et il se traduit avec
+      le menu. Les noms ci-dessus ne servent qu'en l'absence de menu.
+    endcomment
+    for kn_top in kn_nav
+      if kn_top.type == 'collection_link' and kn_top.object.handle == kn_universe.handle
+        assign kn_category = kn_top.title
+        break
+      endif
+    endfor
   endif
 
   comment
@@ -89,10 +106,6 @@
         juste en dessous. Sans catégorie trouvée, le fil garde ce nom.
       endcomment
       if current_title == blank
-        assign kn_nav = nav_links
-        if kn_nav == blank
-          assign kn_nav = linklists['main-menu'].links
-        endif
         for kn_top in kn_nav
           if kn_top.type != 'collection_link' or kn_top.object.handle != kn_universe.handle
             continue

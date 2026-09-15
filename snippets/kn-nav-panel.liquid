@@ -21,6 +21,10 @@
 {%- liquid
   assign kn_links = linklists[section.settings.menu].links
   assign kn_utility = linklists[section.settings.utility_menu].links
+  assign kn_view_all = 'kinu.nav.view_all' | t
+  assign kn_view_all = section.settings.label_view_all | default: kn_view_all
+  assign kn_collections = 'kinu.nav.collections' | t
+  assign kn_collections = section.settings.label_collections | default: kn_collections
 -%}
 
 <div class="kn-nav" id="kn-nav" data-kn-nav>
@@ -83,8 +87,8 @@
                 {%- render 'kn-nav-universe',
                   link: kn_link,
                   aside: kn_row_aside,
-                  view_all_label: section.settings.label_view_all,
-                  collections_label: section.settings.label_collections
+                  view_all_label: kn_view_all,
+                  collections_label: kn_collections
                 -%}
               </li>
             {%- endfor -%}

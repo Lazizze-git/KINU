@@ -11,6 +11,7 @@
   @param {string} section_id - Identifiant de la section hôte.
   @param {object} results - `collection` (ou tout objet exposant filters/sort_options).
   @param {number} active_count - Nombre de filtres actifs.
+  @param {string} [clear_url] - Adresse de « tout effacer », calculée par la section.
   @param {string} filter_label - Libellé du bouton d’ouverture des filtres.
   @param {string} sort_label - Libellé accessible du tri.
   @param {string} clear_label - Libellé du lien « tout effacer ».
@@ -43,9 +44,12 @@
     ramène aux catégories : sans le tri, « Tout effacer » ferait quitter la
     liste des pièces au lieu de la vider de ses filtres.
   endcomment
-  assign kn_clear_url = results.url
-  if results.sort_by != blank
-    assign kn_clear_url = results.url | append: '?sort_by=' | append: results.sort_by
+  assign kn_clear_url = clear_url
+  if kn_clear_url == blank
+    assign kn_clear_url = results.url
+    if results.sort_by != blank
+      assign kn_clear_url = results.url | append: '?sort_by=' | append: results.sort_by
+    endif
   endif
 -%}
 

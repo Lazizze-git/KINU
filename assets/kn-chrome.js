@@ -235,6 +235,29 @@
   var MENU_CLOSE_DELAY = 180;
 
   /**
+   * Referme le panneau ouvert, s'il y en a un. Une seule reference pour tout le
+   * module : l'editeur de theme recharge le header sans recharger ce script, et
+   * chaque rechargement ajoutait sinon ses propres ecouteurs.
+   * @type {(() => void) | null}
+   */
+  var closeActiveMenu = null;
+
+  (function () {
+    var query = window.matchMedia('(min-width: 1024px)');
+    /* Sous 1024 px, les panneaux n'existent plus : on ne laisse rien ouvert. */
+    if (typeof query.addEventListener === 'function') {
+      query.addEventListener('change', function (event) {
+        if (!event.matches && closeActiveMenu) closeActiveMenu();
+      });
+    }
+    /* L'editeur retire une section : un panneau ouvert se referme avec elle,
+       et ses ecouteurs de document partent aussi. */
+    document.addEventListener('shopify:section:unload', function () {
+      if (closeActiveMenu) closeActiveMenu();
+    });
+  })();
+
+  /**
    * @param {HTMLElement} header
    */
   function initMenus(header) {
@@ -401,12 +424,9 @@
       wire(/** @type {HTMLElement} */ (items[i]));
     }
 
-    /* Sous 1024 px, les panneaux n'existent plus : on ne laisse rien ouvert. */
-    if (typeof desktop.addEventListener === 'function') {
-      desktop.addEventListener('change', function (event) {
-        if (!event.matches) close(false);
-      });
-    }
+    closeActiveMenu = function () {
+      close(false);
+    };
   }
 
   /* ------------------------------------------------------------------------
