@@ -379,18 +379,19 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 > **Amendement du 15 septembre 2026 — un panneau par univers sur ordinateur.**
 > Sur téléphone, le burger déplie chaque univers en catégories puis en
 > collections. Sur ordinateur, la barre ne donnait qu'un lien direct : aucun
-> niveau de plus, et les collections de chaque genre restaient hors de vue.
-> Chaque rubrique qui a des catégories ou des collections porte désormais un
-> chevron et déroule sous le header un plan vert pleine largeur (R6) : le nom
-> de sa collection, sa phrase et « Tout voir », ses catégories, ses
-> collections, et la photographie de la ligne visée en fondu croisé (§6). Le
-> survol l'ouvre après 90 ms et le referme 180 ms après la sortie ; le chevron
-> l'ouvre au clic, donc au tactile et au clavier, et Échap le referme. Le
-> header passe au vert pendant l'ouverture, comme au scroll. Ouverture en
-> 240 ms, fermeture en 160 ms : un panneau survolé des dizaines de fois par
-> visite ne peut pas prendre les 560 ms d'un tiroir. La rubrique de l'univers
-> courant passe en accent sur ses catégories et sur ses pièces, pas seulement
-> sur sa propre page.
+> niveau de plus. Chaque rubrique qui a des catégories ou des collections
+> ouvre désormais, au survol, un panneau sous la barre : deux listes courtes,
+> Pièces et Collections, alignées sous la première rubrique. Le panneau prend
+> la surface du header, ivoire en haut de page et vert une fois le header
+> basculé, et se ferme sur un filet de 1 px. Au-dessus de la bannière, le
+> header redevient ivoire le temps de l'ouverture. Ni photographie, ni phrase,
+> ni voile, ni chevron visible : une première version en plan vert, avec
+> photographie et description, a été refaite le jour même, jugée bien trop
+> chargée — « ça doit être beaucoup plus clean ». Le survol ouvre après 90 ms
+> et referme 180 ms après la sortie. Au clavier, un bouton placé juste après
+> la rubrique ouvre le panneau et n'apparaît qu'au focus ; Échap referme. Un
+> fondu de 160 ms, rien ne se déplace. La rubrique de l'univers courant passe
+> en accent sur ses catégories et sur ses pièces.
 
 - Logo : wordmark `KINŪ`, hauteur 20 px mobile / 24 px desktop, aligné à gauche sur desktop, centré sur mobile.
 - Icônes : trait **1,5 px**, taille 20 px, zone tactile 44 × 44 px, sans libellé. Le compteur du panier est une pastille verte de 16 px, chiffre 10 px DM Sans 500 en ivoire.

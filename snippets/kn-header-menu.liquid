@@ -1,25 +1,20 @@
 {%- doc -%}
-  KINŪ — Panneau déroulant d'un univers, sous sa rubrique, sur ordinateur.
+  KINŪ — Panneau d'un univers sous la barre, sur ordinateur.
 
   Sur téléphone, le burger déplie chaque univers en catégories puis en
-  collections (kn-nav-universe). Sur ordinateur, les univers sont dans la
-  barre et n'ouvraient rien : ce panneau leur rend le même niveau. Plan vert
-  pleine largeur sous le header (DA §3.4 R6) : l'univers et son lien « Tout
-  voir », ses catégories, ses collections, et la photographie de la ligne
-  visée, en fondu croisé (DA §6).
+  collections (kn-nav-universe). Dans la barre, ce panneau rend le même
+  niveau, et rien de plus : deux listes courtes, Pièces et Collections, sur la
+  surface du header, alignées sous les rubriques. Ni photographie, ni phrase,
+  ni voile (amendement du 15 septembre 2026, DIRECTION-ARTISTIQUE.md §7.1).
 
   Même source que le burger : une sous-entrée filtrée par tag est une
   catégorie, affichée seulement si une pièce est en ligne ; une sous-entrée
-  qui mène à une collection entière rejoint les collections. N'écrit rien sans
-  catégorie ni collection rattachée : la rubrique garde alors son seul lien.
-
-  Fermé, le panneau est en `display: none` et ses images en `loading="lazy"` :
-  aucune photographie n'est téléchargée avant la première ouverture.
+  qui mène à une collection entière rejoint les collections, après l'univers
+  lui-même. N'écrit rien sans catégorie ni collection rattachée : la rubrique
+  garde alors son seul lien.
 
   @param {object} link - Entrée de premier niveau du menu.
   @param {string} id - Identifiant du panneau, repris par `aria-controls`.
-  @param {string} [overline] - Nom de la collection de l'univers.
-  @param {string} view_all_label - Lien vers la page de l'univers.
   @param {string} pieces_label - Intitulé des catégories.
   @param {string} collections_label - Intitulé des collections.
 {%- enddoc -%}
@@ -37,33 +32,22 @@
 
   assign kn_pieces = 0
   assign kn_extra = 0
-  assign kn_previews = 0
-  assign kn_used = ','
-  assign kn_pieces_html = ''
-  assign kn_collections_html = ''
-  assign kn_images_html = ''
-  assign kn_widths = '180,240,320,400,480'
-  assign kn_sizes = '(min-width: 1560px) 240px, 16vw'
 -%}
 
-{%- comment -%} Les catégories, chacune photographiée par sa première pièce en ligne. {%- endcomment -%}
-{%- for kn_child in link.links -%}
-  {%- capture kn_rank -%}{%- render 'kn-category-lead', link: kn_child -%}{%- endcapture -%}
-  {%- assign kn_rank = kn_rank | strip -%}
-  {%- if kn_rank == blank -%}
-    {%- continue -%}
-  {%- endif -%}
-
-  {%- assign kn_offset = kn_rank | plus: 0 -%}
-  {%- for kn_lead in kn_child.object.products offset: kn_offset limit: 1 -%}
-    {%- capture kn_tag -%}{%- render 'kn-link-tag', link: kn_child -%}{%- endcapture -%}
-    {%- assign kn_tag = kn_tag | strip -%}
-    {%- capture kn_item -%}
+{%- capture kn_pieces_html -%}
+  {%- for kn_child in link.links -%}
+    {%- capture kn_rank -%}{%- render 'kn-category-lead', link: kn_child -%}{%- endcapture -%}
+    {%- assign kn_rank = kn_rank | strip -%}
+    {%- if kn_rank != blank -%}
+      {%- capture kn_tag -%}{%- render 'kn-link-tag', link: kn_child -%}{%- endcapture -%}
+      {%- liquid
+        assign kn_tag = kn_tag | strip
+        assign kn_pieces = kn_pieces | plus: 1
+      -%}
       <li>
         <a
           class="kn-menu__link"
           href="{{ kn_child.url }}"
-          data-kn-menu-preview="{{ kn_previews }}"
           {% if kn_current != blank and kn_tag == kn_current %}
             aria-current="page"
           {% endif %}
@@ -71,129 +55,43 @@
           {{- kn_child.title | escape -}}
         </a>
       </li>
-    {%- endcapture -%}
-    {%- capture kn_image -%}
-      <span class="kn-menu__img{% if kn_previews == 0 %} is-active{% endif %}" data-kn-menu-image="{{ kn_previews }}">
-        {%- if kn_lead.featured_image != blank -%}
-          {{
-            kn_lead.featured_image
-            | image_url: width: 480
-            | image_tag: widths: kn_widths, sizes: kn_sizes, class: 'kn-img', alt: '', loading: 'lazy'
-          }}
-        {%- endif -%}
-      </span>
-    {%- endcapture -%}
-    {%- liquid
-      assign kn_pieces_html = kn_pieces_html | append: kn_item
-      assign kn_images_html = kn_images_html | append: kn_image
-      assign kn_used = kn_used | append: kn_lead.id | append: ','
-      assign kn_previews = kn_previews | plus: 1
-      assign kn_pieces = kn_pieces | plus: 1
-    -%}
+    {%- endif -%}
   {%- endfor -%}
-{%- endfor -%}
+{%- endcapture -%}
 
-{%- comment -%}
-  L'univers est la première de ses collections : sa ligne mène à la liste
-  complète de ses pièces, par le tri par défaut, comme dans le burger. Sans
-  image de collection, sa photographie est la première pièce qu'aucune
-  catégorie ne montre déjà.
-{%- endcomment -%}
-{%- if kn_self != nil -%}
-  {%- liquid
-    assign kn_cover = kn_self.image
-    if kn_cover == blank
-      for kn_product in kn_self.products
-        assign kn_key = ',' | append: kn_product.id | append: ','
-        if kn_used contains kn_key or kn_product.featured_image == blank
-          continue
-        endif
-        assign kn_cover = kn_product.featured_image
-        break
-      endfor
-    endif
-    assign kn_cover = kn_cover | default: kn_self.products.first.featured_image
-    assign kn_self_url = kn_self.url | append: '?sort_by=' | append: kn_self.default_sort_by
-  -%}
-  {%- capture kn_item -%}
+{%- capture kn_collections_html -%}
+  {%- comment -%}
+    L'univers est la première de ses collections : sa ligne mène à la liste
+    complète de ses pièces, par le tri par défaut, comme dans le burger.
+  {%- endcomment -%}
+  {%- if kn_self != nil -%}
     <li>
-      <a class="kn-menu__link" href="{{ kn_self_url }}" data-kn-menu-preview="{{ kn_previews }}" translate="no">
+      <a
+        class="kn-menu__link"
+        href="{{ kn_self.url }}?sort_by={{ kn_self.default_sort_by }}"
+        translate="no"
+      >
         {{- kn_self.title | escape -}}
       </a>
     </li>
-  {%- endcapture -%}
-  {%- capture kn_image -%}
-    <span class="kn-menu__img{% if kn_previews == 0 %} is-active{% endif %}" data-kn-menu-image="{{ kn_previews }}">
-      {%- if kn_cover != blank -%}
-        {{ kn_cover | image_url: width: 480 | image_tag: widths: kn_widths, sizes: kn_sizes, class: 'kn-img', alt: '', loading: 'lazy' }}
+  {%- endif -%}
+  {%- for kn_child in link.links -%}
+    {%- if kn_child.type == 'collection_link' and kn_child.object != blank and kn_child.url == kn_child.object.url -%}
+      {%- if kn_self == nil or kn_child.object.handle != kn_self.handle -%}
+        {%- assign kn_extra = kn_extra | plus: 1 -%}
+        <li>
+          <a class="kn-menu__link" href="{{ kn_child.url }}">{{ kn_child.title | escape }}</a>
+        </li>
       {%- endif -%}
-    </span>
-  {%- endcapture -%}
-  {%- liquid
-    assign kn_collections_html = kn_collections_html | append: kn_item
-    assign kn_images_html = kn_images_html | append: kn_image
-    assign kn_previews = kn_previews | plus: 1
-  -%}
-{%- endif -%}
-
-{%- comment -%} Puis toute collection entière rattachée dans le menu. {%- endcomment -%}
-{%- for kn_child in link.links -%}
-  {%- if kn_child.type != 'collection_link' or kn_child.object == blank -%}
-    {%- continue -%}
-  {%- endif -%}
-  {%- if kn_child.url != kn_child.object.url -%}
-    {%- continue -%}
-  {%- endif -%}
-  {%- if kn_self != nil and kn_child.object.handle == kn_self.handle -%}
-    {%- continue -%}
-  {%- endif -%}
-
-  {%- assign kn_cover = kn_child.object.image | default: kn_child.object.products.first.featured_image -%}
-  {%- capture kn_item -%}
-    <li>
-      <a class="kn-menu__link" href="{{ kn_child.url }}" data-kn-menu-preview="{{ kn_previews }}">
-        {{- kn_child.title | escape -}}
-      </a>
-    </li>
-  {%- endcapture -%}
-  {%- capture kn_image -%}
-    <span class="kn-menu__img{% if kn_previews == 0 %} is-active{% endif %}" data-kn-menu-image="{{ kn_previews }}">
-      {%- if kn_cover != blank -%}
-        {{ kn_cover | image_url: width: 480 | image_tag: widths: kn_widths, sizes: kn_sizes, class: 'kn-img', alt: '', loading: 'lazy' }}
-      {%- endif -%}
-    </span>
-  {%- endcapture -%}
-  {%- liquid
-    assign kn_collections_html = kn_collections_html | append: kn_item
-    assign kn_images_html = kn_images_html | append: kn_image
-    assign kn_previews = kn_previews | plus: 1
-    assign kn_extra = kn_extra | plus: 1
-  -%}
-{%- endfor -%}
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
 
 {%- if kn_pieces > 0 or kn_extra > 0 -%}
-  {%- liquid
-    assign kn_note = ''
-    if kn_self != nil
-      assign kn_note = kn_self.description | strip_html | strip
-    endif
-  -%}
-  <div class="kn-menu" id="{{ id }}" data-kn-surface="flood" data-kn-menu-panel>
-    <div class="kn-container kn-menu__inner">
-      <div class="kn-menu__intro">
-        {%- if overline != blank -%}
-          <p class="kn-label kn-menu__overline" translate="no">{{ overline | escape }}</p>
-        {%- endif -%}
-        {%- if kn_note != blank -%}
-          <p class="kn-sm kn-menu__note">{{ kn_note | escape }}</p>
-        {%- endif -%}
-        <a class="kn-label kn-underline kn-menu__all" href="{{ link.url }}">
-          {{- view_all_label | escape -}}
-        </a>
-      </div>
-
+  <div class="kn-menu" id="{{ id }}" data-kn-menu-panel>
+    <div class="kn-menu__inner">
       {%- if kn_pieces > 0 -%}
-        <div class="kn-menu__group kn-menu__group--pieces">
+        <div class="kn-menu__group">
           <p class="kn-label kn-menu__label">{{ pieces_label | escape }}</p>
           <ul class="kn-menu__list" role="list">
             {{- kn_pieces_html -}}
@@ -201,22 +99,12 @@
         </div>
       {%- endif -%}
 
-      {%- if kn_collections_html != blank -%}
-        <div class="kn-menu__group kn-menu__group--collections">
-          <p class="kn-label kn-menu__label">{{ collections_label | escape }}</p>
-          <ul class="kn-menu__list" role="list">
-            {{- kn_collections_html -}}
-          </ul>
-        </div>
-      {%- endif -%}
-
-      {%- if kn_images_html != blank -%}
-        <div class="kn-menu__media" aria-hidden="true">
-          <div class="kn-ratio kn-menu__frame">
-            {{- kn_images_html -}}
-          </div>
-        </div>
-      {%- endif -%}
+      <div class="kn-menu__group">
+        <p class="kn-label kn-menu__label">{{ collections_label | escape }}</p>
+        <ul class="kn-menu__list" role="list">
+          {{- kn_collections_html -}}
+        </ul>
+      </div>
     </div>
   </div>
 {%- endif -%}

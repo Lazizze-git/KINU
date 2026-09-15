@@ -122,24 +122,12 @@
                 endif
               endif
 
-              assign kn_overline = ''
-              assign kn_key = kn_link.title | downcase | strip
-              for kn_block in section.blocks
-                assign kn_block_key = kn_block.settings.label | downcase | strip
-                if kn_block_key == kn_key
-                  assign kn_overline = kn_block.settings.overline
-                  break
-                endif
-              endfor
-
               assign kn_menu_id = 'KnMenu-' | append: section.id | append: '-' | append: forloop.index
             -%}
             {%- capture kn_menu -%}
               {%- render 'kn-header-menu',
                 link: kn_link,
                 id: kn_menu_id,
-                overline: kn_overline,
-                view_all_label: section.settings.label_view_all,
                 pieces_label: section.settings.label_pieces,
                 collections_label: section.settings.label_collections
               -%}
@@ -224,9 +212,6 @@
       {%- endif -%}
     </div>
   </div>
-
-  {%- comment -%} Voile du panneau déroulant, sous le header (DA §3.4 R6). {%- endcomment -%}
-  <div class="kn-header__scrim" data-kn-menu-scrim aria-hidden="true"></div>
 </div>
 
 {%- render 'kn-nav-panel', section: section -%}

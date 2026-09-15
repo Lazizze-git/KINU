@@ -223,12 +223,12 @@
   /* ------------------------------------------------------------------------
      3 bis. Panneaux des univers, sur ordinateur
      Survol : une courte intention avant d'ouvrir, un delai de grace avant de
-     fermer, le temps de rejoindre le panneau. Le chevron ouvre au clic, donc
-     au tactile et au clavier ; Echap referme et rend le focus au chevron.
-     D'un univers a l'autre, le panneau change sans rejouer son ouverture.
+     fermer, le temps de descendre dans le panneau. Au clavier, le bouton qui
+     suit la rubrique ouvre ; Echap referme et lui rend le focus. D'un univers
+     a l'autre, le panneau change sans refaire son fondu.
      ---------------------------------------------------------------------- */
 
-  /** Delai avant ouverture au survol : un simple passage ne deroule rien. */
+  /** Delai avant ouverture au survol : un simple passage n'ouvre rien. */
   var MENU_OPEN_DELAY = 90;
 
   /** Delai avant fermeture : laisse le temps de descendre dans le panneau. */
@@ -244,25 +244,21 @@
 
     var desktop = window.matchMedia('(min-width: 1024px)');
     var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
-    var wrapper = document.querySelector('.page-wrapper');
+    var nav = header.querySelector('.kn-header__nav');
     /** @type {HTMLElement | null} */
     var current = null;
     var openTimer = 0;
     var closeTimer = 0;
-    var frame = 0;
 
-    /* Le voile se cale sous le bas reel du header : la barre d'annonce peut
-       etre encore visible, ou deja sortie du champ. */
-    function placeScrim() {
-      header.style.setProperty('--kn-menu-top', Math.round(header.getBoundingClientRect().bottom) + 'px');
-    }
-
-    function onScroll() {
-      if (frame) return;
-      frame = window.requestAnimationFrame(function () {
-        frame = 0;
-        placeScrim();
-      });
+    /* Bas reel du header, pour borner la hauteur du panneau, et bord gauche
+       de la barre : chaque panneau aligne son contenu sous la premiere
+       rubrique, et rien ne saute d'un univers a l'autre. */
+    function place() {
+      var box = header.getBoundingClientRect();
+      header.style.setProperty('--kn-menu-top', Math.round(box.bottom) + 'px');
+      if (nav) {
+        header.style.setProperty('--kn-menu-x', Math.round(nav.getBoundingClientRect().left - box.left) + 'px');
+      }
     }
 
     /**
@@ -273,23 +269,11 @@
       return item.querySelector('[data-kn-menu-toggle]');
     }
 
-    /**
-     * @param {HTMLElement} item
-     * @param {number} index
-     */
-    function preview(item, index) {
-      var images = item.querySelectorAll('[data-kn-menu-image]');
-      for (var i = 0; i < images.length; i += 1) {
-        images[i].classList.toggle('is-active', images[i].getAttribute('data-kn-menu-image') === String(index));
-      }
-    }
-
     /** @param {HTMLElement} item */
     function shut(item) {
       item.classList.remove('is-open');
       var toggle = toggleOf(item);
       if (toggle) toggle.setAttribute('aria-expanded', 'false');
-      preview(item, 0);
     }
 
     function clearTimers() {
@@ -326,15 +310,15 @@
       }
 
       current = item;
-      placeScrim();
+      place();
       item.classList.add('is-open');
       var toggle = toggleOf(item);
       if (toggle) toggle.setAttribute('aria-expanded', 'true');
       header.classList.add('is-menu-open');
 
       if (switching) {
-        /* La bascule instantanee doit etre peinte avant que les transitions
-           ne reprennent : deux images plus tard. */
+        /* La bascule sans fondu doit etre peinte avant que la transition ne
+           reprenne : deux images plus tard. */
         window.requestAnimationFrame(function () {
           window.requestAnimationFrame(function () {
             header.removeAttribute('data-kn-menu-instant');
@@ -345,8 +329,6 @@
 
       document.addEventListener('keydown', onKeydown);
       document.addEventListener('pointerdown', onPointerDown, true);
-      window.addEventListener('scroll', onScroll, { passive: true });
-      if (wrapper) wrapper.addEventListener('scroll', onScroll, { passive: true });
     }
 
     /** @param {boolean} restoreFocus */
@@ -359,14 +341,10 @@
       shut(item);
       header.classList.remove('is-menu-open');
       header.removeAttribute('data-kn-menu-mode');
-      /* Une bascule dont les images n'ont jamais ete peintes (onglet cache)
-         ne doit pas priver la fermeture suivante de sa transition. */
       header.removeAttribute('data-kn-menu-instant');
 
       document.removeEventListener('keydown', onKeydown);
       document.removeEventListener('pointerdown', onPointerDown, true);
-      window.removeEventListener('scroll', onScroll);
-      if (wrapper) wrapper.removeEventListener('scroll', onScroll);
 
       if (restoreFocus) {
         var toggle = toggleOf(item);
@@ -412,35 +390,15 @@
         });
       }
 
-      /* Le focus quitte l'univers : son panneau se replie. */
+      /* Le focus quitte l'univers : son panneau se referme. */
       item.addEventListener('focusout', function (event) {
         var next = /** @type {Node | null} */ (event.relatedTarget);
         if (current === item && next && !item.contains(next)) close(false);
       });
-
-      var lines = item.querySelectorAll('[data-kn-menu-preview]');
-      for (var i = 0; i < lines.length; i += 1) {
-        (function (line) {
-          var index = Number(line.getAttribute('data-kn-menu-preview'));
-          line.addEventListener('pointerenter', function () {
-            preview(item, index);
-          });
-          line.addEventListener('focus', function () {
-            preview(item, index);
-          });
-        })(lines[i]);
-      }
     }
 
     for (var i = 0; i < items.length; i += 1) {
       wire(/** @type {HTMLElement} */ (items[i]));
-    }
-
-    var scrim = header.querySelector('[data-kn-menu-scrim]');
-    if (scrim) {
-      scrim.addEventListener('click', function () {
-        close(false);
-      });
     }
 
     /* Sous 1024 px, les panneaux n'existent plus : on ne laisse rien ouvert. */
