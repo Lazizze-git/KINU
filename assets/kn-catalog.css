@@ -445,24 +445,43 @@
    l'autre sans remonter. Echelle d'etiquette, comme le fil d'Ariane. Les
    autres entrees restent attenuees ; la page courante reprend la couleur du
    texte et un filet de 1 px, qui la designe sans rien deplacer. */
+/* Sur telephone, la ligne ne passe jamais a la ligne : elle defile en
+   largeur, bord a bord, et kn-catalog.js ramene la categorie courante dans le
+   champ. A cinq entrees deja, un retour a la ligne laissait Brassieres seule
+   dessous, et chaque categorie ajoutee en aurait isole d'autres. La liste
+   garde 4 px d'air en haut et en bas : un conteneur qui defile rogne l'anneau
+   de focus qui depasse. */
 .kn-rayons {
   margin-block-start: var(--kn-space-md);
+  margin-inline: calc(var(--kn-gutter) * -1);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
 }
 
-/* 16 px d'intervalle sur telephone : les cinq entrees de Femme tiennent sur
-   une ligne des 375 px, au lieu d'en laisser une seule orpheline dessous. */
+.kn-rayons::-webkit-scrollbar {
+  display: none;
+}
+
 .kn-rayons__list {
   display: flex;
-  flex-wrap: wrap;
-  column-gap: var(--kn-space-sm);
+  column-gap: var(--kn-space-md);
+  width: max-content;
   margin: 0;
-  padding: 0;
+  padding: var(--kn-space-3xs) var(--kn-gutter);
   list-style: none;
 }
 
 @media (min-width: 640px) {
+  .kn-rayons {
+    margin-inline: 0;
+    overflow-x: visible;
+  }
+
   .kn-rayons__list {
-    column-gap: var(--kn-space-md);
+    flex-wrap: wrap;
+    width: auto;
+    padding-inline: 0;
   }
 }
 

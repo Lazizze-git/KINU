@@ -465,11 +465,28 @@
     if (activeRender) activeRender(window.location.href);
   });
 
+  /**
+   * Ligne de categories : sur telephone elle defile en largeur. La categorie
+   * courante est ramenee au centre du champ au chargement, sans toucher au
+   * defilement vertical de la page.
+   */
+  function revealCurrentCategory() {
+    var strips = document.querySelectorAll('.kn-rayons');
+    Array.prototype.forEach.call(strips, function (strip) {
+      if (!(strip instanceof HTMLElement) || strip.scrollWidth <= strip.clientWidth) return;
+      var current = strip.querySelector('[aria-current]');
+      if (!(current instanceof HTMLElement)) return;
+      var start = current.getBoundingClientRect().left - strip.getBoundingClientRect().left + strip.scrollLeft;
+      strip.scrollLeft = Math.max(0, start - (strip.clientWidth - current.offsetWidth) / 2);
+    });
+  }
+
   function init() {
     var sections = document.querySelectorAll('[data-kn-collection]');
     Array.prototype.forEach.call(sections, function (section) {
       if (section instanceof HTMLElement) setupSection(section);
     });
+    revealCurrentCategory();
   }
 
   if (document.readyState === 'loading') {
