@@ -16,7 +16,15 @@
 {%- liquid
   assign kn_live = true
   case link.type
-    when 'page_link', 'collection_link', 'product_link', 'article_link', 'policy_link', 'metaobject_link'
+    when 'page_link', 'collection_link', 'product_link', 'article_link'
+      comment
+        En aperçu, un compte de l'équipe voit encore l'objet d'une page
+        dépubliée : c'est sa date de publication, vide, qui la trahit.
+      endcomment
+      if link.object == blank or link.object.published_at == blank
+        assign kn_live = false
+      endif
+    when 'policy_link', 'metaobject_link'
       if link.object == blank
         assign kn_live = false
       endif
