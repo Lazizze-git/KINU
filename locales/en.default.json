@@ -24,6 +24,13 @@
       "all": "View all pieces",
       "collections": "Collections",
       "strip_all": "All"
+    },
+    "spec": {
+      "composition": "Composition",
+      "grammage": "Weight",
+      "coupe": "Fit",
+      "entretien": "Care",
+      "origine": "Origin"
     }
   },
   "accessibility": {

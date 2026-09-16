@@ -15,6 +15,13 @@
       "all": "Voir toutes les pièces",
       "collections": "Les collections",
       "strip_all": "Tout"
+    },
+    "spec": {
+      "composition": "Composition",
+      "grammage": "Grammage",
+      "coupe": "Coupe",
+      "entretien": "Entretien",
+      "origine": "Origine"
     }
   },
   "blocks": {

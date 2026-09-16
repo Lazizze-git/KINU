@@ -59,40 +59,41 @@
     {%- comment -%}
       Les libellés de ligne ne sont pas des réglages : ce sont les termes du
       métier, les mêmes que ceux des métachamps que le client remplit. Les
-      rendre éditables inviterait à les désaccorder.
+      rendre éditables inviterait à les désaccorder. Ils passent par les
+      fichiers de langue pour exister aussi en anglais.
     {%- endcomment -%}
     <dl class="kn-spec__list">
       {%- if kn_mf.composition != blank -%}
         <div class="kn-spec__row">
-          <dt class="kn-label kn-spec__key">Composition</dt>
+          <dt class="kn-label kn-spec__key">{{ 'kinu.spec.composition' | t }}</dt>
           <dd class="kn-spec__val">{{ kn_mf.composition }}</dd>
         </div>
       {%- endif -%}
 
       {%- if kn_mf.grammage != blank -%}
         <div class="kn-spec__row">
-          <dt class="kn-label kn-spec__key">Grammage</dt>
+          <dt class="kn-label kn-spec__key">{{ 'kinu.spec.grammage' | t }}</dt>
           <dd class="kn-spec__val kn-spec__val--num">{{ kn_mf.grammage }}</dd>
         </div>
       {%- endif -%}
 
       {%- if kn_mf.coupe != blank -%}
         <div class="kn-spec__row">
-          <dt class="kn-label kn-spec__key">Coupe</dt>
+          <dt class="kn-label kn-spec__key">{{ 'kinu.spec.coupe' | t }}</dt>
           <dd class="kn-spec__val">{{ kn_mf.coupe }}</dd>
         </div>
       {%- endif -%}
 
       {%- if kn_mf.entretien != blank -%}
         <div class="kn-spec__row">
-          <dt class="kn-label kn-spec__key">Entretien</dt>
+          <dt class="kn-label kn-spec__key">{{ 'kinu.spec.entretien' | t }}</dt>
           <dd class="kn-spec__val">{{ kn_mf.entretien }}</dd>
         </div>
       {%- endif -%}
 
       {%- if kn_mf.origine != blank -%}
         <div class="kn-spec__row">
-          <dt class="kn-label kn-spec__key">Origine</dt>
+          <dt class="kn-label kn-spec__key">{{ 'kinu.spec.origine' | t }}</dt>
           <dd class="kn-spec__val">{{ kn_mf.origine }}</dd>
         </div>
       {%- endif -%}
