@@ -517,21 +517,23 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
   }
 
   /* R7 — la ligne visee reste nette, les autres s'attenuent. */
-  .kn-menu__list:focus-within .kn-menu__link {
+  /* Le panneau entier s'efface, les deux colonnes comprises : la ligne visee
+     est la seule nette, comme dans la barre juste au-dessus. */
+  .kn-menu:focus-within .kn-menu__link {
     color: var(--kn-surface-faint);
   }
 
-  .kn-menu__list:focus-within .kn-menu__link:focus-visible {
+  .kn-menu:focus-within .kn-menu__link:focus-visible {
     color: var(--kn-surface-accent);
   }
 }
 
 @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
-  .kn-menu__list:hover .kn-menu__link {
+  .kn-menu:hover .kn-menu__link {
     color: var(--kn-surface-faint);
   }
 
-  .kn-menu__list:hover .kn-menu__link:hover {
+  .kn-menu:hover .kn-menu__link:hover {
     color: var(--kn-surface-accent);
   }
 }
