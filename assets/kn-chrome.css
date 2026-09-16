@@ -473,8 +473,7 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
   /* Les lignes suivent, l'une apres l'autre : la liste s'ecrit de haut en bas
      au lieu de tomber d'un bloc. Le retard ne porte que sur l'entree, jamais
      sur la couleur, sinon le survol accuserait un temps mort. */
-  .kn-menu__label,
-  .kn-menu__link {
+  .kn-menu__label {
     opacity: 0;
     transform: translateY(6px);
     transition: opacity var(--kn-dur-2) var(--kn-ease-out) var(--kn-in-delay, 0ms),
@@ -555,7 +554,13 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
     font-weight: var(--kn-fw-regular);
     line-height: 1.5;
     color: var(--kn-surface-fg);
-    transition: color var(--kn-dur-2) var(--kn-ease-state);
+    /* Entree en escalier, puis couleur sans retard : les deux tiennent dans la
+       meme declaration, sinon la derniere ecraserait la premiere. */
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity var(--kn-dur-2) var(--kn-ease-out) var(--kn-in-delay, 0ms),
+      transform var(--kn-dur-2) var(--kn-ease-out) var(--kn-in-delay, 0ms),
+      color var(--kn-dur-2) var(--kn-ease-state);
   }
 
   .kn-menu__link[aria-current] {
