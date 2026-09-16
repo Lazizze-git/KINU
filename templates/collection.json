@@ -38,9 +38,17 @@
             "universe_name": "Amplitude",
             "intro": "Des pièces mixtes taillées pour la plus grande course possible du mouvement."
           }
+        },
+        "rayon-tshirts-unisexe": {
+          "type": "rayon",
+          "settings": {
+            "tag": "T-shirt",
+            "collection": "amplitude",
+            "text": "<p>Si KINŪ (絹) désigne la soie dans sa perfection finale, j’ai décomposé ce mot en deux forces : KI (気), l’énergie vitale universelle, et NŪ (ぬ), le flux et l’émergence du mouvement. KINŪ est le fil conducteur de cette énergie.</p><p>Deux pièces, une même origine. Le symbole devant, le nom qui se révèle au dos ou se niche en broderie : chacune porte une moitié de cette énergie.</p>"
+          }
         }
       },
-      "block_order": ["universe-femme", "universe-homme", "universe-unisexe"],
+      "block_order": ["universe-femme", "universe-homme", "universe-unisexe", "rayon-tshirts-unisexe"],
       "settings": {
         "show_breadcrumb": true,
         "show_universe": true,

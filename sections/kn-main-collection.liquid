@@ -85,6 +85,34 @@
       render 'kn-category-strip', link: kn_universe_link, all_label: kn_strip_all, all_url: kn_all_url, label: kn_hub_pieces
     endcapture
   endif
+
+  comment
+    Texte de rayon, demande client du 16 septembre 2026. Une catégorie est une
+    adresse filtrée par tag : Shopify ne lui donne ni description ni image, et
+    un texte qui la raconte n'avait d'autre place que la fiche d'une pièce. Un
+    bloc « Texte de rayon » lui en donne un, posé au-dessus de la grille.
+  endcomment
+  assign kn_story = ''
+  assign kn_story_attrs = ''
+  assign kn_here_tag = current_tags | join: '' | handleize
+  if kn_here_tag != blank
+    for kn_block in section.blocks
+      if kn_block.type != 'rayon'
+        continue
+      endif
+      assign kn_block_tag = kn_block.settings.tag | handleize
+      if kn_block_tag != kn_here_tag
+        continue
+      endif
+      assign kn_block_universe = kn_block.settings.collection.handle
+      if kn_block_universe != blank and kn_block_universe != collection.handle
+        continue
+      endif
+      assign kn_story = kn_block.settings.text
+      assign kn_story_attrs = kn_block.shopify_attributes
+      break
+    endfor
+  endif
 -%}
 
 {%- comment -%}
@@ -104,6 +132,12 @@
     nav_links: kn_nav_links,
     rayons: kn_rayons
   -%}
+
+  {%- if kn_story != blank -%}
+    <div class="kn-container">
+      <div class="kn-body kn-collection__story" {{ kn_story_attrs }}>{{ kn_story }}</div>
+    </div>
+  {%- endif -%}
 
   {%- if kn_hub != blank -%}
     {{ kn_hub }}
@@ -215,6 +249,15 @@
     { "type": "text", "id": "pagination_label", "label": "Libellé accessible", "default": "Pagination des produits" }
   ],
   "blocks": [
+    {
+      "type": "rayon",
+      "name": "Texte de rayon",
+      "settings": [
+        { "type": "text", "id": "tag", "label": "Tag du rayon", "info": "Le tag filtré par l’entrée de menu, par exemple T-shirt." },
+        { "type": "collection", "id": "collection", "label": "Univers concerné", "info": "Laisser vide pour tous les univers qui ont ce rayon." },
+        { "type": "richtext", "id": "text", "label": "Texte", "info": "Posé au-dessus de la grille, sur la page de ce rayon seulement." }
+      ]
+    },
     {
       "type": "universe",
       "name": "Univers",

@@ -332,6 +332,24 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
   color: var(--kn-surface-muted);
 }
 
+/* Amendement du 16 septembre 2026, demande client : la rubrique visée ne se
+   contente plus de rester nette, elle passe à l'accent, vert forêt sur fond
+   clair. Sur le vert et au-dessus d'une vidéo, l'accent vaut ivoire : la
+   rubrique visée reste la seule nette, sans jamais perdre en lisibilité. */
+@media (hover: hover) and (pointer: fine) {
+  .kn-header__nav-item:hover > .kn-header__nav-link,
+  .kn-header__nav-item:hover > .kn-header__nav-toggle {
+    color: var(--kn-surface-accent);
+  }
+}
+
+/* Panneau ouvert au clic : la rubrique garde la même couleur que sous le
+   pointeur, sinon elle s'éteindrait pendant qu'on parcourt sa liste. */
+.kn-header__nav-item.is-open > .kn-header__nav-link,
+.kn-header__nav-item.is-open > .kn-header__nav-toggle {
+  color: var(--kn-surface-accent);
+}
+
 /* `page` sur l'univers lui-même, `true` sur ses catégories et ses pièces. */
 .kn-header__nav-link[aria-current] {
   color: var(--kn-surface-accent);
@@ -501,7 +519,7 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
   }
 
   .kn-menu__list:focus-within .kn-menu__link:focus-visible {
-    color: var(--kn-surface-fg);
+    color: var(--kn-surface-accent);
   }
 }
 
@@ -511,7 +529,7 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
   }
 
   .kn-menu__list:hover .kn-menu__link:hover {
-    color: var(--kn-surface-fg);
+    color: var(--kn-surface-accent);
   }
 }
 

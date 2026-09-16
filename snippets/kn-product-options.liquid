@@ -57,9 +57,17 @@
             elsif kn_opt_lower contains 'size'
               assign kn_is_size = true
             endif
+            comment
+              Le lien suit ce que kn-product-sizes saura dessiner : le tableau
+              de la pièce, sinon le tableau commun réglé dans l'éditeur.
+            endcomment
             assign kn_has_guide = false
-            if kn_is_size and product.metafields.custom.guide_tailles != blank
-              assign kn_has_guide = true
+            if kn_is_size
+              if product.metafields.custom.guide_tailles != blank
+                assign kn_has_guide = true
+              elsif opts.size_guide_rows != blank
+                assign kn_has_guide = true
+              endif
             endif
           -%}
           <legend class="kn-opt__legend">

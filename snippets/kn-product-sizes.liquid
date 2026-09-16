@@ -13,8 +13,13 @@
   La donnée vient du métachamp « Guide des tailles », une liste de lignes dont
   les colonnes sont séparées par une barre verticale. La première ligne sert
   d’en-tête. Un nombre de colonnes quelconque fonctionne : une poitrine seule,
-  ou poitrine, taille, longueur et manche. Sans métachamp rempli, ni le lien ni
-  le panneau ne se dessinent.
+  ou poitrine, taille, longueur et manche.
+
+  Amendement du 16 septembre 2026 : sans métachamp rempli, la fiche retombe sur
+  le tableau commun réglé dans l’éditeur, une ligne par taille. Une maison qui
+  n’a qu’une grille de mensurations n’a donc rien à recopier pièce par pièce, et
+  celle qui en a plusieurs garde la main produit par produit. Sans l’un ni
+  l’autre, ni le lien ni le panneau ne se dessinent.
 
   `<dialog>` natif plutôt qu’un panneau maison : la fermeture par Échap, le
   piège de focus et le voile de fond sont donnés par le navigateur, et ne
@@ -25,8 +30,13 @@
   @param {string} section_id
 {%- enddoc -%}
 
+{%- capture kn_newline %}
+{% endcapture -%}
 {%- liquid
   assign kn_rows = product.metafields.custom.guide_tailles.value
+  if kn_rows == blank and opts.size_guide_rows != blank
+    assign kn_rows = opts.size_guide_rows | strip | split: kn_newline
+  endif
   assign kn_title = opts.size_guide_title | default: 'Guide des tailles'
 -%}
 

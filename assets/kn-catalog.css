@@ -440,6 +440,21 @@
   margin-bottom: 0;
 }
 
+/* Texte de rayon (amendement du 16 septembre 2026). Meme largeur de lecture
+   que la phrase de contexte, pose entre l'en-tete et la barre d'outils : le
+   visiteur lit ce que raconte le rayon avant de voir ses pieces. */
+.kn-collection__story {
+  margin-block: var(--kn-space-md) var(--kn-space-lg);
+}
+
+.kn-collection__story > :first-child {
+  margin-top: 0;
+}
+
+.kn-collection__story > :last-child {
+  margin-bottom: 0;
+}
+
 /* Ligne de categories (amendement du 15/09/2026). Sous l'en-tete d'une
    categorie ou de la liste complete d'un univers : on passe de l'une a
    l'autre sans remonter. Echelle d'etiquette, comme le fil d'Ariane. Les
