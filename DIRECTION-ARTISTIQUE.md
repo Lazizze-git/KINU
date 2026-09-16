@@ -591,6 +591,26 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 
 ## 8. Motion
 
+> **Amendement du 16 septembre 2026 — le mouvement se voit.** Retour client :
+> les animations manquaient de travail. Trois gestes s'ajoutent, tous sous
+> 300 ms, tous justifiés :
+>
+> - **Panneau de menu** : il descend de 6 px en s'ouvrant, sur `--kn-dur-2` et
+>   `--kn-ease-out`, au lieu d'apparaître sur place. Le mouvement dit d'où il
+>   vient : de la rubrique, juste au-dessus.
+> - **Escalier des lignes** : les libellés puis les liens suivent, 30 ms
+>   d'écart, plafonnés à 210 ms. La liste s'écrit de haut en bas. Le retard ne
+>   porte que sur l'entrée, jamais sur la couleur : un survol qui attend son
+>   tour serait un survol cassé. D'un univers à l'autre, la bascule reste
+>   instantanée, escalier compris.
+> - **Pression** : tout ce qui se presse s'enfonce. Boutons à 97 %, icônes du
+>   header à 92 %, sur `--kn-dur-1`. L'œil ne mesure pas le déplacement, il
+>   sent que le clic a été entendu.
+>
+> Le mouvement réduit reste prioritaire : les durées tombent à 1 ms sous
+> `prefers-reduced-motion`, et les états d'arrivée sont les mêmes.
+
+
 **Durées** — quatre valeurs, pas une de plus :
 
 | Jeton | Valeur | Usage |

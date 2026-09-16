@@ -448,23 +448,62 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
     color: var(--kn-surface-fg);
     border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
     opacity: 0;
-    transition: opacity var(--kn-dur-1) var(--kn-ease-state),
-      display var(--kn-dur-1) allow-discrete;
+    /* Amendement du 16 septembre 2026 : le panneau descend de six pixels en
+       s'ouvrant au lieu d'apparaitre sur place. Le mouvement dit d'ou vient le
+       panneau — de la rubrique, juste au-dessus. */
+    transform: translateY(-6px);
+    transition: opacity var(--kn-dur-2) var(--kn-ease-out),
+      transform var(--kn-dur-2) var(--kn-ease-out),
+      display var(--kn-dur-2) allow-discrete;
   }
 
   .kn-header__nav-item.is-open > .kn-menu {
     display: block;
     opacity: 1;
+    transform: none;
   }
 
   @starting-style {
     .kn-header__nav-item.is-open > .kn-menu {
       opacity: 0;
+      transform: translateY(-6px);
     }
   }
 
-  /* D'un univers a l'autre, le panneau change sans refaire son fondu. */
-  .kn-header[data-kn-menu-instant] .kn-menu {
+  /* Les lignes suivent, l'une apres l'autre : la liste s'ecrit de haut en bas
+     au lieu de tomber d'un bloc. Le retard ne porte que sur l'entree, jamais
+     sur la couleur, sinon le survol accuserait un temps mort. */
+  .kn-menu__label,
+  .kn-menu__link {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity var(--kn-dur-2) var(--kn-ease-out) var(--kn-in-delay, 0ms),
+      transform var(--kn-dur-2) var(--kn-ease-out) var(--kn-in-delay, 0ms),
+      color var(--kn-dur-2) var(--kn-ease-state);
+  }
+
+  .kn-header__nav-item.is-open .kn-menu__label,
+  .kn-header__nav-item.is-open .kn-menu__link {
+    opacity: 1;
+    transform: none;
+  }
+
+  .kn-header__nav-item.is-open .kn-menu__label {
+    --kn-in-delay: 30ms;
+  }
+
+  .kn-header__nav-item.is-open .kn-menu__list > li:nth-child(1) { --kn-in-delay: 60ms; }
+  .kn-header__nav-item.is-open .kn-menu__list > li:nth-child(2) { --kn-in-delay: 90ms; }
+  .kn-header__nav-item.is-open .kn-menu__list > li:nth-child(3) { --kn-in-delay: 120ms; }
+  .kn-header__nav-item.is-open .kn-menu__list > li:nth-child(4) { --kn-in-delay: 150ms; }
+  .kn-header__nav-item.is-open .kn-menu__list > li:nth-child(5) { --kn-in-delay: 180ms; }
+  .kn-header__nav-item.is-open .kn-menu__list > li:nth-child(n + 6) { --kn-in-delay: 210ms; }
+
+  /* D'un univers a l'autre, le panneau change sans refaire son fondu ni son
+     escalier : la bascule doit etre instantanee. */
+  .kn-header[data-kn-menu-instant] .kn-menu,
+  .kn-header[data-kn-menu-instant] .kn-menu__label,
+  .kn-header[data-kn-menu-instant] .kn-menu__link {
     transition: none;
   }
 
@@ -472,6 +511,13 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
   html:not([data-kn-js]) .kn-header__nav-item:is(:hover, :focus-within) > .kn-menu {
     display: block;
     opacity: 1;
+    transform: none;
+  }
+
+  html:not([data-kn-js]) .kn-header__nav-item:is(:hover, :focus-within) .kn-menu__label,
+  html:not([data-kn-js]) .kn-header__nav-item:is(:hover, :focus-within) .kn-menu__link {
+    opacity: 1;
+    transform: none;
   }
 
   /* Le contenu commence sous la premiere rubrique de la barre, quelle que
@@ -547,7 +593,13 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
   background: none;
   color: currentcolor;
   cursor: pointer;
-  transition: color var(--kn-dur-1) var(--kn-ease-state);
+  transition: color var(--kn-dur-1) var(--kn-ease-state),
+    transform var(--kn-dur-1) var(--kn-ease-out);
+}
+
+/* Meme reponse que les boutons : l'icone s'enfonce sous le doigt. */
+.kn-header__icon:active {
+  transform: scale(0.92);
 }
 
 .kn-header__icon:hover {

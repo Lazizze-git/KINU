@@ -241,7 +241,15 @@ a {
   width: 100%;
   transition: background-color var(--kn-dur-2) var(--kn-ease-state),
               color var(--kn-dur-2) var(--kn-ease-state),
-              border-color var(--kn-dur-2) var(--kn-ease-state);
+              border-color var(--kn-dur-2) var(--kn-ease-state),
+              transform var(--kn-dur-1) var(--kn-ease-out);
+}
+
+/* Amendement du 16 septembre 2026 : un bouton pressé s'enfonce. Trois pour
+   cent suffisent — l'oeil ne mesure pas le deplacement, il sent que le clic a
+   ete entendu, et l'attente du serveur devient moins muette. */
+.kn-btn:active {
+  transform: scale(0.97);
 }
 
 @media (min-width: 640px) {
