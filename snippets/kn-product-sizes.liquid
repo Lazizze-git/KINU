@@ -30,12 +30,10 @@
   @param {string} section_id
 {%- enddoc -%}
 
-{%- capture kn_newline %}
-{% endcapture -%}
 {%- liquid
   assign kn_rows = product.metafields.custom.guide_tailles.value
   if kn_rows == blank and opts.size_guide_rows != blank
-    assign kn_rows = opts.size_guide_rows | strip | split: kn_newline
+    assign kn_rows = opts.size_guide_rows | strip | newline_to_br | split: '<br />'
   endif
   assign kn_title = opts.size_guide_title | default: 'Guide des tailles'
 -%}
