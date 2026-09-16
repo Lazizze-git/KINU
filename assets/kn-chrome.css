@@ -226,6 +226,7 @@ a.kn-announce__item:hover {
   --kn-surface-fg: var(--kn-ink);
   --kn-surface-line: var(--kn-line);
   --kn-surface-muted: var(--kn-grey);
+  --kn-surface-faint: var(--kn-faint);
   --kn-surface-accent: var(--kn-forest);
   --kn-bubble-bg: var(--kn-forest);
   --kn-bubble-fg: var(--kn-ivory);
@@ -249,6 +250,7 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true'].is-nav-
   --kn-surface-fg: var(--kn-ivory);
   --kn-surface-line: var(--kn-line-invert);
   --kn-surface-muted: var(--kn-muted-invert);
+  --kn-surface-faint: var(--kn-faint-invert);
   --kn-surface-accent: var(--kn-ivory);
   --kn-bubble-bg: var(--kn-ivory);
   --kn-bubble-fg: var(--kn-forest);
@@ -259,6 +261,7 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
   --kn-surface-fg: var(--kn-ivory);
   --kn-surface-line: transparent;
   --kn-surface-muted: var(--kn-muted-invert);
+  --kn-surface-faint: var(--kn-faint-invert);
   --kn-surface-accent: var(--kn-ivory);
   --kn-bubble-bg: var(--kn-ivory);
   --kn-bubble-fg: var(--kn-forest);
@@ -329,7 +332,7 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
 /* Une rubrique ouverte reste nette tant que son panneau est parcouru. */
 .kn-header__nav-list:hover .kn-header__nav-item:not(:hover):not(.is-open) > .kn-header__nav-link,
 .kn-header__nav-list:hover .kn-header__nav-item:not(:hover):not(.is-open) > .kn-header__nav-toggle {
-  color: var(--kn-surface-muted);
+  color: var(--kn-surface-faint);
 }
 
 /* Amendement du 16 septembre 2026, demande client : la rubrique visée ne se
@@ -515,7 +518,7 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
 
   /* R7 — la ligne visee reste nette, les autres s'attenuent. */
   .kn-menu__list:focus-within .kn-menu__link {
-    color: var(--kn-surface-muted);
+    color: var(--kn-surface-faint);
   }
 
   .kn-menu__list:focus-within .kn-menu__link:focus-visible {
@@ -525,7 +528,7 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
 
 @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
   .kn-menu__list:hover .kn-menu__link {
-    color: var(--kn-surface-muted);
+    color: var(--kn-surface-faint);
   }
 
   .kn-menu__list:hover .kn-menu__link:hover {

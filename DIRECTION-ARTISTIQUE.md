@@ -196,6 +196,14 @@ Implémentation Liquid : ajouter `data-kn-territory="fluid-motion|crossover|ampl
 > illisible (§3.6). Vaut pour la barre du header et pour les listes de ses
 > panneaux. Une rubrique dont le panneau est ouvert garde cette couleur tant
 > qu'on parcourt sa liste, sans quoi elle s'éteindrait pendant la lecture.
+>
+> **Complément du même jour.** Le geste manquait de tranchant : le gris atténué
+> du §3.2 reste un gris de lecture, et la marche entre l'encre et lui se voyait
+> à peine. Les voisines descendent maintenant d'un cran de plus, à `--kn-faint`,
+> l'encre à 42 %. Cette valeur n'est jamais une couleur de repos : elle ne vit
+> que le temps d'un survol, sur une entrée qu'on ne vise pas, et la rubrique
+> visée reste seule pleinement lisible. Sur les surfaces vertes, son équivalent
+> est `--kn-faint-invert`, déjà en service dans le panneau du burger.
 
 ### 3.6 Combinaisons interdites
 

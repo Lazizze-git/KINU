@@ -30,12 +30,17 @@
   --kn-scrim:        rgba(27, 26, 22, 0.4);
   --kn-muted-invert: rgba(247, 245, 240, 0.7);
   --kn-faint-invert: rgba(247, 245, 240, 0.45);
+  /* Amendement du 16 septembre 2026 : l'effacement du survol demandait un
+     cran de plus que le gris attenue. --kn-faint n'est jamais une couleur
+     de repos, seulement l'etat passager d'un voisin qu'on ne vise pas. */
+  --kn-faint:        rgba(27, 26, 22, 0.42);
 
   /* ---- Surface courante (réassignée par [data-kn-surface]) ------------- */
   --kn-surface-bg:   var(--kn-ivory);
   --kn-surface-fg:   var(--kn-ink);
   --kn-surface-line: var(--kn-line);
   --kn-surface-muted: var(--kn-grey);
+  --kn-surface-faint: var(--kn-faint);
   --kn-surface-accent: var(--kn-forest);
 
   /* ---- Typographie ---------------------------------------------------- */
@@ -169,6 +174,7 @@
   --kn-surface-fg: var(--kn-ink);
   --kn-surface-line: var(--kn-line);
   --kn-surface-muted: var(--kn-grey);
+  --kn-surface-faint: var(--kn-faint);
   --kn-surface-accent: var(--kn-forest);
 }
 
@@ -177,6 +183,7 @@
   --kn-surface-fg: var(--kn-ink);
   --kn-surface-line: var(--kn-line);
   --kn-surface-muted: var(--kn-grey-deep);
+  --kn-surface-faint: var(--kn-faint);
   --kn-surface-accent: var(--kn-forest);
 }
 
@@ -185,6 +192,7 @@
   --kn-surface-fg: var(--kn-ivory);
   --kn-surface-line: var(--kn-line-invert);
   --kn-surface-muted: var(--kn-muted-invert);
+  --kn-surface-faint: var(--kn-faint-invert);
   --kn-surface-accent: var(--kn-ivory);
 }
 
@@ -193,6 +201,7 @@
   --kn-surface-fg: var(--kn-ivory);
   --kn-surface-line: var(--kn-line-invert);
   --kn-surface-muted: var(--kn-muted-invert);
+  --kn-surface-faint: var(--kn-faint-invert);
   --kn-surface-accent: var(--kn-forest-soft);
 }
 
@@ -212,6 +221,7 @@
   --kn-surface-fg: var(--kn-ink);
   --kn-surface-line: var(--kn-line);
   --kn-surface-muted: var(--kn-grey);
+  --kn-surface-faint: var(--kn-faint);
   --kn-surface-accent: var(--kn-forest);
 }
 
@@ -228,6 +238,7 @@
   --kn-surface-fg: var(--kn-ink);
   --kn-surface-line: var(--kn-line);
   --kn-surface-muted: var(--kn-grey-deep);
+  --kn-surface-faint: var(--kn-faint);
   --kn-surface-accent: var(--kn-forest);
 }
 
@@ -236,6 +247,7 @@
   --kn-surface-fg: var(--kn-ivory);
   --kn-surface-line: var(--kn-line-invert);
   --kn-surface-muted: var(--kn-muted-invert);
+  --kn-surface-faint: var(--kn-faint-invert);
   --kn-surface-accent: var(--kn-ivory);
 }
 

@@ -205,6 +205,7 @@ body.kn-header--over-media .kn-hero {
   --kn-surface-fg: var(--kn-ivory);
   --kn-surface-line: var(--kn-line-invert);
   --kn-surface-muted: var(--kn-muted-invert);
+  --kn-surface-faint: var(--kn-faint-invert);
   --kn-surface-accent: var(--kn-ivory);
 
   position: absolute;

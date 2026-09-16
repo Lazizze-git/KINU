@@ -74,6 +74,7 @@ body:has(.kn-pdp) .kn-territory-surface {
   --kn-surface-fg: var(--kn-ink);
   --kn-surface-line: var(--kn-line);
   --kn-surface-muted: var(--kn-grey);
+  --kn-surface-faint: var(--kn-faint);
   --kn-surface-accent: var(--kn-forest);
 }
 
