@@ -384,7 +384,7 @@ body.kn-header--over-media .kn-hero {
    format 2:3. Un cadre 4:5 leur coupait la tete et les jambes ; le cadre
    adopte leur format, l'image entre entiere. */
 .kn-universe__frame {
-  --kn-ratio: 2 / 3;
+  --kn-ratio: var(--kn-ratio-photo);
 }
 
 .kn-universe__frame .kn-img {

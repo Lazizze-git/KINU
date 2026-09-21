@@ -139,6 +139,10 @@
      le sauge codé en dur reprenait la main. Il suit desormais la surface. */
   --kn-media-bg:       var(--kn-surface-bg, var(--kn-ivory));
   --kn-ratio-portrait: 4 / 5;
+  /* 2:3 — le format des photographies produit de la boutique (1334 × 2000).
+     Tout cadre qui montre une photo produit entiere prend ce rapport : un
+     autre la couperait en tete ou en pied (retour client du 21/09/2026). */
+  --kn-ratio-photo:    2 / 3;
   --kn-ratio-square:   1 / 1;
   --kn-ratio-wide:     21 / 9;
   --kn-ratio-hero:     16 / 9;

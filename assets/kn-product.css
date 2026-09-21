@@ -25,16 +25,13 @@
   --kn-opt-inset: calc((var(--kn-tap) - var(--kn-opt-swatch)) / 2);   /*  6 px */
   --kn-thumb-w: 4rem;                                                 /* 64 px */
   --kn-ctrl-h: 52px;
-  --kn-gal-ratio: var(--kn-ratio-portrait);
+  --kn-gal-ratio: var(--kn-ratio-photo);
 }
 
 @media (min-width: 640px) {
   .kn-pdp { --kn-ctrl-h: 56px; }
 }
 
-@media (min-width: 768px) {
-  .kn-pdp { --kn-gal-ratio: var(--kn-ratio-card); }
-}
 
 /* Amendement du 09/09/2026 — la fiche passe a deux colonnes des 768 px, plus
    a 1024. En une seule colonne la galerie va bord a bord et garde le rapport
