@@ -201,6 +201,8 @@ body:has(.kn-pdp) .kn-territory-surface {
   padding: 0;
   border: 0;
   background-color: var(--kn-sage);
+  border-radius: calc(var(--kn-radius-media) / 2);
+  overflow: hidden;
   cursor: pointer;
   outline: var(--kn-stroke) solid transparent;
   outline-offset: calc(var(--kn-stroke) * -1);
@@ -266,6 +268,13 @@ body:has(.kn-pdp) .kn-territory-surface {
   aspect-ratio: var(--kn-gal-ratio);
   overflow: hidden;
   background-color: var(--kn-sage);
+}
+
+/* Sur telephone la galerie va bord a bord : elle reste droite. */
+@media (min-width: 768px) {
+  .kn-gal__frame {
+    border-radius: var(--kn-radius-media);
+  }
 }
 
 .kn-gal__frame > * {

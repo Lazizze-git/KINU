@@ -109,6 +109,11 @@
 
   /* ---- Traits, rayons, cibles ------------------------------------------ */
   --kn-radius:        0;
+  /* Demande client du 21/09/2026 : un arrondi leger sur les photographies,
+     et sur elles seules. Boutons, champs et filets gardent l'angle vif. Une
+     photo bord a bord (galerie produit sur telephone) reste droite : un
+     arrondi contre le bord de l'ecran se lirait comme un accident. */
+  --kn-radius-media:  6px;
   --kn-radius-pill:   999px;
   --kn-stroke:        1px;
   --kn-stroke-strong: 2px;

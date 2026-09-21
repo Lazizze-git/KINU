@@ -425,5 +425,6 @@ a {
   display: block;
   aspect-ratio: var(--kn-ratio, var(--kn-ratio-card));
   overflow: hidden;
+  border-radius: var(--kn-radius-media);
   background-color: var(--kn-media-bg);
 }
