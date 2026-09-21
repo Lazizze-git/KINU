@@ -283,6 +283,46 @@
   transform: scaleX(1);
 }
 
+/* Telephone : le nom replie souvent sur deux ou trois lignes, et un filet de
+   toute la largeur de la colonne ne soulignait plus rien. Le trait passe sous
+   le dernier mot seul, qui ne se coupe jamais. */
+.kn-card__title-last {
+  position: relative;
+  white-space: nowrap;
+}
+
+.kn-card__title::after {
+  display: none;
+}
+
+.kn-card__title-last::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -0.1em;
+  height: var(--kn-stroke);
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform var(--kn-dur-3) var(--kn-ease-out);
+}
+
+.kn-card:hover .kn-card__title-last::after,
+.kn-card:focus-within .kn-card__title-last::after {
+  transform: scaleX(1);
+}
+
+/* Ordinateur : le nom tient sur une ligne, le filet reprend toute sa longueur. */
+@media (min-width: 768px) {
+  .kn-card__title::after {
+    display: block;
+  }
+
+  .kn-card__title-last::after {
+    display: none;
+  }
+}
+
 /* Sur-titre d'univers : au-dessus du nom (l'ordre est celui du balisage),
    jamais en dessous. Sous le nom, la place revient au coloris — c'est
    l'information qui décide d'un clic. */

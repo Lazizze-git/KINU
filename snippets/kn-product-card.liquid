@@ -198,7 +198,19 @@
         <span class="kn-label kn-card__universe">{{ kn_universe_line }}</span>
       {%- endif -%}
 
-      <{{ kn_heading }} class="kn-card__title">{{ product.title }}</{{ kn_heading }}>
+      {%- liquid
+        comment
+          Le dernier mot porte son propre soulignement : sur telephone, un nom
+          replie sur deux lignes ne se souligne que sous ce mot, pas sur toute
+          la largeur de la colonne (demande client du 21/09/2026).
+        endcomment
+        assign kn_title_last = product.title | split: ' ' | last
+        assign kn_title_rest = product.title | remove_last: kn_title_last | strip
+      -%}
+      <{{ kn_heading }} class="kn-card__title">
+        {%- if kn_title_rest != blank -%}{{ kn_title_rest | escape }} {% endif -%}
+        <span class="kn-card__title-last">{{ kn_title_last | escape }}</span>
+      </{{ kn_heading }}>
 
       <span class="kn-card__prices">
         {%- if product.price_varies -%}
