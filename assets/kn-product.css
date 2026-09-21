@@ -87,6 +87,19 @@ body:has(.kn-pdp) .kn-territory-surface {
   margin-bottom: var(--kn-space-xs);
 }
 
+/* Sans fil d'Ariane, rien ne justifie l'espace au-dessus de la galerie : sur
+   telephone la photo vient directement sous le header, bord a bord. */
+.kn-pdp__inner:not(:has(.kn-pdp__breadcrumb)) {
+  padding-top: 0;
+}
+
+@media (min-width: 768px) {
+  .kn-pdp__inner:not(:has(.kn-pdp__breadcrumb)) {
+    padding-top: var(--kn-space-lg);
+  }
+}
+
+
 /* Le seul signe de territoire de la page (DA §3.4 R4). */
 .kn-pdp__territory {
   height: var(--kn-territory-bar);

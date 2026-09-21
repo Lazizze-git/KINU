@@ -78,12 +78,15 @@
   {{ section.shopify_attributes }}
 >
   <div class="kn-container kn-container--narrow kn-pdp__inner">
+    {%- comment -%}
+      Fil d'Ariane et signe de territoire vont ensemble (DA §3.4 R4) : le filet
+      vert souligne le chemin, il n'a pas de sens seul. Masques ensemble a la
+      demande du client (21/09/2026), reactivables dans l'editeur.
+    {%- endcomment -%}
     {%- if kn_s.show_breadcrumb -%}
       <div class="kn-pdp__breadcrumb">{% render 'kn-breadcrumb' %}</div>
+      <hr class="kn-pdp__territory">
     {%- endif -%}
-
-    {%- comment -%} Signe de territoire, et un seul (DA §3.4 R4). {%- endcomment -%}
-    <hr class="kn-pdp__territory">
 
     <div class="kn-pdp__layout">
       <div class="kn-pdp__gallery">
@@ -179,7 +182,7 @@
   "tag": "section",
   "settings": [
     { "type": "header", "content": "Territoire" },
-    { "type": "checkbox", "id": "show_breadcrumb", "label": "Afficher le fil d’Ariane", "default": true },
+    { "type": "checkbox", "id": "show_breadcrumb", "label": "Afficher le fil d’Ariane", "info": "Avec le filet vert qui le souligne.", "default": false },
     { "type": "text", "id": "label_women", "label": "Libellé Femme", "default": "Femme" },
     { "type": "text", "id": "label_men", "label": "Libellé Homme", "default": "Homme" },
     { "type": "text", "id": "label_unisex", "label": "Libellé Unisexe", "default": "Unisexe" },
