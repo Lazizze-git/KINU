@@ -27,6 +27,7 @@ var DESKTOP_QUERY = '(min-width: 768px)';
    * @property {string[]} options
    * @property {string} title
    * @property {string} price
+   * @property {number} cents
    * @property {string|null} compare
    * @property {string} sku
    * @property {number|null} media
@@ -366,6 +367,12 @@ var DESKTOP_QUERY = '(min-width: 768px)';
     var availabilityDot = one(root, '[data-kn-availability-dot]');
     var live = one(root, '[data-kn-live]');
     var pickup = one(root, '[data-kn-pickup]');
+    var totals = all(root, '[data-kn-btn-total]');
+    var totalValue = one(root, '[data-kn-total]');
+    var quantity = /** @type {HTMLInputElement|null} */ (one(root, '[data-kn-qty-input]'));
+    var moneyFormat = root.dataset.knMoneyFormat || '';
+    /** @type {KnVariant|null} */
+    var current = null;
     /** @type {AbortController|null} */
     var pickupRequest = null;
 
@@ -439,6 +446,30 @@ var DESKTOP_QUERY = '(min-width: 768px)';
       });
     }
 
+    /**
+     * Prix de la variante multiplie par la quantite, au format de la boutique.
+     * Si le format est illisible, on renonce au total plutot que d'afficher un
+     * montant faux : le bouton garde alors son seul libelle.
+     * @param {KnVariant} variant
+     * @returns {string|null}
+     */
+    function totalFor(variant) {
+      var count = quantity ? parseInt(quantity.value, 10) || 1 : 1;
+      if (count === 1) return variant.price;
+      var format = window.KN && window.KN.formatMoney;
+      if (typeof format !== 'function' || typeof variant.cents !== 'number') return null;
+      return format(variant.cents * count, moneyFormat);
+    }
+
+    function refreshTotal() {
+      if (!totalValue) return;
+      var amount = current && current.available ? totalFor(current) : null;
+      totals.forEach(function (node) {
+        node.hidden = !amount;
+      });
+      if (amount) totalValue.textContent = amount;
+    }
+
     /** @param {KnVariant} variant */
     function pushUrl(variant) {
       if (!window.history || typeof window.history.replaceState !== 'function') return;
@@ -493,6 +524,8 @@ var DESKTOP_QUERY = '(min-width: 768px)';
 
       refreshOptionStates(choice);
 
+      current = variant;
+      refreshTotal();
       idInput.value = variant ? String(variant.id) : '';
       buttons.forEach(function (button) {
         button.disabled = !canAdd;
@@ -533,6 +566,11 @@ var DESKTOP_QUERY = '(min-width: 768px)';
       if (target instanceof HTMLElement && target.hasAttribute('data-kn-option-input')) update(true);
     });
 
+    if (quantity) {
+      quantity.addEventListener('input', refreshTotal);
+      quantity.addEventListener('change', refreshTotal);
+    }
+
     update(false);
   }
 
@@ -559,6 +597,8 @@ var DESKTOP_QUERY = '(min-width: 768px)';
       button.addEventListener('click', function () {
         var step = parseInt(button.dataset.knQtyStep || '1', 10) || 1;
         input.value = String(Math.max(floor(), (parseInt(input.value, 10) || floor()) + step));
+        // Une valeur ecrite par script ne declenche rien : on previent le total.
+        input.dispatchEvent(new Event('change', { bubbles: true }));
       });
     });
 

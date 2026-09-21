@@ -1,0 +1,31 @@
+{%- doc -%}
+  Ligne de réassurance sous le bouton d'ajout : jusqu'à trois arguments, un
+  pictogramme au trait et un libellé court. Ni cadre ni fond, deux filets
+  seulement (DA §5.4). Un argument sans texte n'est pas rendu ; sans aucun
+  texte, la ligne entière disparaît.
+
+  @param {object[]} blocks - Blocs de la section produit ; seuls ceux de type `assurance` sont lus.
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_items = blocks | where: 'type', 'assurance'
+  assign kn_count = 0
+  for kn_block in kn_items
+    if kn_block.settings.text != blank
+      assign kn_count = kn_count | plus: 1
+    endif
+  endfor
+-%}
+
+{%- if kn_count > 0 -%}
+  <ul class="kn-assure" role="list" style="--kn-assure-count: {{ kn_count }};">
+    {%- for kn_block in kn_items -%}
+      {%- if kn_block.settings.text != blank -%}
+        <li class="kn-assure__item" {{ kn_block.shopify_attributes }}>
+          {%- render 'kn-icon', name: kn_block.settings.icon, size: 20, class: 'kn-assure__icon' -%}
+          <span class="kn-sm kn-assure__text">{{ kn_block.settings.text | escape }}</span>
+        </li>
+      {%- endif -%}
+    {%- endfor -%}
+  </ul>
+{%- endif -%}

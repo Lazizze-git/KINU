@@ -29,7 +29,7 @@
         "tax_note": "<p>TVA incluse. Frais de livraison calculés au paiement.</p>",
         "show_availability": true,
         "label_availability": "Disponibilité",
-        "show_sku": true,
+        "show_sku": false,
         "label_sku": "Référence",
         "show_pickup": true,
         "label_pickup_available": "Retrait disponible",
@@ -48,6 +48,25 @@
         "title_material": "Matière & entretien",
         "title_shipping": "Livraison & retours",
         "text_shipping": "<p>Livraison standard en Suisse à 7 CHF, offerte dès 65 CHF d’achat. Livraison internationale à 15 CHF vers vingt-sept pays.</p>"
+      },
+      "blocks": {
+        "assurance_shipping": {
+          "type": "assurance",
+          "settings": { "icon": "truck", "text": "Livraison offerte dès CHF 65" }
+        },
+        "assurance_world": {
+          "type": "assurance",
+          "settings": { "icon": "globe", "text": "Expédition dans 27 pays" }
+        }
+      },
+      "block_order": ["assurance_shipping", "assurance_world"]
+    },
+    "complete_the_look": {
+      "type": "kn-product-recommendations",
+      "settings": {
+        "heading": "Complétez la tenue",
+        "recommendation_type": "complementary",
+        "products_to_show": 4
       }
     },
     "recommendations": {
@@ -59,5 +78,5 @@
       }
     }
   },
-  "order": ["main", "recommendations"]
+  "order": ["main", "complete_the_look", "recommendations"]
 }

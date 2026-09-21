@@ -56,6 +56,20 @@
   endif
 
   assign kn_badge = badge | default: product.metafields.kn.badge.value
+
+  comment
+    Sans badge editorial, une piece soldee affiche sa remise en chiffre
+    (« −20 % ») : un chiffre se lit d'un coup d'oeil, un mot se lit. Toujours
+    l'aplat du badge, jamais de rouge (DA §7.3).
+  endcomment
+  if kn_badge == blank and kn_on_sale
+    assign kn_saving = kn_compare_at | minus: product.price | times: 100.0
+    assign kn_percent = kn_saving | divided_by: kn_compare_at | round
+    if kn_percent > 0
+      assign kn_badge = '−' | append: kn_percent | append: ' %'
+    endif
+  endif
+
   unless kn_available
     assign kn_badge = ''
   endunless

@@ -7,7 +7,8 @@
   toujours la gamme de la surface qui l'accueille.
 
   @param {string} name - burger, close, search, account, cart, chevron,
-    arrow-right, plus, minus, instagram, tiktok, facebook, pinterest, youtube
+    arrow-right, plus, minus, truck, globe, return, shield, instagram, tiktok,
+    facebook, pinterest, youtube
   @param {number} [size] - Côté en pixels. 20 par défaut.
   @param {string} [class] - Classes supplémentaires.
 
@@ -64,6 +65,25 @@
 
     {%- when 'minus' -%}
       <path d="M5 12h14" />
+
+    {%- when 'truck' -%}
+      <path d="M2.75 6.75h11.5v10H2.75z" />
+      <path d="M14.25 10.25h4l3 3.25v3.25h-7" />
+      <circle cx="7" cy="17.75" r="1.75" />
+      <circle cx="17.5" cy="17.75" r="1.75" />
+
+    {%- when 'globe' -%}
+      <circle cx="12" cy="12" r="8.75" />
+      <path d="M3.25 12h17.5" />
+      <path d="M12 3.25c2.3 2.4 3.5 5.3 3.5 8.75s-1.2 6.35-3.5 8.75c-2.3-2.4-3.5-5.3-3.5-8.75S9.7 5.65 12 3.25z" />
+
+    {%- when 'return' -%}
+      <path d="M8.5 5.5 4.75 9.25 8.5 13" />
+      <path d="M4.75 9.25h9.5a5 5 0 0 1 0 10h-5.5" />
+
+    {%- when 'shield' -%}
+      <path d="M12 3.25 19.25 6v5.5c0 4.4-3 7.9-7.25 9.25-4.25-1.35-7.25-4.85-7.25-9.25V6z" />
+      <path d="m9 12 2.25 2.25L15.25 10" />
 
     {%- when 'instagram' -%}
       <rect x="3.5" y="3.5" width="17" height="17" rx="4.75" />

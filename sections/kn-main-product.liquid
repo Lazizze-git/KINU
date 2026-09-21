@@ -50,7 +50,9 @@
   if kn_with_currency
     assign kn_price = kn_variant.price | money_with_currency
     assign kn_compare = kn_variant.compare_at_price | money_with_currency
+    assign kn_money_format = shop.money_with_currency_format
   else
+    assign kn_money_format = shop.money_format
     assign kn_price = kn_variant.price | money
     assign kn_compare = kn_variant.compare_at_price | money
   endif
@@ -72,6 +74,7 @@
   data-kn-label-unavailable="{{ kn_s.label_unavailable | escape }}"
   data-kn-label-in-stock="{{ kn_s.label_in_stock | escape }}"
   data-kn-label-selected="{{ kn_s.label_selected | escape }}"
+  data-kn-money-format="{{ kn_money_format | strip_html | escape }}"
   {{ section.shopify_attributes }}
 >
   <div class="kn-container kn-container--narrow kn-pdp__inner">
@@ -105,10 +108,6 @@
           >{{ kn_compare }}</s>
         </div>
 
-        {%- if kn_s.tax_note != blank -%}
-          <div class="kn-sm kn-pdp__tax">{{ kn_s.tax_note }}</div>
-        {%- endif -%}
-
         {%- render 'kn-product-variant-data', product: kn_product -%}
 
         {%- render 'kn-product-options', product: kn_product, opts: kn_s, section_id: section.id -%}
@@ -120,9 +119,20 @@
           form_id: kn_form_id,
           can_add: kn_can_add,
           button_label: kn_btn_label,
+          price: kn_price,
           section_id: section.id
         -%}
 
+        {%- comment -%}
+          La mention TVA suit le bouton plutot que le prix : entre le prix et le
+          bouton, chaque ligne qui n'aide pas a choisir les eloigne l'un de
+          l'autre.
+        {%- endcomment -%}
+        {%- if kn_s.tax_note != blank -%}
+          <div class="kn-sm kn-pdp__tax">{{ kn_s.tax_note }}</div>
+        {%- endif -%}
+
+        {%- render 'kn-product-assurance', blocks: section.blocks -%}
       </div>
 
       {%- comment -%}
@@ -185,12 +195,13 @@
     { "type": "text", "id": "label_increase", "label": "Augmenter la quantité", "default": "Augmenter la quantité" },
     { "type": "text", "id": "label_option_unavailable", "label": "Suffixe option indisponible", "default": "indisponible" },
     { "type": "checkbox", "id": "show_sticky_bar", "label": "Bandeau d’achat collant (mobile)", "default": true },
-    { "type": "richtext", "id": "tax_note", "label": "Mention sous le prix", "default": "<p>TVA incluse. Frais de livraison calculés au paiement.</p>" },
+    { "type": "richtext", "id": "tax_note", "label": "Mention sous le bouton", "default": "<p>TVA incluse. Frais de livraison calculés au paiement.</p>" },
+
 
     { "type": "header", "content": "Disponibilité" },
     { "type": "checkbox", "id": "show_availability", "label": "Afficher la disponibilité", "default": true },
-    { "type": "text", "id": "label_availability", "label": "Libellé disponibilité", "default": "Disponibilité" },
-    { "type": "checkbox", "id": "show_sku", "label": "Afficher la référence", "default": true },
+    { "type": "text", "id": "label_availability", "label": "Libellé disponibilité", "default": "Disponibilité", "info": "Lu par les lecteurs d’écran seulement : à l’écran, « En stock » se suffit." },
+    { "type": "checkbox", "id": "show_sku", "label": "Afficher la référence", "default": false, "info": "La référence sert au service client plus qu’à l’acheteur : masquée par défaut pour garder le bouton d’ajout près du prix." },
     { "type": "text", "id": "label_sku", "label": "Libellé référence", "default": "Référence" },
     { "type": "checkbox", "id": "show_pickup", "label": "Afficher le retrait en magasin", "default": true },
     { "type": "text", "id": "label_pickup_available", "label": "Retrait disponible", "default": "Retrait disponible" },
@@ -220,6 +231,19 @@
     { "type": "text", "id": "title_shipping", "label": "Titre — Livraison", "default": "Livraison & retours" },
     { "type": "richtext", "id": "text_shipping", "label": "Texte de repli — Livraison" }
   ],
+  "blocks": [
+    {
+      "type": "assurance",
+      "name": "Argument de réassurance",
+      "limit": 3,
+      "settings": [
+        { "type": "paragraph", "content": "Affiché sous le bouton d’ajout. N’écrire que des engagements réels." },
+        { "type": "select", "id": "icon", "label": "Pictogramme", "options": [{ "value": "truck", "label": "Livraison" }, { "value": "globe", "label": "International" }, { "value": "return", "label": "Retours" }, { "value": "shield", "label": "Paiement sécurisé" }], "default": "truck" },
+        { "type": "text", "id": "text", "label": "Texte", "default": "Livraison offerte dès CHF 65" }
+      ]
+    }
+  ],
+  "max_blocks": 3,
   "presets": [{ "name": "Produit KINŪ" }]
 }
 {% endschema %}

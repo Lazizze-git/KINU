@@ -374,7 +374,7 @@ body:has(.kn-pdp) .kn-territory-surface {
 }
 
 .kn-pdp__tax {
-  margin: var(--kn-space-3xs) 0 0;
+  margin: var(--kn-space-sm) 0 0;
   max-width: var(--kn-measure);
   color: var(--kn-grey);
 }
@@ -607,6 +607,18 @@ body:has(.kn-pdp) .kn-territory-surface {
 .kn-buy__button {
   min-height: var(--kn-ctrl-h);
   width: 100%;
+  flex-wrap: wrap;
+  column-gap: 0.5em;
+  row-gap: var(--kn-space-3xs);
+  padding-block: var(--kn-space-2xs);
+}
+
+/* Le total ne se coupe jamais : si la ligne manque de place, il passe entier
+   sous le libelle. Chiffres tabulaires, pour que le bouton ne tremble pas
+   quand la quantite change. */
+.kn-buy__total {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .kn-buy__button[disabled] {
@@ -694,6 +706,45 @@ body:has(.kn-pdp) .kn-territory-surface {
 .kn-buy__pickup-title {
   font-weight: var(--kn-fw-medium);
   color: var(--kn-ink);
+}
+
+/* Réassurance : une rangée d'arguments entre deux filets, pictos au trait en
+   encre, sans cadre ni fond. Empilée sur mobile, en colonnes égales dès que
+   la colonne d'achat a la place. */
+.kn-assure {
+  display: grid;
+  gap: var(--kn-space-xs);
+  margin: var(--kn-space-md) 0 0;
+  padding: var(--kn-space-sm) 0;
+  border-block: var(--kn-stroke) solid var(--kn-line);
+  list-style: none;
+}
+
+.kn-assure__item {
+  display: flex;
+  align-items: center;
+  gap: var(--kn-space-2xs);
+  min-width: 0;
+}
+
+.kn-assure__icon {
+  flex: none;
+}
+
+.kn-assure__text {
+  margin: 0;
+}
+
+@media (min-width: 1024px) {
+  .kn-assure {
+    grid-template-columns: repeat(var(--kn-assure-count, 3), minmax(0, 1fr));
+    gap: var(--kn-space-sm);
+  }
+
+  .kn-assure__item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -957,6 +1008,12 @@ body:has(.kn-sticky.is-visible) {
    revenues : sans contenu, pas de grand vide au bas de la page. */
 .kn-recos__inner {
   padding-block: var(--kn-section-y);
+}
+
+/* « Complétez la tenue » puis « Vous aimerez aussi » : deux blocs qui se
+   suivent partagent une seule respiration, pas deux. */
+.shopify-section:has(.kn-recos__inner) + .shopify-section .kn-recos__inner {
+  padding-top: 0;
 }
 
 .kn-recos__head {

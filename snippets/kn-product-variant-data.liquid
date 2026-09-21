@@ -27,6 +27,7 @@
         "options": {{ kn_v.options | json }},
         "title": {{ kn_v.title | json }},
         "price": {{ kn_v_price | json }},
+        "cents": {{ kn_v.price }},
         "compare": {% if kn_v.compare_at_price > kn_v.price %}{{ kn_v_compare | json }}{% else %}null{% endif %},
         "sku": {{ kn_v.sku | default: '' | json }},
         "media": {% if kn_v.featured_media %}{{ kn_v.featured_media.id }}{% else %}null{% endif %},

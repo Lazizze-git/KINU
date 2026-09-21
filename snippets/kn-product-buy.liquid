@@ -9,6 +9,7 @@
   @param {string} form_id
   @param {boolean} can_add
   @param {string} button_label
+  @param {string} price - Prix unitaire formaté de la variante affichée.
   @param {string} section_id
 {%- enddoc -%}
 
@@ -96,6 +97,18 @@
           {% endunless %}
         >
           <span data-kn-btn-label>{{ button_label }}</span>
+          {%- comment -%}
+            Le total suit la variante et la quantite : l'acheteur sait ce qu'il
+            paie avant de cliquer. Le tiret reste dans le fragment insecable,
+            pour qu'un retour a la ligne passe avant lui et jamais apres.
+          {%- endcomment -%}
+          <span
+            class="kn-buy__total"
+            data-kn-btn-total
+            {% unless can_add %}
+              hidden
+            {% endunless %}
+          >—&nbsp;<span data-kn-total>{{ price | strip_html }}</span></span>
         </button>
       </add-to-cart-component>
     </div>
@@ -112,7 +125,7 @@
   <dl class="kn-buy__meta">
     {%- if opts.show_availability -%}
       <div class="kn-buy__meta-row">
-        <dt class="kn-label kn-buy__meta-key">{{ opts.label_availability }}</dt>
+        <dt class="kn-visually-hidden">{{ opts.label_availability }}</dt>
         <dd class="kn-buy__meta-val">
           <span
             class="kn-buy__dot"
