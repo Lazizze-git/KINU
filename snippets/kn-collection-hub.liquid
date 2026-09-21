@@ -42,12 +42,28 @@
         assign kn_tiles = kn_tiles | plus: 1
       -%}
       {%- for kn_lead in kn_child.object.products offset: kn_offset limit: 1 -%}
-        {%- assign kn_used = kn_used | append: kn_lead.id | append: ',' -%}
+        {%- liquid
+          assign kn_used = kn_used | append: kn_lead.id | append: ','
+
+          comment
+            Demande client du 21 septembre : au survol, un autre coloris de la
+            piece plutot qu'une deuxieme vue du meme. On prend la photo de la
+            premiere variante qui en porte une autre que la couverture ; une
+            piece a un seul coloris retombe sur sa deuxieme photo.
+          endcomment
+          assign kn_hover = kn_lead.images[1]
+          for kn_variant in kn_lead.variants
+            if kn_variant.featured_media != blank and kn_variant.featured_media.id != kn_lead.featured_media.id
+              assign kn_hover = kn_variant.featured_media.preview_image
+              break
+            endif
+          endfor
+        -%}
         <li>
           {%- render 'kn-hub-tile',
             url: kn_child.url,
             image: kn_lead.featured_image,
-            image_hover: kn_lead.images[1],
+            image_hover: kn_hover,
             title: kn_child.title,
             eager: kn_eager
           -%}

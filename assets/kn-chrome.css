@@ -656,7 +656,12 @@ body.kn-header--over-media
   display: block;
 }
 
+/* Demande client du 21 septembre : sur ivoire, le nom de la marque prend le
+   vert forêt. L'accent de surface redevient ivoire quand le header passe en
+   vert ou en transparent, le logo reste donc toujours lisible. */
 .kn-header__wordmark {
+  color: var(--kn-surface-accent);
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
   font-family: var(--kn-font-ui);
   font-size: var(--kn-logo-h);
   font-weight: var(--kn-fw-bold);

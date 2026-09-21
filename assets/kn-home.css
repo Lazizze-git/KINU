@@ -380,8 +380,11 @@ body.kn-header--over-media .kn-hero {
   flex-direction: column;
 }
 
+/* Demande client du 21 septembre : les photographies de la boutique sont au
+   format 2:3. Un cadre 4:5 leur coupait la tete et les jambes ; le cadre
+   adopte leur format, l'image entre entiere. */
 .kn-universe__frame {
-  --kn-ratio: var(--kn-ratio-portrait);
+  --kn-ratio: 2 / 3;
 }
 
 .kn-universe__frame .kn-img {
