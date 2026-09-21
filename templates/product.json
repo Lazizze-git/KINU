@@ -21,6 +21,7 @@
         "label_unavailable": "Indisponible",
         "label_in_stock": "En stock",
         "label_selected": "sélectionné",
+        "show_quantity": false,
         "label_quantity": "Quantité",
         "label_decrease": "Diminuer la quantité",
         "label_increase": "Augmenter la quantité",
