@@ -1097,17 +1097,13 @@ body:has(.kn-sticky.is-visible) {
    -------------------------------------------------------------------------- */
 
 .kn-spec {
-  margin-block-start: var(--kn-space-3xl);
-}
-
-.kn-spec__title {
-  margin: 0 0 var(--kn-space-md);
-  color: var(--kn-surface-muted);
-}
-
-.kn-spec__list {
-  margin: 0;
   display: grid;
+  margin: 0;
+}
+
+/* Sous le texte de la pièce, dans l'accordéon Description. */
+.kn-acc__body > * + .kn-spec {
+  margin-block-start: var(--kn-space-md);
 }
 
 /* Le filet ouvre la ligne, jamais ne la ferme : la derniere referme le champ,
@@ -1124,13 +1120,20 @@ body:has(.kn-sticky.is-visible) {
   border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
 }
 
-/* Le rail des cles tient a 12 rem : « Composition » y entre sans se couper, et
+/* Dans l'accordéon, c'est le filet de l'accordéon qui referme la liste : le
+   second, juste au-dessus, ferait un trait double. */
+.kn-acc__body .kn-spec__row:last-child {
+  border-block-end: 0;
+  padding-block-end: 0;
+}
+
+/* Le rail des cles tient a 10 rem : « Composition » y entre sans se couper, et
    toutes les valeurs demarrent sur la meme verticale. Sous 560 px la cle passe
    au-dessus de sa valeur — deux colonnes y donneraient une valeur de six
    caracteres de large. */
 @media (min-width: 560px) {
   .kn-spec__row {
-    grid-template-columns: 12rem minmax(0, 1fr);
+    grid-template-columns: 10rem minmax(0, 1fr);
   }
 }
 

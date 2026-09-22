@@ -1,6 +1,8 @@
 {%- doc -%}
   Accordéons de la page produit (DA §7.7) : filets 1 px, sans fond, chevron 12 px.
   Matière et Livraison viennent de métachamps, avec repli sur un texte de section.
+  Description porte le texte de la pièce puis sa fiche technique
+  (kn-product-spec) ; elle s'ouvre dès que l'un des deux existe.
 
   @param {object} product
   @param {object} opts
@@ -32,18 +34,26 @@
   {%- endif -%}
 {%- endcapture -%}
 
+{%- capture kn_spec -%}
+  {%- render 'kn-product-spec', product: product -%}
+{%- endcapture -%}
+
 {%- liquid
   assign kn_material = kn_material | strip
   assign kn_shipping = kn_shipping | strip
+  assign kn_spec = kn_spec | strip
 -%}
 
 <div class="kn-acc">
-  {%- if product.description != blank -%}
+  {%- if product.description != blank or kn_spec != blank -%}
     <details class="kn-acc__item" name="kn-acc-{{ section_id }}" open>
       <summary class="kn-acc__sum">
         <span class="kn-label">{{ opts.title_description }}</span>
       </summary>
-      <div class="kn-acc__body kn-body">{{ product.description }}</div>
+      <div class="kn-acc__body kn-body">
+        {{- product.description -}}
+        {{- kn_spec -}}
+      </div>
     </details>
   {%- endif -%}
 
