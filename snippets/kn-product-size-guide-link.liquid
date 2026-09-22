@@ -1,0 +1,43 @@
+{%- doc -%}
+  KINŪ — Lien vers le guide des tailles, sous le bouton d'ajout au panier.
+
+  Demande client du 22 septembre 2026 : le lien quitte la légende de l'option
+  Taille pour passer sous le bouton. Il n'apparaît que si la pièce a une option
+  de taille et que kn-product-sizes saura dessiner un tableau — celui de la
+  pièce (métachamp), sinon le tableau commun réglé dans l'éditeur. Pas de lien
+  vers un panneau vide.
+
+  @param {object} product
+  @param {object} opts
+  @param {string} section_id
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_has_size = false
+  for kn_option in product.options_with_values
+    assign kn_opt_lower = kn_option.name | downcase
+    if kn_opt_lower contains 'taille' or kn_opt_lower contains 'size'
+      assign kn_has_size = true
+      break
+    endif
+  endfor
+
+  assign kn_has_guide = false
+  if kn_has_size
+    if product.metafields.custom.guide_tailles != blank
+      assign kn_has_guide = true
+    elsif opts.size_guide_rows != blank
+      assign kn_has_guide = true
+    endif
+  endif
+-%}
+
+{%- if kn_has_guide -%}
+  <button
+    type="button"
+    class="kn-label kn-underline kn-buy__guide"
+    data-kn-sizes-open="kn-sizes-{{ section_id }}"
+  >
+    {{- opts.label_size_guide | default: 'Guide des tailles' -}}
+  </button>
+{%- endif -%}

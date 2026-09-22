@@ -131,6 +131,8 @@
     </span>
   {%- endform -%}
 
+  {%- render 'kn-product-size-guide-link', product: product, opts: opts, section_id: section_id -%}
+
   <dl class="kn-buy__meta">
     {%- if opts.show_availability -%}
       <div class="kn-buy__meta-row">

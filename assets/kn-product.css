@@ -1170,8 +1170,9 @@ body:has(.kn-sticky.is-visible) {
   gap: var(--kn-space-2xs);
 }
 
-.kn-opt__guide {
-  margin-inline-start: auto;
+/* Sous le bouton d'ajout au panier (demande client du 22 septembre 2026). */
+.kn-buy__guide {
+  margin-block-start: var(--kn-space-sm);
   padding: 0;
   border: 0;
   background: none;
