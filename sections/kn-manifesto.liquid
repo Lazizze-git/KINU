@@ -1,3 +1,19 @@
+{%- comment -%}
+  KINŪ — Manifeste (inondation 1, DA §3.4 R1).
+
+  Refonte du 22 septembre 2026, demande client : les trois preuves deviennent
+  des plaques de verre dépoli posées sur un fond vivant. Sur téléphone, elles
+  s'empilent au défilement ; sur ordinateur, elles tiennent une rangée et un
+  reflet suit le pointeur (kn-manifesto.js).
+
+  Le fond est une photographie si elle est réglée, sinon trois halos de lumière
+  aux couleurs de la marque — jamais d'image de maquette, le verre doit avoir
+  quelque chose à flouter sans rien emprunter.
+{%- endcomment -%}
+
+{{ 'kn-manifesto.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'kn-manifesto.js' | asset_url }}" defer></script>
+
 {%- liquid
   assign s = section.settings
   assign show_cta = false
@@ -6,8 +22,27 @@
   endif
 -%}
 
-<div class="kn-section" data-kn-surface="flood">
-  <div class="kn-container">
+<div class="kn-section kn-manifesto" data-kn-surface="flood" data-kn-manifesto>
+  <div class="kn-manifesto__backdrop" aria-hidden="true">
+    {%- if s.image != blank -%}
+      {{
+        s.image
+        | image_url: width: 2400
+        | image_tag:
+          widths: '640, 828, 1080, 1440, 1920, 2400',
+          sizes: '100vw',
+          class: 'kn-manifesto__photo',
+          alt: '',
+          loading: 'lazy'
+      }}
+    {%- else -%}
+      <span class="kn-manifesto__halo kn-manifesto__halo--1"></span>
+      <span class="kn-manifesto__halo kn-manifesto__halo--2"></span>
+      <span class="kn-manifesto__halo kn-manifesto__halo--3"></span>
+    {%- endif -%}
+  </div>
+
+  <div class="kn-container kn-manifesto__inner">
     <div class="kn-manifesto__head">
       <div class="kn-reveal">
         <h2 class="kn-manifesto__title">{{ s.title | escape }}</h2>
@@ -24,16 +59,21 @@
     </div>
 
     {%- if section.blocks.size > 0 -%}
-      <div class="kn-manifesto__pillars" style="--kn-pillar-count: {{ section.blocks.size }};">
+      <ul class="kn-manifesto__pillars" role="list">
         {%- for block in section.blocks -%}
-          <div class="kn-manifesto__pillar kn-reveal" {{ block.shopify_attributes }}>
+          <li
+            class="kn-manifesto__pillar kn-reveal"
+            style="--kn-i: {{ forloop.index0 }}; --kn-reveal-delay: {{ forloop.index0 | times: 80 }}ms;"
+            data-kn-glass
+            {{ block.shopify_attributes }}
+          >
             <span class="kn-manifesto__key">{{ block.settings.key | escape }}</span>
             {%- if block.settings.text != blank -%}
-              <p class="kn-sm">{{ block.settings.text | escape }}</p>
+              <p class="kn-manifesto__text">{{ block.settings.text | escape }}</p>
             {%- endif -%}
-          </div>
+          </li>
         {%- endfor -%}
-      </div>
+      </ul>
     {%- endif -%}
   </div>
 </div>
@@ -67,6 +107,12 @@
       "type": "url",
       "id": "link_url",
       "label": "Destination du bouton"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Photo de fond",
+      "info": "Facultatif. Vue à travers les cartes en verre, teintée de vert. Sans photo, le fond est fait de halos de lumière verts."
     }
   ],
   "blocks": [

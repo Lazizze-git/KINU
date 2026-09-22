@@ -65,8 +65,7 @@
    enfant. Partout où l'écart est porté par `gap`, la marge UA doit sauter,
    sinon elle s'ajoute silencieusement au rythme. */
 .kn-hero__inner > p,
-.kn-home-empty > p,
-.kn-manifesto__aside > p {
+.kn-home-empty > p {
   margin: 0;
 }
 
@@ -433,94 +432,8 @@ body.kn-header--over-media .kn-hero {
 }
 
 /* --------------------------------------------------------------------------
-   3. Manifeste — inondation 1 (DA §3.4 R1, R9)
+   3. Manifeste — voir kn-manifesto.css, chargé par la section elle-même.
    -------------------------------------------------------------------------- */
-
-.kn-manifesto__head {
-  display: grid;
-  gap: var(--kn-space-lg);
-}
-
-@media (min-width: 1024px) {
-  .kn-manifesto__head {
-    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-    column-gap: var(--kn-space-2xl);
-    align-items: start;
-  }
-}
-
-.kn-manifesto__title {
-  font-size: var(--kn-fs-h1);
-}
-
-.kn-manifesto__aside {
-  display: grid;
-  justify-items: start;
-  gap: var(--kn-space-lg);
-}
-
-/* La bande se ferme en bas : sans ce filet, la derniere preuve restait ouverte
-   sur le vide — visible surtout empilee, ou plus rien ne la retenait. */
-.kn-manifesto__pillars {
-  display: grid;
-  grid-template-columns: 1fr;
-  margin-block-start: var(--kn-space-2xl);
-  border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
-}
-
-/* Les filets hauts s'alignent en une ligne continue sur desktop, et deviennent
-   des séparateurs horizontaux dès que la grille se replie.
-
-   Le pilier est une simple pile : la cle, puis sa phrase, tous deux cales sur
-   le meme bord gauche. La disposition en deux colonnes qui existait ici tenait
-   a l'index [01] retire le 29 aout ; sans lui, la cle heritait d'une colonne
-   de largeur variable et la phrase demarrait plus loin a chaque rangee. */
-.kn-manifesto__pillar {
-  display: grid;
-  gap: var(--kn-space-2xs);
-  padding-block: var(--kn-space-lg);
-  border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
-}
-
-.kn-manifesto__key {
-  display: block;
-  font-size: var(--kn-fs-h3);
-  font-family: var(--kn-font-ui);
-  font-weight: var(--kn-fw-medium);
-  line-height: var(--kn-lh-tight);
-  letter-spacing: -0.015em;
-}
-
-.kn-manifesto__pillar p {
-  margin: 0;
-  color: var(--kn-surface-muted);
-  max-width: var(--kn-measure);
-}
-
-@media (min-width: 768px) {
-  /* Des cellules separees par un filet plutot que par une gouttiere : la rangee
-     se lit comme une seule bande et non comme trois paragraphes ranges cote a
-     cote. La premiere cellule n'a pas de retrait — elle reste calee sur le rail
-     gauche de la page. */
-  .kn-manifesto__pillars {
-    grid-template-columns: repeat(var(--kn-pillar-count, 3), minmax(0, 1fr));
-  }
-
-  .kn-manifesto__pillar {
-    padding-inline-end: var(--kn-space-lg);
-  }
-
-  .kn-manifesto__pillar + .kn-manifesto__pillar {
-    padding-inline-start: var(--kn-space-lg);
-    border-inline-start: var(--kn-stroke) solid var(--kn-surface-line);
-  }
-
-  /* La derniere cellule rejoint le rail droit : la bande tient les deux bords
-     de la page, comme tout le reste de la grille. */
-  .kn-manifesto__pillar:last-child {
-    padding-inline-end: 0;
-  }
-}
 
 /* --------------------------------------------------------------------------
    4. Nouveautés (DA §5.2 — 2 colonnes mobile minimum)

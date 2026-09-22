@@ -1,0 +1,265 @@
+/* ==========================================================================
+   KINŪ — Manifeste : preuves en verre dépoli (refonte du 22 septembre 2026)
+   --------------------------------------------------------------------------
+   Toujours l'inondation forêt bord à bord (DA §3.4 R1), mais le plan n'est
+   plus un aplat : des halos de lumière — ou une photographie — vivent sous
+   trois plaques de verre. Angles à 6 px comme les photos, aucune ombre portée.
+   Mobile-first : pile collante au défilement, puis rangée dès 1024 px.
+   ========================================================================== */
+
+.kn-manifesto {
+  --kn-glass-fill: rgba(247, 245, 240, 0.08);
+  --kn-glass-fill-hover: rgba(247, 245, 240, 0.12);
+  --kn-glass-border: rgba(247, 245, 240, 0.18);
+  --kn-glass-highlight: rgba(247, 245, 240, 0.28);
+  --kn-glass-spot: rgba(247, 245, 240, 0.16);
+  --kn-glass-fallback: rgba(22, 58, 44, 0.92);
+  --kn-pillar-blur: blur(22px) saturate(160%);
+  /* Décalage entre deux plaques empilées : la tranche de chacune dépasse. */
+  --kn-stack-step: 0.875rem;
+
+  position: relative;
+  isolation: isolate;
+  /* `clip` et non `hidden` : il découpe les halos sans créer de conteneur de
+     défilement, sinon les plaques ne pourraient plus coller. */
+  overflow: clip;
+}
+
+/* --------------------------------------------------------------------------
+   Fond — halos ou photographie
+   -------------------------------------------------------------------------- */
+
+.kn-manifesto__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.kn-manifesto__photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* La photographie passe sous un voile forêt : le texte ivoire garde son
+   contraste quelle que soit l'image choisie. */
+.kn-manifesto__backdrop:has(.kn-manifesto__photo)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(30, 77, 59, 0.88) 0%,
+    rgba(30, 77, 59, 0.55) 45%,
+    rgba(22, 58, 44, 0.85) 100%
+  );
+}
+
+.kn-manifesto__halo {
+  position: absolute;
+  width: 120vmax;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  translate: -50% -50%;
+  animation: kn-halo-drift 26s var(--kn-ease-inout) infinite alternate;
+}
+
+.kn-manifesto__halo--1 {
+  inset-block-start: 18%;
+  inset-inline-start: 85%;
+  width: 90vmax;
+  background: radial-gradient(closest-side, rgba(111, 169, 140, 0.55), transparent);
+}
+
+.kn-manifesto__halo--2 {
+  inset-block-start: 58%;
+  inset-inline-start: 5%;
+  background: radial-gradient(closest-side, rgba(230, 234, 227, 0.22), transparent);
+  animation-duration: 32s;
+  animation-direction: alternate-reverse;
+}
+
+.kn-manifesto__halo--3 {
+  inset-block-start: 95%;
+  inset-inline-start: 70%;
+  width: 80vmax;
+  background: radial-gradient(closest-side, rgba(22, 58, 44, 0.9), transparent);
+  animation-duration: 22s;
+}
+
+@keyframes kn-halo-drift {
+  to {
+    transform: translate(-8vmax, 6vmax) scale(1.12);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .kn-manifesto__halo {
+    animation: none;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Tête — titre, paragraphe, bouton
+   -------------------------------------------------------------------------- */
+
+.kn-manifesto__head {
+  display: grid;
+  gap: var(--kn-space-lg);
+}
+
+.kn-manifesto__title {
+  font-size: var(--kn-fs-h1);
+}
+
+.kn-manifesto__aside {
+  display: grid;
+  justify-items: start;
+  gap: var(--kn-space-lg);
+}
+
+.kn-manifesto__aside > p {
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Plaques de verre — pile collante sur téléphone
+   -------------------------------------------------------------------------- */
+
+.kn-manifesto__pillars {
+  display: grid;
+  gap: var(--kn-space-md);
+  margin: var(--kn-space-2xl) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kn-manifesto__pillar {
+  position: sticky;
+  inset-block-start: calc(
+    var(--kn-header-h) + var(--kn-space-md) + var(--kn-i, 0) * var(--kn-stack-step)
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--kn-space-xl);
+  min-height: 15rem;
+  padding: var(--kn-space-lg) var(--kn-space-md);
+  border: var(--kn-stroke) solid var(--kn-glass-border);
+  border-radius: var(--kn-radius-media);
+  background-color: var(--kn-glass-fallback);
+  color: var(--kn-ivory);
+  /* Reprend l'apparition de `.kn-reveal` (kn-base.css) avec son retard, que
+     ce raccourci effacerait sinon, sans retarder le survol. */
+  transition: background-color var(--kn-dur-3) var(--kn-ease-state),
+    border-color var(--kn-dur-3) var(--kn-ease-state),
+    opacity var(--kn-dur-4) var(--kn-ease-out) var(--kn-reveal-delay, 0ms),
+    transform var(--kn-dur-4) var(--kn-ease-out) var(--kn-reveal-delay, 0ms);
+}
+
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .kn-manifesto__pillar {
+    /* Un reflet diagonal et une arête claire en haut : la lumière accroche
+       la tranche du verre. Ce sont des bords, pas des ombres. */
+    background-color: var(--kn-glass-fill);
+    background-image: linear-gradient(
+      150deg,
+      rgba(247, 245, 240, 0.14),
+      rgba(247, 245, 240, 0) 40%
+    );
+    box-shadow: inset 0 1px 0 var(--kn-glass-highlight);
+    -webkit-backdrop-filter: var(--kn-pillar-blur);
+    backdrop-filter: var(--kn-pillar-blur);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .kn-manifesto__pillar {
+    background-color: var(--kn-forest-deep);
+    background-image: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
+/* Reflet qui suit le pointeur, posé par kn-manifesto.js. Invisible tant
+   qu'aucune position n'est connue. */
+.kn-manifesto__pillar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    24rem circle at var(--kn-mx, 50%) var(--kn-my, 0%),
+    var(--kn-glass-spot),
+    transparent 60%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--kn-dur-3) var(--kn-ease-state);
+}
+
+.kn-manifesto__pillar.is-lit::before {
+  opacity: 1;
+}
+
+.kn-manifesto__key {
+  position: relative;
+  display: block;
+  font-family: var(--kn-font-display);
+  font-size: clamp(3.25rem, 15vw, 5.5rem);
+  font-weight: var(--kn-fw-bold);
+  line-height: var(--kn-lh-display);
+  letter-spacing: var(--kn-ls-display);
+}
+
+.kn-manifesto__text {
+  position: relative;
+  max-width: 30ch;
+  margin: 0;
+  font-size: var(--kn-fs-body);
+  line-height: 1.5;
+  color: var(--kn-ivory);
+}
+
+/* --------------------------------------------------------------------------
+   Rangée — dès 1024 px
+   -------------------------------------------------------------------------- */
+
+@media (min-width: 1024px) {
+  .kn-manifesto__head {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    column-gap: var(--kn-space-2xl);
+    align-items: end;
+  }
+
+  .kn-manifesto__pillars {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--kn-grid-gap);
+    margin-block-start: var(--kn-space-3xl);
+  }
+
+  .kn-manifesto__pillar {
+    position: relative;
+    inset-block-start: auto;
+    min-height: 22rem;
+    padding: var(--kn-space-xl) var(--kn-space-lg);
+  }
+
+  .kn-manifesto__key {
+    font-size: clamp(4rem, 6vw, 6.5rem);
+  }
+}
+
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+  .kn-manifesto__pillar:hover {
+    border-color: var(--kn-glass-highlight);
+  }
+
+  @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+    .kn-manifesto__pillar:hover {
+      background-color: var(--kn-glass-fill-hover);
+    }
+  }
+}
