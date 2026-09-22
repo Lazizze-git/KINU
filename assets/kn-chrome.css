@@ -763,6 +763,33 @@ body.kn-header--over-media
   transition-timing-function: var(--kn-ease-out);
 }
 
+/* Verre dépoli : le vert laisse deviner la page, floutée. L'opacité est
+   calée pour que le texte atténué garde 4,5:1 au-dessus du voile, même sur
+   une page ivoire. Sans flou possible, ou si le visiteur a demandé moins de
+   transparence, le plan reste vert plein. */
+@supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
+  .kn-nav__panel {
+    background-color: rgba(30, 77, 59, 0.78);
+    background-image: linear-gradient(
+      160deg,
+      rgba(247, 245, 240, 0.08),
+      rgba(247, 245, 240, 0) 45%
+    );
+    box-shadow: inset 0 1px 0 rgba(247, 245, 240, 0.12);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    backdrop-filter: blur(24px) saturate(140%);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .kn-nav__panel {
+    background-color: var(--kn-forest);
+    background-image: none;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+
 .kn-nav__bar {
   display: flex;
   align-items: center;
