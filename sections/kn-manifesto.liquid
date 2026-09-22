@@ -1,10 +1,10 @@
 {%- comment -%}
   KINŪ — Manifeste (inondation 1, DA §3.4 R1).
 
-  Refonte du 22 septembre 2026, demande client : les trois preuves deviennent
-  des plaques de verre dépoli posées sur un fond vivant. Sur téléphone, elles
-  s'empilent au défilement ; sur ordinateur, elles tiennent une rangée et un
-  reflet suit le pointeur (kn-manifesto.js).
+  Refonte du 22 septembre 2026, demande client, affinée le jour même : les
+  trois preuves tiennent dans une seule plaque de verre dépoli, découpée par
+  des filets — en lignes sur téléphone, en colonnes sur ordinateur. Chiffres
+  en graisse légère ; un reflet suit le pointeur (kn-manifesto.js).
 
   Le fond est une photographie si elle est réglée, sinon trois halos de lumière
   aux couleurs de la marque — jamais d'image de maquette, le verre doit avoir
@@ -12,6 +12,25 @@
 {%- endcomment -%}
 
 {{ 'kn-manifesto.css' | asset_url | stylesheet_tag }}
+{{ 'kn-manifesto-backdrop.css' | asset_url | stylesheet_tag }}
+
+{%- comment -%}
+  Les chiffres sont en DM Sans light, graisse que le thème ne charge pas
+  ailleurs. Si la bibliothèque Shopify ne la propose pas, la 400 prend le
+  relais ; à défaut, le navigateur retombe sur la graisse la plus proche.
+{%- endcomment -%}
+{%- liquid
+  assign kn_light = settings.type_heading_font | font_modify: 'weight', '300'
+  if kn_light == blank
+    assign kn_light = settings.type_heading_font | font_modify: 'weight', '400'
+  endif
+-%}
+{%- if kn_light != blank -%}
+  <style>
+    {{ kn_light | font_face: font_display: 'swap' }}
+    .kn-manifesto { --kn-fw-key: {{ kn_light.weight }}; }
+  </style>
+{%- endif -%}
 <script src="{{ 'kn-manifesto.js' | asset_url }}" defer></script>
 
 {%- liquid
@@ -59,12 +78,16 @@
     </div>
 
     {%- if section.blocks.size > 0 -%}
-      <ul class="kn-manifesto__pillars" role="list">
+      <ul
+        class="kn-manifesto__pillars"
+        role="list"
+        style="--kn-pillar-count: {{ section.blocks.size }};"
+        data-kn-glass
+      >
         {%- for block in section.blocks -%}
           <li
             class="kn-manifesto__pillar kn-reveal"
-            style="--kn-i: {{ forloop.index0 }}; --kn-reveal-delay: {{ forloop.index0 | times: 80 }}ms;"
-            data-kn-glass
+            style="--kn-reveal-delay: {{ forloop.index0 | times: 90 }}ms;"
             {{ block.shopify_attributes }}
           >
             <span class="kn-manifesto__key">{{ block.settings.key | escape }}</span>
@@ -112,7 +135,7 @@
       "type": "image_picker",
       "id": "image",
       "label": "Photo de fond",
-      "info": "Facultatif. Vue à travers les cartes en verre, teintée de vert. Sans photo, le fond est fait de halos de lumière verts."
+      "info": "Facultatif. Vue à travers la plaque de verre, teintée de vert. Sans photo, le fond est fait de halos de lumière verts."
     }
   ],
   "blocks": [
