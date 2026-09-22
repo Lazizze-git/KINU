@@ -2,17 +2,13 @@
   KINŪ — Manifeste (inondation 1, DA §3.4 R1).
 
   Refonte du 22 septembre 2026, demande client, affinée le jour même : les
-  trois preuves tiennent dans une seule plaque de verre dépoli, découpée par
-  des filets — en lignes sur téléphone, en colonnes sur ordinateur. Chiffres
-  en graisse légère ; un reflet suit le pointeur (kn-manifesto.js).
-
-  Le fond est une photographie si elle est réglée, sinon trois halos de lumière
-  aux couleurs de la marque — jamais d'image de maquette, le verre doit avoir
-  quelque chose à flouter sans rien emprunter.
+  trois preuves tiennent dans une seule plaque claire posée sur l'aplat forêt
+  uni, découpée par des filets — en lignes sur téléphone, en colonnes sur
+  ordinateur. Chiffres en graisse légère ; un reflet suit le pointeur
+  (kn-manifesto.js).
 {%- endcomment -%}
 
 {{ 'kn-manifesto.css' | asset_url | stylesheet_tag }}
-{{ 'kn-manifesto-backdrop.css' | asset_url | stylesheet_tag }}
 
 {%- comment -%}
   Les chiffres sont en DM Sans light, graisse que le thème ne charge pas
@@ -42,25 +38,6 @@
 -%}
 
 <div class="kn-section kn-manifesto" data-kn-surface="flood" data-kn-manifesto>
-  <div class="kn-manifesto__backdrop" aria-hidden="true">
-    {%- if s.image != blank -%}
-      {{
-        s.image
-        | image_url: width: 2400
-        | image_tag:
-          widths: '640, 828, 1080, 1440, 1920, 2400',
-          sizes: '100vw',
-          class: 'kn-manifesto__photo',
-          alt: '',
-          loading: 'lazy'
-      }}
-    {%- else -%}
-      <span class="kn-manifesto__halo kn-manifesto__halo--1"></span>
-      <span class="kn-manifesto__halo kn-manifesto__halo--2"></span>
-      <span class="kn-manifesto__halo kn-manifesto__halo--3"></span>
-    {%- endif -%}
-  </div>
-
   <div class="kn-container kn-manifesto__inner">
     <div class="kn-manifesto__head">
       <div class="kn-reveal">
@@ -130,12 +107,6 @@
       "type": "url",
       "id": "link_url",
       "label": "Destination du bouton"
-    },
-    {
-      "type": "image_picker",
-      "id": "image",
-      "label": "Photo de fond",
-      "info": "Facultatif. Vue à travers la plaque de verre, teintée de vert. Sans photo, le fond est fait de halos de lumière verts."
     }
   ],
   "blocks": [
