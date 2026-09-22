@@ -30,6 +30,18 @@
 
   /* Position du bas du header, affinée par kn-chrome.js à l'ouverture. */
   --kn-nav-top: calc(var(--kn-header-h) + var(--kn-stroke));
+
+  /* Verre dépoli des menus (panneau du téléphone, panneau sous la barre).
+     L'opacité du vert est calée pour que le texte ivoire garde 4,5:1, même
+     au-dessus d'une page ivoire. */
+  --kn-glass-bg: rgba(30, 77, 59, 0.78);
+  --kn-glass-sheen: linear-gradient(
+    160deg,
+    rgba(247, 245, 240, 0.08),
+    rgba(247, 245, 240, 0) 45%
+  );
+  --kn-glass-edge: inset 0 1px 0 rgba(247, 245, 240, 0.12);
+  --kn-glass-blur: blur(24px) saturate(140%);
 }
 
 @media (min-width: 640px) {
@@ -436,7 +448,16 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
     transform: rotate(180deg);
   }
 
+  /* Verre vert, texte ivoire, quel que soit l'état de la barre au-dessus
+     (voir §5). Seul le survol atténue encore les lignes non visées. */
   .kn-menu {
+    --kn-surface-bg: var(--kn-forest);
+    --kn-surface-fg: var(--kn-ivory);
+    --kn-surface-line: var(--kn-line-invert);
+    --kn-surface-muted: var(--kn-ivory);
+    --kn-surface-faint: var(--kn-faint-invert);
+    --kn-surface-accent: var(--kn-ivory);
+
     position: absolute;
     inset-inline: 0;
     inset-block-start: 100%;
@@ -763,26 +784,28 @@ body.kn-header--over-media
   transition-timing-function: var(--kn-ease-out);
 }
 
-/* Verre dépoli : le vert laisse deviner la page, floutée. L'opacité est
-   calée pour que le texte atténué garde 4,5:1 au-dessus du voile, même sur
-   une page ivoire. Sans flou possible, ou si le visiteur a demandé moins de
-   transparence, le plan reste vert plein. */
+/* Verre dépoli (demande client du 22 septembre 2026) : le vert laisse
+   deviner la page, floutée, et tout le texte du panneau passe en ivoire
+   plein — plus aucun gris atténué au repos. Sans flou possible, ou si le
+   visiteur a demandé moins de transparence, le plan reste vert plein. */
+.kn-nav__panel {
+  --kn-muted-invert: var(--kn-ivory);
+}
+
 @supports (backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)) {
-  .kn-nav__panel {
-    background-color: rgba(30, 77, 59, 0.78);
-    background-image: linear-gradient(
-      160deg,
-      rgba(247, 245, 240, 0.08),
-      rgba(247, 245, 240, 0) 45%
-    );
-    box-shadow: inset 0 1px 0 rgba(247, 245, 240, 0.12);
-    -webkit-backdrop-filter: blur(24px) saturate(140%);
-    backdrop-filter: blur(24px) saturate(140%);
+  .kn-nav__panel,
+  .kn-menu {
+    background-color: var(--kn-glass-bg);
+    background-image: var(--kn-glass-sheen);
+    box-shadow: var(--kn-glass-edge);
+    -webkit-backdrop-filter: var(--kn-glass-blur);
+    backdrop-filter: var(--kn-glass-blur);
   }
 }
 
 @media (prefers-reduced-transparency: reduce) {
-  .kn-nav__panel {
+  .kn-nav__panel,
+  .kn-menu {
     background-color: var(--kn-forest);
     background-image: none;
     -webkit-backdrop-filter: none;
@@ -875,18 +898,11 @@ body.kn-header--over-media
   display: flex;
   flex: none;
   color: inherit;
-  opacity: 0.7;
-  transition: transform var(--kn-dur-1) var(--kn-ease-state),
-    opacity var(--kn-dur-2) var(--kn-ease-state);
+  transition: transform var(--kn-dur-1) var(--kn-ease-state);
 }
 
 .kn-nav__fold[open] .kn-nav__chevron {
   transform: rotate(180deg);
-}
-
-.kn-nav__entry:hover .kn-nav__chevron,
-.kn-nav__entry:focus-within .kn-nav__chevron {
-  opacity: 1;
 }
 
 .kn-nav__level1 {
@@ -926,13 +942,12 @@ body.kn-header--over-media
   gap: var(--kn-space-2xs);
 }
 
-/* Nom de collection et fleche heritent de la teinte de leur rangee et
-   s'attenuent d'un cran : quand R7 efface une entree, ils s'effacent avec
-   elle au lieu de rester en pleine lumiere. */
+/* Nom de collection et fleche heritent de la teinte de leur rangee : quand
+   R7 efface une entree, ils s'effacent avec elle. Ivoire plein au repos
+   depuis le verre depoli (22 septembre 2026). */
 .kn-nav__overline,
 .kn-nav__arrow {
   color: inherit;
-  opacity: 0.7;
 }
 
 .kn-nav__arrow {
@@ -942,15 +957,8 @@ body.kn-header--over-media
     opacity var(--kn-dur-2) var(--kn-ease-state);
 }
 
-/* R7 — l'item vise reste net, tous les autres s'effacent. */
-.kn-nav__list:focus-within .kn-nav__level1 {
-  color: var(--kn-faint-invert);
-}
-
-.kn-nav__entry:focus-within .kn-nav__level1 {
-  color: var(--kn-ivory);
-}
-
+/* R7 — au survol seulement. Au toucher, le focus restait sur la rubrique
+   ouverte et grisait durablement toutes les autres (22 septembre 2026). */
 .kn-nav__entry:focus-within .kn-nav__arrow {
   opacity: 1;
   transform: translateX(var(--kn-space-3xs));
