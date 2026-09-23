@@ -42,6 +42,17 @@
   assign kn_material = kn_material | strip
   assign kn_shipping = kn_shipping | strip
   assign kn_spec = kn_spec | strip
+
+  comment
+    Amendement du 23 septembre 2026. Quand la fiche technique a pris le texte
+    enrichi du métachamp Matière, cet accordéon répétait mot pour mot les
+    mêmes lignes, deux blocs plus bas. On l’éteint : la donnée a trouvé sa
+    place dans la fiche, l’accordéon ne servait qu’à l’abriter avant qu’elle
+    existe. Il reste pour les pièces qui n’ont que le texte de repli de section.
+  endcomment
+  if kn_spec contains 'kn-spec--rte'
+    assign kn_material = ''
+  endif
 -%}
 
 <div class="kn-acc">

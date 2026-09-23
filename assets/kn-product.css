@@ -1152,6 +1152,72 @@ body:has(.kn-sticky.is-visible) {
   font-variant-numeric: tabular-nums;
 }
 
+/* Le metachamp « Matiere & entretien » est un texte enrichi : une liste dont
+   chaque ligne s'ecrit « Label : valeur ». C'est la source que le client
+   remplit, et elle dit plus que les cinq champs fixes. On lui donne le dessin
+   du champ regle plutot que de lui demander de ressaisir la meme chose
+   ailleurs : meme filet, meme rail de cles, meme corps.
+
+   La ligne est une grille de deux elements : le <strong> forme la cle, le
+   texte qui le suit forme la valeur — un element de grille anonyme, que la
+   grille place en seconde colonne sans balise supplementaire. */
+.kn-spec--rte ul,
+.kn-spec--rte ol {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.kn-spec--rte li {
+  display: grid;
+  gap: var(--kn-space-3xs) var(--kn-space-lg);
+  padding-block: var(--kn-space-sm);
+  border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
+  max-width: none;
+}
+
+.kn-spec--rte li:last-child {
+  border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+/* Dans l'accordeon, c'est le filet de l'accordeon qui referme la liste. */
+.kn-acc__body .kn-spec--rte li:last-child {
+  border-block-end: 0;
+  padding-block-end: 0;
+}
+
+@media (min-width: 560px) {
+  .kn-spec--rte li {
+    grid-template-columns: 10rem minmax(0, 1fr);
+  }
+}
+
+/* La cle reprend l'etiquette capitale du champ regle. Le gras du texte
+   enrichi disait « ceci est une cle » ; ici c'est la casse et la couleur qui
+   le disent, et le gras redeviendrait du bruit. */
+.kn-spec--rte li strong {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-label);
+  font-weight: var(--kn-fw-medium);
+  line-height: var(--kn-lh-tight);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
+  color: var(--kn-surface-muted);
+  padding-block-start: 0.2em;
+}
+
+/* Un paragraphe isole (une piece dont la matiere n'a pas ete mise en liste)
+   garde le corps courant : rien a aligner, rien a regler. */
+.kn-spec--rte p {
+  margin: 0;
+  max-width: var(--kn-measure);
+}
+
+.kn-spec--rte p + p {
+  margin-block-start: var(--kn-space-sm);
+}
+
 /* --------------------------------------------------------------------------
    12. Guide des tailles (DA §5.4, §7.7)
 

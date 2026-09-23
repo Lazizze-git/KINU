@@ -13,15 +13,31 @@
   rien à comparer. Les cinq lignes ci-dessous sont exactement les questions qu’on
   pose avant d’acheter une pièce à 85 francs.
 
+  Deux sources, dans cet ordre (amendement du 23 septembre 2026).
+
+  1. Le métachamp « Matière & entretien », un texte enrichi en lignes
+     « Label : valeur ». C’est celui que le client remplit déjà — quatorze
+     pièces sur dix-huit le portent — et il dit plus que les cinq champs
+     fixes : opacité, maintien, coloris, finition. On le rend tel quel, dans
+     le dessin du champ réglé.
+  2. À défaut, les cinq métachamps nommés un par un. Ils restent le filet de
+     sécurité d’une pièce saisie à l’ancienne.
+
+  Une seule source s’affiche à la fois. La fiche portait sinon les mêmes
+  lignes que l’accordéon Matière, deux blocs plus bas sur la même page :
+  c’est kn-product-details qui éteint l’accordéon quand la fiche a pris le
+  texte enrichi.
+
   Chaque ligne vient d’un métachamp nommé en français dans l’admin. Une ligne
-  vide ne se dessine pas, et si les cinq sont vides le bloc entier disparaît :
-  le client peut donc remplir au fur et à mesure sans jamais montrer un trou.
+  vide ne se dessine pas, et si tout est vide le bloc entier disparaît : le
+  client peut donc remplir au fur et à mesure sans jamais montrer un trou.
 
   @param {object} product
 {%- enddoc -%}
 
 {%- liquid
   assign kn_mf = product.metafields.custom
+  assign kn_rte = kn_mf.matiere_entretien
 
   comment
     On compte avant de dessiner. Sans ce garde, un produit qui n’a rien de
@@ -45,7 +61,23 @@
   endif
 -%}
 
-{%- if kn_filled > 0 -%}
+{%- if kn_rte != blank -%}
+  {%- comment -%}
+    Les étiquettes du texte enrichi s’écrivent « Composition : ». Le
+    deux-points appartenait à la phrase, pas au rail des clés, où il
+    flotterait entre les deux colonnes. On le retire du rendu, jamais du champ :
+    le client continue d’écrire comme il parle.
+  {%- endcomment -%}
+  {%- capture kn_rte_html -%}{{ kn_rte | metafield_tag }}{%- endcapture -%}
+  <div class="kn-spec kn-spec--rte">
+    {{- kn_rte_html
+      | replace: ' : </strong>', '</strong>'
+      | replace: ' :</strong>', '</strong>'
+      | replace: ': </strong>', '</strong>'
+      | replace: ':</strong>', '</strong>'
+    -}}
+  </div>
+{%- elsif kn_filled > 0 -%}
   {%- comment -%}
     Les libellés de ligne ne sont pas des réglages : ce sont les termes du
     métier, les mêmes que ceux des métachamps que le client remplit. Les
