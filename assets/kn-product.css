@@ -1099,6 +1099,11 @@ body:has(.kn-sticky.is-visible) {
 .kn-spec {
   display: grid;
   margin: 0;
+  /* Le rail des cles se regle sur la LARGEUR DU BLOC, pas sur celle de
+     l'ecran. La fiche vit dans la colonne d'achat, large de 390 px sur un
+     ecran de 1440 : une requete media y voyait « grand ecran » et imposait
+     deux colonnes dans un espace qui n'en tient qu'une. */
+  container-type: inline-size;
 }
 
 /* Sous le texte de la pièce, dans l'accordéon Description. */
@@ -1127,12 +1132,21 @@ body:has(.kn-sticky.is-visible) {
   padding-block-end: 0;
 }
 
-/* Le rail des cles tient a 10 rem : « Composition » y entre sans se couper, et
-   toutes les valeurs demarrent sur la meme verticale. Sous 560 px la cle passe
-   au-dessus de sa valeur — deux colonnes y donneraient une valeur de six
-   caracteres de large. */
-@media (min-width: 560px) {
-  .kn-spec__row {
+/* Le rail des cles tient a 10 rem la ou il y a la place : « Composition » y
+   entre sans se couper et toutes les valeurs demarrent sur la meme verticale.
+   Dans un bloc plus etroit le rail se resserre a 7,5 rem, et sous 20 rem la
+   cle passe au-dessus de sa valeur — deux colonnes y donneraient une valeur
+   de six caracteres de large. */
+@container (min-width: 20rem) {
+  .kn-spec__row,
+  .kn-spec--rte li {
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+  }
+}
+
+@container (min-width: 30rem) {
+  .kn-spec__row,
+  .kn-spec--rte li {
     grid-template-columns: 10rem minmax(0, 1fr);
   }
 }
@@ -1185,12 +1199,6 @@ body:has(.kn-sticky.is-visible) {
 .kn-acc__body .kn-spec--rte li:last-child {
   border-block-end: 0;
   padding-block-end: 0;
-}
-
-@media (min-width: 560px) {
-  .kn-spec--rte li {
-    grid-template-columns: 10rem minmax(0, 1fr);
-  }
 }
 
 /* La cle reprend l'etiquette capitale du champ regle. Le gras du texte
