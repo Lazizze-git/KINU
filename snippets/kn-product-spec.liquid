@@ -71,10 +71,10 @@
   {%- capture kn_rte_html -%}{{ kn_rte | metafield_tag }}{%- endcapture -%}
   <div class="kn-spec kn-spec--rte">
     {{- kn_rte_html
-      | replace: ' : </strong>', '</strong>'
-      | replace: ' :</strong>', '</strong>'
-      | replace: ': </strong>', '</strong>'
-      | replace: ':</strong>', '</strong>'
+      | replace: ' : </strong>', '</strong> '
+      | replace: ' :</strong>', '</strong> '
+      | replace: ': </strong>', '</strong> '
+      | replace: ':</strong>', '</strong> '
     -}}
   </div>
 {%- elsif kn_filled > 0 -%}
