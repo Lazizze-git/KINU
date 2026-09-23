@@ -71,11 +71,18 @@
           endfor
 
           if kn_hover == blank
-            assign kn_sibling_offset = kn_offset | plus: 1
-            for kn_sibling in kn_child.object.products offset: kn_sibling_offset limit: 1
-              if kn_sibling.featured_image != blank
-                assign kn_hover = kn_sibling.featured_image
+            comment
+              On ne prend pas « l'index suivant » : la piece de couverture
+              n'est pas toujours la premiere de la categorie, et on tomberait
+              alors hors de la liste. On prend la premiere piece qui n'est
+              pas elle.
+            endcomment
+            for kn_sibling in kn_child.object.products limit: 12
+              if kn_sibling.id == kn_lead.id or kn_sibling.featured_image == blank
+                continue
               endif
+              assign kn_hover = kn_sibling.featured_image
+              break
             endfor
           endif
 
