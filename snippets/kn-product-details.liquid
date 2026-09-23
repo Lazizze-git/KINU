@@ -4,6 +4,13 @@
   Description porte le texte de la pièce puis sa fiche technique
   (kn-product-spec) ; elle s'ouvre dès que l'un des deux existe.
 
+  L'Origine porte un récit partagé par plusieurs pièces — celui que le client
+  a écrit pour KI et NŪ, où le nom de la marque se décompose en deux forces.
+  Il vit dans son propre volet plutôt qu'en tête de Description : trois
+  paragraphes d'histoire avant le premier mot sur la pièce repousseraient la
+  fiche technique hors de l'écran, et un visiteur qui compare deux t-shirts
+  cherche d'abord le t-shirt. Replié, il se lit par qui le veut.
+
   @param {object} product
   @param {object} opts
   @param {string} section_id
@@ -16,6 +23,7 @@
   endcomment
   assign kn_material_mf = product.metafields.custom.matiere_entretien
   assign kn_shipping_mf = product.metafields.custom.livraison_retours
+  assign kn_origin_mf = product.metafields.custom.recit_origine
 -%}
 
 {%- capture kn_material -%}
@@ -65,6 +73,15 @@
         {{- product.description -}}
         {{- kn_spec -}}
       </div>
+    </details>
+  {%- endif -%}
+
+  {%- if kn_origin_mf != blank -%}
+    <details class="kn-acc__item" name="kn-acc-{{ section_id }}">
+      <summary class="kn-acc__sum">
+        <span class="kn-label">{{ opts.title_origin | default: 'L’origine' }}</span>
+      </summary>
+      <div class="kn-acc__body kn-body">{{ kn_origin_mf | metafield_tag }}</div>
     </details>
   {%- endif -%}
 
