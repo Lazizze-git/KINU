@@ -156,14 +156,24 @@
       {%- endif -%}
 
       {%- comment -%}
-        Mention legale et signature d'atelier lues ensemble : qui vend, puis
-        qui a construit. Le libelle entre crochets dit qu'il s'agit d'une
-        donnee ; seul le nom de l'atelier est en pleine lumiere.
+        Mention legale, signature de marque et signature d'atelier lues
+        ensemble : qui vend, ce qu'il dit de lui, puis qui a construit. Le
+        libelle entre crochets dit qu'il s'agit d'une donnee ; seuls le nom de
+        la marque et celui de l'atelier sont en pleine lumiere.
+
+        Amendement du 23 septembre 2026 : la signature de marque entre dans le
+        site. Elle est tissee sur l'etiquette du tote bag et brodee sous les
+        chaussettes, et elle n'apparaissait nulle part ici. Pour une marque
+        dont le nom designe la soie, c'est la phrase qui explique le nom.
       {%- endcomment -%}
       <div class="kn-footer__legal">
         <p class="kn-footer__copy kn-label">
           © {{ section.settings.brand_name | escape }} {{ 'now' | date: '%Y' }}
         </p>
+
+        {%- if section.settings.brand_signature != blank -%}
+          <p class="kn-footer__sign kn-label">{{ section.settings.brand_signature | escape }}</p>
+        {%- endif -%}
 
         {%- if section.settings.credit_name != blank -%}
           <p class="kn-footer__credit kn-label">
@@ -241,6 +251,7 @@
       "default": "Choisir la langue"
     },
     { "type": "text", "id": "brand_name", "label": "Nom de la marque", "default": "KINŪ" },
+    { "type": "text", "id": "brand_signature", "label": "Signature de marque", "default": "Silk in Motion", "info": "La phrase tissee sur l'etiquette. Elle s'affiche a cote de la mention legale. Videz le champ pour la retirer." },
     { "type": "header", "content": "Signature de l’atelier" },
     {
       "type": "text",

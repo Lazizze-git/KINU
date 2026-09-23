@@ -1353,6 +1353,15 @@ body.kn-header--over-media
   color: var(--kn-muted-invert);
 }
 
+/* La signature de marque se lit dans la meme rangee que la mention legale,
+   mais elle n'est pas une mention legale : elle sort de l'attenue pour
+   l'ivoire plein, comme le nom de l'atelier. Une annee de copyright se
+   verifie, une signature se lit. */
+.kn-footer__sign {
+  margin: 0;
+  color: var(--kn-ivory);
+}
+
 .kn-footer__credit-link {
   color: var(--kn-ivory);
   text-decoration: none;
