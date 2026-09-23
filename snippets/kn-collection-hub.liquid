@@ -48,16 +48,40 @@
           comment
             Demande client du 21 septembre : au survol, un autre coloris de la
             piece plutot qu'une deuxieme vue du meme. On prend la photo de la
-            premiere variante qui en porte une autre que la couverture ; une
-            piece a un seul coloris retombe sur sa deuxieme photo.
+            premiere variante qui en porte une autre que la couverture.
+
+            Amendement du 23 septembre. Une piece a coloris unique retombait
+            sur sa deuxieme photo — la vignette Ensembles montrait le hoodie
+            marine, puis le meme hoodie marine sous un autre angle, et le
+            survol ne disait rien. Elle prend desormais la PIECE SUIVANTE de
+            la categorie : le marine appelle le noir. « Quand tu passes le
+            curseur sur l'ensemble bleu, qu'on voie le noir aussi, ca donne
+            un apercu de ce qu'il y a. »
+
+            L'ordre reste : autre coloris, sinon piece suivante, sinon
+            deuxieme photo. Les vignettes qui marchaient deja — T-shirts, ou
+            KI porte trois coloris — ne changent pas de comportement.
           endcomment
-          assign kn_hover = kn_lead.images[1]
+          assign kn_hover = blank
           for kn_variant in kn_lead.variants
             if kn_variant.featured_media != blank and kn_variant.featured_media.id != kn_lead.featured_media.id
               assign kn_hover = kn_variant.featured_media.preview_image
               break
             endif
           endfor
+
+          if kn_hover == blank
+            assign kn_sibling_offset = kn_offset | plus: 1
+            for kn_sibling in kn_child.object.products offset: kn_sibling_offset limit: 1
+              if kn_sibling.featured_image != blank
+                assign kn_hover = kn_sibling.featured_image
+              endif
+            endfor
+          endif
+
+          if kn_hover == blank
+            assign kn_hover = kn_lead.images[1]
+          endif
         -%}
         <li>
           {%- render 'kn-hub-tile',

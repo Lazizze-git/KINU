@@ -50,45 +50,33 @@
     Image de survol. Elle doit apprendre quelque chose : une autre piece, un
     autre coloris, une autre face. Deux sources, dans cet ordre.
 
-    1. Le metachamp « Apercu au survol ». Il nomme une AUTRE piece, dont la
-       premiere photographie remplace la deuxieme de celle-ci. C'est la
-       demande du 22 septembre, mot pour mot : « quand tu passes le curseur
-       sur l'ensemble bleu, qu'on voie le noir aussi — ca donne un apercu de
-       ce qu'il y a ». Les deux tracksuits se pointent l'un l'autre : le
-       marine appelle le noir, le noir appelle le marine. Deux pieces que le
-       catalogue montrait cote a cote sans jamais les relier.
+    Une photographie de la piece elle-meme : la deuxieme, sauf si elle
+    raconte la meme chose que la premiere — les six visuels d'un coloris
+    Fluid Motion portent la meme legende, les trois du hoodie aussi, et on
+    survolait un hoodie pour obtenir le meme hoodie. Le texte alternatif dit
+    ce que la photographie montre : quand il ne change pas, on cherche la
+    premiere dont il change. Santa Luzia sous Brava, le jogger sous le hoodie.
 
-    2. Sinon, une photographie de la piece elle-meme. La deuxieme, sauf si
-       elle raconte la meme chose que la premiere — les six visuels d'un
-       coloris Fluid Motion portent la meme legende, les trois du hoodie
-       aussi, et on survolait un hoodie pour obtenir le meme hoodie. Le texte
-       alternatif dit ce que la photographie montre : quand il ne change pas,
-       on cherche la premiere dont il change. Santa Luzia sous Brava, le
-       jogger sous le hoodie.
+    Le survol qui montre une AUTRE piece appartient a la vignette de
+    categorie, pas a la carte produit : sur la page Ensembles, les deux
+    tracksuits sont deja cote a cote, et survoler l'un pour obtenir l'autre
+    n'apprend rien. Voir kn-collection-hub.
 
     Les cartes qui marchaient deja ne bougent pas : leur deuxieme visuel a
     deja sa propre legende, la boucle n'est meme pas parcourue.
   endcomment
-  assign kn_image_alt = blank
-  assign kn_pair = product.metafields.custom.apercu_associe.value
-  if kn_pair != blank
-    assign kn_image_alt = kn_pair.images[0]
-  endif
+  assign kn_image_alt = product.images[1]
+  assign kn_first_story = kn_image.alt | default: '' | strip
+  assign kn_next_story = kn_image_alt.alt | default: '' | strip
 
-  if kn_image_alt == blank
-    assign kn_image_alt = product.images[1]
-    assign kn_first_story = kn_image.alt | default: '' | strip
-    assign kn_next_story = kn_image_alt.alt | default: '' | strip
-
-    if kn_image_alt != blank and kn_next_story == kn_first_story
-      for kn_candidate in product.images
-        assign kn_candidate_story = kn_candidate.alt | default: '' | strip
-        if kn_candidate_story != blank and kn_candidate_story != kn_first_story
-          assign kn_image_alt = kn_candidate
-          break
-        endif
-      endfor
-    endif
+  if kn_image_alt != blank and kn_next_story == kn_first_story
+    for kn_candidate in product.images
+      assign kn_candidate_story = kn_candidate.alt | default: '' | strip
+      if kn_candidate_story != blank and kn_candidate_story != kn_first_story
+        assign kn_image_alt = kn_candidate
+        break
+      endif
+    endfor
   endif
 
   assign kn_available = product.available
