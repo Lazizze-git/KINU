@@ -1,8 +1,17 @@
 {%- doc -%}
   Accordéons de la page produit (DA §7.7) : filets 1 px, sans fond, chevron 12 px.
-  Matière et Livraison viennent de métachamps, avec repli sur un texte de section.
-  Description porte le texte de la pièce puis sa fiche technique
-  (kn-product-spec) ; elle s'ouvre dès que l'un des deux existe.
+  Livraison vient d'un métachamp, avec repli sur un texte de section.
+
+  Description ne porte que le texte de la pièce. Matière & entretien porte la
+  fiche technique (kn-product-spec) : une ligne par donnée, un filet entre
+  chacune. Deux volets distincts — demande client du 24 septembre 2026,
+  répétée : « j'aimerais avoir les deux catégories bien distinctes, avec
+  cette présentation pour tous les produits ».
+
+  La fiche avait été glissée sous le texte de Description la veille, pour
+  qu'elle cesse de flotter en pleine largeur sous la colonne d'achat. Elle
+  cesse de flotter aussi bien dans son propre volet, et le client y retrouve
+  les deux rubriques qu'il lit depuis le début.
 
   L'Origine porte un récit partagé par plusieurs pièces — celui que le client
   a écrit pour KI et NŪ, où le nom de la marque se décompose en deux forces.
@@ -21,18 +30,9 @@
     Les metachamps texte enrichi passent par metafield_tag, qui les rend en
     HTML. Lire .value renverrait la structure brute du champ.
   endcomment
-  assign kn_material_mf = product.metafields.custom.matiere_entretien
   assign kn_shipping_mf = product.metafields.custom.livraison_retours
   assign kn_origin_mf = product.metafields.custom.recit_origine
 -%}
-
-{%- capture kn_material -%}
-  {%- if kn_material_mf != blank -%}
-    {{- kn_material_mf | metafield_tag -}}
-  {%- else -%}
-    {{- opts.text_material -}}
-  {%- endif -%}
-{%- endcapture -%}
 
 {%- capture kn_shipping -%}
   {%- if kn_shipping_mf != blank -%}
@@ -47,32 +47,27 @@
 {%- endcapture -%}
 
 {%- liquid
-  assign kn_material = kn_material | strip
   assign kn_shipping = kn_shipping | strip
   assign kn_spec = kn_spec | strip
 
   comment
-    Amendement du 23 septembre 2026. Quand la fiche technique a pris le texte
-    enrichi du métachamp Matière, cet accordéon répétait mot pour mot les
-    mêmes lignes, deux blocs plus bas. On l’éteint : la donnée a trouvé sa
-    place dans la fiche, l’accordéon ne servait qu’à l’abriter avant qu’elle
-    existe. Il reste pour les pièces qui n’ont que le texte de repli de section.
+    Le volet Matière porte la fiche technique. A defaut de donnee sur la
+    piece, il retombe sur le texte de repli regle dans la section, pour ne
+    pas laisser un volet vide.
   endcomment
-  if kn_spec contains 'kn-spec--rte'
-    assign kn_material = ''
+  assign kn_material = kn_spec
+  if kn_material == blank
+    assign kn_material = opts.text_material | strip
   endif
 -%}
 
 <div class="kn-acc">
-  {%- if product.description != blank or kn_spec != blank -%}
+  {%- if product.description != blank -%}
     <details class="kn-acc__item" name="kn-acc-{{ section_id }}" open>
       <summary class="kn-acc__sum">
         <span class="kn-label">{{ opts.title_description }}</span>
       </summary>
-      <div class="kn-acc__body kn-body">
-        {{- product.description -}}
-        {{- kn_spec -}}
-      </div>
+      <div class="kn-acc__body kn-body">{{ product.description }}</div>
     </details>
   {%- endif -%}
 
