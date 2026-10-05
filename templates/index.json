@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero": {
@@ -54,22 +63,22 @@
         "pillar-1": {
           "type": "pillar",
           "settings": {
-            "key": "Suisse",
-            "text": "Conception, patronage et prototypage à Lausanne."
+            "key": "Soie",
+            "text": "KINŪ signifie « soie » : légèreté, fluidité, liberté."
           }
         },
         "pillar-2": {
           "type": "pillar",
           "settings": {
-            "key": "1 saison",
-            "text": "De test en conditions réelles avant toute mise en production."
+            "key": "Passage",
+            "text": "De la séance à la rue, sans changer de pièce."
           }
         },
         "pillar-3": {
           "type": "pillar",
           "settings": {
-            "key": "5 ans",
-            "text": "De réparation gratuite sur les coutures et les fermetures."
+            "key": "Élan",
+            "text": "Une coupe qui suit le geste, jamais l'inverse."
           }
         }
       },
@@ -79,8 +88,8 @@
         "pillar-3"
       ],
       "settings": {
-        "title": "Peu de pièces, pensées pour durer une décennie.",
-        "text": "Petites séries, ateliers européens : nous préférons une coupe juste à une nouveauté de plus.",
+        "title": "Des pièces pensées pour durer et conçues pour bouger avec toi.",
+        "text": "On ne suit pas une saison, on suit un mouvement. Chaque choix est fait pour rester juste, longtemps après le premier geste.",
         "link_label": "NOTRE FABRICATION",
         "link_url": ""
       }
