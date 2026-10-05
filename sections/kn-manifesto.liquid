@@ -4,29 +4,14 @@
   Refonte du 22 septembre 2026, demande client, affinée le jour même : les
   trois preuves tiennent dans une seule plaque claire posée sur l'aplat forêt
   uni, découpée par des filets — en lignes sur téléphone, en colonnes sur
-  ordinateur. Chiffres en graisse légère ; un reflet suit le pointeur
-  (kn-manifesto.js).
+  ordinateur. Un reflet suit le pointeur (kn-manifesto.js).
+
+  5 octobre 2026 : les chiffres sont devenus des mots-clés, en DM Sans 500
+  (déjà chargée par le thème) ; la graisse légère n'est plus chargée ici.
 {%- endcomment -%}
 
 {{ 'kn-manifesto.css' | asset_url | stylesheet_tag }}
 
-{%- comment -%}
-  Les chiffres sont en DM Sans light, graisse que le thème ne charge pas
-  ailleurs. Si la bibliothèque Shopify ne la propose pas, la 400 prend le
-  relais ; à défaut, le navigateur retombe sur la graisse la plus proche.
-{%- endcomment -%}
-{%- liquid
-  assign kn_light = settings.type_heading_font | font_modify: 'weight', '300'
-  if kn_light == blank
-    assign kn_light = settings.type_heading_font | font_modify: 'weight', '400'
-  endif
--%}
-{%- if kn_light != blank -%}
-  <style>
-    {{ kn_light | font_face: font_display: 'swap' }}
-    .kn-manifesto { --kn-fw-key: {{ kn_light.weight }}; }
-  </style>
-{%- endif -%}
 <script src="{{ 'kn-manifesto.js' | asset_url }}" defer></script>
 
 {%- comment -%}

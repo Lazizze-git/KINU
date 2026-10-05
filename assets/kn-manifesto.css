@@ -10,6 +10,8 @@
    5 octobre 2026 : les chiffres sont devenus des mots (Soie, Passage, Élan).
    Le mot n'a plus à dominer comme un chiffre : il descend d'un cran et sa
    phrase vient juste dessous, au lieu d'être repoussée en bas de colonne.
+   Le mot passe en DM Sans 500, déjà chargée par le thème : il se détache de
+   sa phrase par la graisse autant que par la taille.
    ========================================================================== */
 
 .kn-manifesto {
@@ -18,8 +20,6 @@
   --kn-glass-highlight: rgba(247, 245, 240, 0.2);
   --kn-glass-rule: rgba(247, 245, 240, 0.12);
   --kn-glass-spot: rgba(247, 245, 240, 0.08);
-  /* Graisse des chiffres : light si la section a pu la charger. */
-  --kn-fw-key: var(--kn-fw-regular);
 }
 
 /* --------------------------------------------------------------------------
@@ -101,10 +101,10 @@
 .kn-manifesto__key {
   display: block;
   font-family: var(--kn-font-display);
-  font-size: clamp(2rem, 8vw, 2.25rem);
-  font-weight: var(--kn-fw-key);
+  font-size: clamp(2.25rem, 9vw, 2.5rem);
+  font-weight: var(--kn-fw-medium);
   line-height: 1;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.025em;
   font-variant-numeric: tabular-nums;
 }
 
@@ -136,7 +136,7 @@
   }
 
   .kn-manifesto__key {
-    font-size: clamp(2rem, 3vw, 2.75rem);
+    font-size: clamp(2.25rem, 3.4vw, 3rem);
   }
 }
 
