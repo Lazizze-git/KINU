@@ -6,6 +6,10 @@
    rien à flouter, donc pas de filtre, seulement la teinte et l'arête du verre.
    Angles à 6 px comme les photos, aucune ombre portée. Mobile-first : lignes
    sur téléphone, colonnes dès 768 px.
+
+   5 octobre 2026 : les chiffres sont devenus des mots (Soie, Passage, Élan).
+   Le mot n'a plus à dominer comme un chiffre : il descend d'un cran et sa
+   phrase vient juste dessous, au lieu d'être repoussée en bas de colonne.
    ========================================================================== */
 
 .kn-manifesto {
@@ -85,7 +89,8 @@
 .kn-manifesto__pillar {
   position: relative;
   display: grid;
-  gap: var(--kn-space-2xs);
+  align-content: start;
+  gap: var(--kn-space-sm);
   padding-block: var(--kn-space-lg);
 }
 
@@ -96,7 +101,7 @@
 .kn-manifesto__key {
   display: block;
   font-family: var(--kn-font-display);
-  font-size: clamp(2.25rem, 10vw, 2.75rem);
+  font-size: clamp(2rem, 8vw, 2.25rem);
   font-weight: var(--kn-fw-key);
   line-height: 1;
   letter-spacing: -0.035em;
@@ -104,15 +109,15 @@
 }
 
 .kn-manifesto__text {
-  max-width: 32ch;
+  max-width: 34ch;
   margin: 0;
-  font-size: var(--kn-fs-sm);
-  line-height: 1.55;
+  font-size: var(--kn-fs-body);
+  line-height: 1.6;
   color: var(--kn-ivory);
 }
 
 /* --------------------------------------------------------------------------
-   Colonnes — dès 768 px : chiffre en haut, phrase en bas
+   Colonnes — dès 768 px : le mot, puis sa phrase juste dessous
    -------------------------------------------------------------------------- */
 
 @media (min-width: 768px) {
@@ -122,10 +127,7 @@
   }
 
   .kn-manifesto__pillar {
-    align-content: space-between;
-    gap: var(--kn-space-2xl);
-    min-height: 15rem;
-    padding: var(--kn-space-lg);
+    padding: var(--kn-space-xl) var(--kn-space-lg);
   }
 
   .kn-manifesto__pillar + .kn-manifesto__pillar {
@@ -134,7 +136,7 @@
   }
 
   .kn-manifesto__key {
-    font-size: clamp(2.5rem, 4.2vw, 4rem);
+    font-size: clamp(2rem, 3vw, 2.75rem);
   }
 }
 
@@ -147,10 +149,5 @@
 
   .kn-manifesto__pillars {
     margin-block-start: var(--kn-space-3xl);
-  }
-
-  .kn-manifesto__pillar {
-    min-height: 17rem;
-    padding: var(--kn-space-xl) var(--kn-space-lg) var(--kn-space-lg);
   }
 }
