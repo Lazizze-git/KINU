@@ -140,7 +140,20 @@
   }
 }
 
+/* Ordinateur resserré (retour client d'octobre 2026) : sur un portable
+   13 pouces, la section prenait plus d'un écran pour trois mots et trois
+   phrases courtes. Titre ramené à la taille h2, air de section ordinaire
+   plutôt que celui des inondations, plaque rapprochée du titre et moins
+   haute. Le téléphone ne bouge pas. */
 @media (min-width: 1024px) {
+  .kn-manifesto.kn-section {
+    padding-block: var(--kn-section-y);
+  }
+
+  .kn-manifesto__title {
+    font-size: var(--kn-fs-h2);
+  }
+
   .kn-manifesto__head {
     grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
     column-gap: var(--kn-space-2xl);
@@ -148,6 +161,10 @@
   }
 
   .kn-manifesto__pillars {
-    margin-block-start: var(--kn-space-3xl);
+    margin-block-start: var(--kn-space-xl);
+  }
+
+  .kn-manifesto__pillar {
+    padding: var(--kn-space-lg);
   }
 }
