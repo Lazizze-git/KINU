@@ -213,12 +213,19 @@
    le texte son fond : forêt/ivoire sur clair (DA §7.3), et l'inverse sur le
    territoire Amplitude — un badge forêt sur une page forêt ne signalerait
    rien, et sur encre il tomberait dans une paire interdite (§3.6). */
+/* Retour client d'octobre 2026 : la pastille (« Précommande » sur presque
+   toutes les vignettes) pesait trop sur la photo. Un cran sous l'étiquette,
+   plus près du coin, rembourrage serré : elle se lit sans couvrir le haut
+   du vêtement. */
 .kn-card__badge {
   position: absolute;
-  top: var(--kn-space-xs);
-  left: var(--kn-space-xs);
+  top: var(--kn-space-2xs);
+  left: var(--kn-space-2xs);
   z-index: 1;
-  padding: var(--kn-space-3xs) var(--kn-space-2xs);
+  padding: 0.1875rem 0.4375rem;
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  line-height: 1.1;
   background-color: var(--kn-surface-accent);
   color: var(--kn-surface-bg);
 }
