@@ -194,6 +194,13 @@ var DESKTOP_QUERY = '(min-width: 768px)';
        */
       setColour: function (value) {
         var next = value || null;
+        // Un coloris encore sans photographie (un sample pas encore shoote)
+        // viderait la galerie : il rend alors toute la galerie.
+        if (next !== null && !slides.some(function (slide) {
+          return slide.getAttribute('data-kn-colour') === next;
+        })) {
+          next = null;
+        }
         if (next === colour) return;
         colour = next;
         slides.forEach(function (slide) {
