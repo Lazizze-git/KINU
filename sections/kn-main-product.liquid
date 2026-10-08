@@ -46,6 +46,26 @@
   elsif kn_variant != blank
     assign kn_btn_label = kn_s.label_sold_out
   endif
+
+  comment
+    Precommande (demande client d'octobre 2026) : sans application, un
+    champ « Precommande » coche sur la piece. Les libelles d'ajout et de
+    disponibilite changent ; kn-product.js les relit dans les attributs
+    data, il n'a rien a savoir de plus.
+  endcomment
+  assign kn_preorder = false
+  if kn_product.metafields.custom.precommande.value == true
+    assign kn_preorder = true
+  endif
+  assign kn_label_add = kn_s.label_add_to_cart
+  assign kn_label_in_stock = kn_s.label_in_stock
+  if kn_preorder
+    assign kn_label_add = settings.kn_preorder_button | default: kn_label_add
+    assign kn_label_in_stock = settings.kn_preorder_status | default: kn_label_in_stock
+    if kn_can_add
+      assign kn_btn_label = kn_label_add
+    endif
+  endif
   assign kn_with_currency = settings.currency_code_enabled_product_pages
   if kn_with_currency
     assign kn_price = kn_variant.price | money_with_currency
@@ -69,10 +89,10 @@
   data-kn-product
   data-kn-section-id="{{ section.id }}"
   data-kn-product-url="{{ kn_product.url }}"
-  data-kn-label-add="{{ kn_s.label_add_to_cart | escape }}"
+  data-kn-label-add="{{ kn_label_add | escape }}"
   data-kn-label-sold-out="{{ kn_s.label_sold_out | escape }}"
   data-kn-label-unavailable="{{ kn_s.label_unavailable | escape }}"
-  data-kn-label-in-stock="{{ kn_s.label_in_stock | escape }}"
+  data-kn-label-in-stock="{{ kn_label_in_stock | escape }}"
   data-kn-label-selected="{{ kn_s.label_selected | escape }}"
   data-kn-money-format="{{ kn_money_format | strip_html | escape }}"
   {{ section.shopify_attributes }}
@@ -122,6 +142,8 @@
           form_id: kn_form_id,
           can_add: kn_can_add,
           button_label: kn_btn_label,
+          in_stock_label: kn_label_in_stock,
+          preorder: kn_preorder,
           price: kn_price,
           section_id: section.id
         -%}
@@ -222,6 +244,7 @@
     { "type": "text", "id": "title_origin", "label": "Titre — Origine", "default": "L’origine", "info": "Volet affiché uniquement sur les pièces dont le métachamp « Récit d’origine » est rempli." },
     { "type": "text", "id": "title_material", "label": "Titre — Matière", "default": "Matière & entretien" },
     { "type": "richtext", "id": "text_material", "label": "Texte de repli — Matière" },
+    { "type": "checkbox", "id": "show_shipping", "label": "Afficher le volet Livraison", "info": "Masqué à la demande du client (octobre 2026) : le coût de livraison est calculé au paiement et le seuil de gratuité figure déjà sous le bouton.", "default": false },
     { "type": "text", "id": "title_shipping", "label": "Titre — Livraison", "default": "Livraison & retours" },
     { "type": "richtext", "id": "text_shipping", "label": "Texte de repli — Livraison" }
   ],
@@ -233,7 +256,7 @@
       "settings": [
         { "type": "paragraph", "content": "Affiché sous le bouton d’ajout. N’écrire que des engagements réels." },
         { "type": "select", "id": "icon", "label": "Pictogramme", "options": [{ "value": "truck", "label": "Livraison" }, { "value": "globe", "label": "International" }, { "value": "return", "label": "Retours" }, { "value": "shield", "label": "Paiement sécurisé" }], "default": "truck" },
-        { "type": "text", "id": "text", "label": "Texte", "default": "Livraison offerte dès CHF 65" }
+        { "type": "text", "id": "text", "label": "Texte", "default": "Livraison offerte dès CHF 90" }
       ]
     }
   ],

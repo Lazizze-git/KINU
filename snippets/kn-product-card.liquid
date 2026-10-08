@@ -102,6 +102,14 @@
     endif
   endif
 
+  comment
+    Une piece en precommande le dit des la vignette, sauf badge editorial
+    ou remise, qui restent prioritaires.
+  endcomment
+  if kn_badge == blank and product.metafields.custom.precommande.value == true
+    assign kn_badge = settings.kn_preorder_badge
+  endif
+
   unless kn_available
     assign kn_badge = ''
   endunless

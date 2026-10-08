@@ -2116,5 +2116,54 @@
         "default": "equal-width-buttons"
       }
     ]
+  },
+  {
+    "name": "KINŪ · Logo de chargement",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Le symbole qui tourne pendant un ajout au panier, un filtrage ou un changement de page qui tarde."
+      },
+      {
+        "type": "image_picker",
+        "id": "kn_loader_mark",
+        "label": "Symbole",
+        "info": "Carré, fond transparent (SVG ou PNG). Sans image, le nom de la boutique s’affiche à la place."
+      }
+    ]
+  },
+  {
+    "name": "KINŪ · Précommande",
+    "settings": [
+      {
+        "type": "paragraph",
+        "content": "Une pièce passe en précommande quand son champ « Précommande » est coché dans la fiche produit de l’admin. Le bouton, la disponibilité et la vignette changent de libellé, et la commande arrive marquée « Précommande : Oui »."
+      },
+      {
+        "type": "text",
+        "id": "kn_preorder_button",
+        "label": "Bouton d’ajout",
+        "default": "Précommander"
+      },
+      {
+        "type": "text",
+        "id": "kn_preorder_status",
+        "label": "Disponibilité",
+        "default": "En précommande"
+      },
+      {
+        "type": "text",
+        "id": "kn_preorder_badge",
+        "label": "Pastille des vignettes",
+        "default": "Précommande"
+      },
+      {
+        "type": "richtext",
+        "id": "kn_preorder_note",
+        "label": "Mention sous le bouton",
+        "info": "N’annoncer qu’un délai tenu.",
+        "default": "<p>Pièce en précommande : expédiée dès réception du stock.</p>"
+      }
+    ]
   }
 ]

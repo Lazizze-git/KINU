@@ -673,6 +673,20 @@ body:has(.kn-pdp) .kn-territory-surface {
   line-height: 1;
 }
 
+/* Mention de précommande : même voix que la mention TVA, collée au bouton
+   qu'elle explique. */
+.kn-buy__preorder {
+  margin: var(--kn-space-xs) 0 0;
+  max-width: var(--kn-measure);
+  color: var(--kn-grey);
+}
+
+.kn-buy__preorder p {
+  margin: 0;
+  font-size: inherit;
+  line-height: inherit;
+}
+
 .kn-buy__meta {
   display: grid;
   gap: var(--kn-space-2xs);
