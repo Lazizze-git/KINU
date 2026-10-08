@@ -75,6 +75,7 @@
       pages que le systeme KINU ne rend pas lui-meme.
     {%- endcomment -%}
     {{ 'kn-horizon.css' | asset_url | stylesheet_tag }}
+    {{ 'kn-loader.css' | asset_url | stylesheet_tag }}
 
     <script src="{{ 'kn-base.js' | asset_url }}" defer></script>
     <script src="{{ 'kn-chrome.js' | asset_url }}" defer></script>
@@ -82,6 +83,7 @@
     <script src="{{ 'kn-catalog.js' | asset_url }}" defer></script>
     <script src="{{ 'kn-money.js' | asset_url }}" defer></script>
     <script src="{{ 'kn-product.js' | asset_url }}" defer></script>
+    <script src="{{ 'kn-loader.js' | asset_url }}" defer></script>
 
     {% if request.design_mode %}
       {%- render 'theme-editor' -%}
@@ -284,6 +286,8 @@
         }
       })();
     </script>
+
+    {% render 'kn-loader' %}
 
     {% render 'search-modal' %}
 
