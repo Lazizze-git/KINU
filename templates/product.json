@@ -46,20 +46,17 @@
         "size_guide_note": "<p>Mesures de la pièce en centimètres, prises avant le port, sans étirer la matière. Entre deux tailles, choisissez la plus grande pour une coupe détendue.</p>",
         "title_description": "Description",
         "title_material": "Matière & entretien",
+        "show_shipping": false,
         "title_shipping": "Livraison & retours",
-        "text_shipping": "<p>Livraison standard en Suisse à 7 CHF, offerte dès 65 CHF d’achat. Livraison internationale à 15 CHF vers vingt-sept pays.</p>"
+        "text_shipping": ""
       },
       "blocks": {
         "assurance_shipping": {
           "type": "assurance",
-          "settings": { "icon": "truck", "text": "Livraison offerte dès CHF 65" }
-        },
-        "assurance_world": {
-          "type": "assurance",
-          "settings": { "icon": "globe", "text": "Expédition dans 27 pays" }
+          "settings": { "icon": "truck", "text": "Livraison offerte dès CHF 90" }
         }
       },
-      "block_order": ["assurance_shipping", "assurance_world"]
+      "block_order": ["assurance_shipping"]
     },
     "complete_the_look": {
       "type": "kn-product-recommendations",

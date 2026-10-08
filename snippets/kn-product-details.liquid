@@ -1,6 +1,9 @@
 {%- doc -%}
   Accordéons de la page produit (DA §7.7) : filets 1 px, sans fond, chevron 12 px.
   Livraison vient d'un métachamp, avec repli sur un texte de section.
+  Amendement d'octobre 2026 : le volet Livraison est masqué par défaut
+  (réglage « Afficher le volet Livraison »). Le client ne veut pas afficher un
+  tarif qu'il n'a pas arrêté ; Shopify le calcule au paiement.
 
   Description ne porte que le texte de la pièce. Matière & entretien porte la
   fiche technique (kn-product-spec) : une ligne par donnée, un filet entre
@@ -89,7 +92,7 @@
     </details>
   {%- endif -%}
 
-  {%- if kn_shipping != blank -%}
+  {%- if opts.show_shipping and kn_shipping != blank -%}
     <details class="kn-acc__item" name="kn-acc-{{ section_id }}">
       <summary class="kn-acc__sum">
         <span class="kn-label">{{ opts.title_shipping }}</span>
