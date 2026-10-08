@@ -12,9 +12,10 @@
     "hero": {
       "type": "kn-hero-video",
       "settings": {
-        "image_alt": "Coureuse en veste technique KINŪ sur une route de montagne suisse",
+        "image_alt": "Athlète en veste Performance KINŪ noire",
         "title": "Le vêtement technique, à l’échelle du geste.",
-        "scrim": 30
+        "scrim": 30,
+        "image": "shopify://shop_images/veste-performance-fogo-01.jpg"
       }
     },
     "universes": {
@@ -26,7 +27,8 @@
             "category": "Femme",
             "collection_name": "Fluid-Motion",
             "description": "Brassières, leggings, shorts, t-shirts, vestes",
-            "collection": "fluid-motion"
+            "collection": "fluid-motion",
+            "image": "shopify://shop_images/veste-everyday-luzia-01.jpg"
           }
         },
         "homme": {
@@ -35,7 +37,8 @@
             "category": "Homme",
             "collection_name": "CrossOver",
             "description": "T-shirts, shorts",
-            "collection": "crossover"
+            "collection": "crossover",
+            "image": "shopify://shop_images/t-shirt-crossover-01.jpg"
           }
         },
         "unisexe": {
@@ -44,7 +47,8 @@
             "category": "Unisexe",
             "collection_name": "Amplitude",
             "description": "Accessoires, t-shirts, tracksuits",
-            "collection": "amplitude"
+            "collection": "amplitude",
+            "image": "shopify://shop_images/tracksuit-zip-beige-01.jpg"
           }
         }
       },

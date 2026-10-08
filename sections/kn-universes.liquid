@@ -18,25 +18,16 @@
         {%- liquid
           assign b = block.settings
           assign target = b.collection.url | default: b.url
-          assign main_image = b.image | default: b.collection.featured_image
+          comment
+            Sans image choisie, la vignette prend celle de la collection, puis
+            la photo de sa premiere piece : une colonne n'est jamais vide.
+          endcomment
+          assign main_image = b.image | default: b.collection.featured_image | default: b.collection.products.first.featured_media.preview_image
           assign alt_text = main_image.alt | default: b.category | escape
         -%}
 
         {%- capture column -%}
           <div class="kn-ratio kn-universe__frame">
-            {%- if main_image == blank -%}
-              {%- comment -%} Maquette : voir snippets/kn-demo-grid.liquid {%- endcomment -%}
-              {%- assign kn_demo_files = 'kn-demo-04.jpg,kn-demo-02.jpg,kn-demo-07.jpg' | split: ',' -%}
-              {%- assign kn_demo_slot = forloop.index0 | modulo: 3 -%}
-              <img
-                class="kn-img"
-                src="{{ kn_demo_files[kn_demo_slot] | asset_url }}"
-                alt=""
-                width="1000"
-                height="1600"
-                loading="lazy"
-              >
-            {%- endif -%}
             {%- if main_image != blank -%}
               {{
                 main_image
