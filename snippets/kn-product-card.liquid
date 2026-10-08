@@ -79,6 +79,48 @@
     endfor
   endif
 
+  comment
+    Amendement d'octobre 2026, demande client : au survol, le vetement change
+    de couleur. Une piece declinee en plusieurs coloris montre donc au survol
+    la photographie d'un AUTRE coloris, avant toute autre face. Le coloris de
+    la premiere photo est celui dont une variante la porte ; a defaut, c'est
+    le premier coloris de la liste. Une piece d'un seul coloris garde le
+    survol ci-dessus.
+  endcomment
+  assign kn_colour_option = blank
+  for kn_option in product.options_with_values
+    assign kn_option_name = kn_option.name | downcase
+    if kn_option.values.size > 1
+      if kn_option_name == 'couleur' or kn_option_name == 'coloris' or kn_option_name == 'color' or kn_option_name == 'colour'
+        assign kn_colour_option = kn_option
+        break
+      endif
+    endif
+  endfor
+
+  if kn_colour_option != blank and kn_image != blank
+    assign kn_colour_prop = kn_colour_option.position | prepend: 'option'
+    assign kn_shown_colour = kn_colour_option.values.first.name
+    for kn_value in kn_colour_option.values
+      assign kn_value_media = product.variants | where: kn_colour_prop, kn_value.name | map: 'featured_media' | first
+      if kn_value_media.preview_image.src == kn_image.src
+        assign kn_shown_colour = kn_value.name
+        break
+      endif
+    endfor
+
+    for kn_value in kn_colour_option.values
+      if kn_value.name == kn_shown_colour
+        continue
+      endif
+      assign kn_value_media = product.variants | where: kn_colour_prop, kn_value.name | map: 'featured_media' | first
+      if kn_value_media.preview_image != blank and kn_value_media.preview_image.src != kn_image.src
+        assign kn_image_alt = kn_value_media.preview_image
+        break
+      endif
+    endfor
+  endif
+
   assign kn_available = product.available
   assign kn_price = product.price | money | strip_html
   assign kn_compare_at = product.compare_at_price
