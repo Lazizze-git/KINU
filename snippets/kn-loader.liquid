@@ -5,32 +5,15 @@
   marque remplace l'attente muette : ajout au panier, filtrage du catalogue,
   changement de page qui tarde. kn-loader.js décide quand il paraît.
 
-  Le symbole se règle dans l'éditeur (Paramètres du thème › KINŪ · Logo de
-  chargement). Sans image, le nom de la marque respire au lieu de tourner :
-  un mot qui pivote ne se lit plus.
+  Le symbole est le SVG officiel (snippets/kn-brand-mark.liquid), dessiné en
+  ligne : il est là dès le premier affichage, sans requête ni réglage.
 
   Décoratif pour les lecteurs d'écran : chaque attente annonce déjà son
   résultat ailleurs (région live du bouton d'ajout, compteur de résultats).
 {%- enddoc -%}
 
-{%- liquid
-  assign kn_mark = settings.kn_loader_mark
-  assign kn_mode = 'word'
-  if kn_mark != blank
-    assign kn_mode = 'mark'
-  endif
--%}
-
-<div class="kn-loader kn-loader--{{ kn_mode }}" data-kn-loader aria-hidden="true">
+<div class="kn-loader" data-kn-loader aria-hidden="true">
   <div class="kn-loader__badge">
-    {%- if kn_mark != blank -%}
-      {{
-        kn_mark
-        | image_url: width: 160
-        | image_tag: class: 'kn-loader__mark', alt: '', loading: 'lazy', width: 40, height: 40
-      }}
-    {%- else -%}
-      <span class="kn-loader__word">{{ shop.name | escape }}</span>
-    {%- endif -%}
+    {%- render 'kn-brand-mark', name: 'symbol', class: 'kn-loader__mark' -%}
   </div>
 </div>

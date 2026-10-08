@@ -2118,21 +2118,6 @@
     ]
   },
   {
-    "name": "KINŪ · Logo de chargement",
-    "settings": [
-      {
-        "type": "paragraph",
-        "content": "Le symbole qui tourne pendant un ajout au panier, un filtrage ou un changement de page qui tarde."
-      },
-      {
-        "type": "image_picker",
-        "id": "kn_loader_mark",
-        "label": "Symbole",
-        "info": "Carré, fond transparent (SVG ou PNG). Sans image, le nom de la boutique s’affiche à la place."
-      }
-    ]
-  },
-  {
     "name": "KINŪ · Précommande",
     "settings": [
       {

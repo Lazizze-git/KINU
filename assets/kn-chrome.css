@@ -683,12 +683,15 @@ body.kn-header--over-media
 .kn-header__wordmark {
   color: var(--kn-surface-accent);
   transition: color var(--kn-dur-2) var(--kn-ease-state);
-  font-family: var(--kn-font-ui);
-  font-size: var(--kn-logo-h);
-  font-weight: var(--kn-fw-bold);
-  line-height: 1;
-  letter-spacing: var(--kn-ls-btn);
-  white-space: nowrap;
+  display: block;
+}
+
+/* Logotype officiel. Sa hauteur comprend le macron du Ū : les capitales
+   tombent a environ 80 % de --kn-logo-h, la taille du mot qu'il remplace. */
+.kn-header__logotype {
+  display: block;
+  width: auto;
+  height: var(--kn-logo-h);
 }
 
 /* Compteur du panier — pastille (DA §7.1). Le composant natif d'Horizon
