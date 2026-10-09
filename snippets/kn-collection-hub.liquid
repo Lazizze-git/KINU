@@ -8,7 +8,8 @@
 
   Tout vient de l'entrée du menu qui pointe vers la collection :
   - une sous-entrée filtrée par tag est une catégorie. Elle n'apparaît que si
-    au moins une pièce est en ligne, et prend la photo de la première ;
+    au moins une pièce est en ligne, et prend la photo d'une de ses pièces,
+    dans un coloris que la vignette précédente ne montre pas ;
   - l'univers est la première de ses collections, suivi de toute sous-entrée
     qui mène à une collection entière.
 
@@ -26,6 +27,49 @@
   assign kn_all_url = collection.url | append: '?sort_by=' | append: collection.default_sort_by
   assign kn_tiles = 0
   assign kn_used = ','
+
+  comment
+    Demande client du 9 octobre : sur Femme, les cinq vignettes montraient la
+    meme tenue aubergine. Chaque categorie prenait sa premiere piece, et les
+    cinq premieres sont toutes des Everyday en coloris Brava.
+
+    Les vignettes se passent desormais les coloris de l'univers, a tour de
+    role. La palette reprend d'abord le coloris de couverture de chaque piece,
+    dans l'ordre de la collection, puis les autres coloris : sur Femme,
+    Brava, Fogo, Santo Antao, Santa Luzia. Chaque categorie prend le coloris
+    suivant de la palette parmi ceux de ses pieces, et sa vignette montre la
+    photographie de ce coloris. Un coloris sans photographie est saute.
+  endcomment
+  assign kn_palette = '|'
+  for kn_product in link.object.products
+    capture kn_colour
+      render 'kn-cover-colour', product: kn_product
+    endcapture
+    assign kn_colour = kn_colour | strip
+    assign kn_key = '|' | append: kn_colour | append: '|'
+    if kn_colour != blank
+      unless kn_palette contains kn_key
+        assign kn_palette = kn_palette | append: kn_colour | append: '|'
+      endunless
+    endif
+  endfor
+  for kn_product in link.object.products
+    for kn_option in kn_product.options_with_values
+      assign kn_name = kn_option.name | downcase
+      unless kn_name == 'couleur' or kn_name == 'coloris' or kn_name == 'color' or kn_name == 'colour'
+        continue
+      endunless
+      for kn_value in kn_option.values
+        assign kn_key = '|' | append: kn_value.name | append: '|'
+        unless kn_palette contains kn_key
+          assign kn_palette = kn_palette | append: kn_value.name | append: '|'
+        endunless
+      endfor
+      break
+    endfor
+  endfor
+  assign kn_colours = kn_palette | remove_first: '|' | split: '|'
+  assign kn_cursor = -1
 -%}
 
 {%- capture kn_categories -%}
@@ -33,73 +77,152 @@
     {%- capture kn_rank -%}{%- render 'kn-category-lead', link: kn_child -%}{%- endcapture -%}
     {%- assign kn_rank = kn_rank | strip -%}
     {%- if kn_rank != blank -%}
+      {%- capture kn_wanted -%}{%- render 'kn-link-tag', link: kn_child -%}{%- endcapture -%}
       {%- liquid
+        assign kn_wanted = kn_wanted | strip
         assign kn_offset = kn_rank | plus: 0
         assign kn_eager = false
         if kn_tiles < 2
           assign kn_eager = true
         endif
         assign kn_tiles = kn_tiles | plus: 1
-      -%}
-      {%- for kn_lead in kn_child.object.products offset: kn_offset limit: 1 -%}
-        {%- liquid
-          assign kn_used = kn_used | append: kn_lead.id | append: ','
 
-          comment
-            Demande client du 21 septembre : au survol, un autre coloris de la
-            piece plutot qu'une deuxieme vue du meme. On prend la photo de la
-            premiere variante qui en porte une autre que la couverture.
+        assign kn_lead = nil
+        assign kn_image = nil
+        assign kn_lead_colour = ''
+        for kn_step in (1..kn_colours.size)
+          assign kn_at = kn_cursor | plus: kn_step | modulo: kn_colours.size
+          assign kn_target = kn_colours[kn_at]
+          for kn_product in kn_child.object.products
+            assign kn_tagged = false
+            for kn_tag in kn_product.tags
+              assign kn_have = kn_tag | handleize
+              if kn_have == kn_wanted
+                assign kn_tagged = true
+                break
+              endif
+            endfor
+            unless kn_tagged
+              continue
+            endunless
 
-            Amendement du 23 septembre. Une piece a coloris unique retombait
-            sur sa deuxieme photo — la vignette Ensembles montrait le hoodie
-            marine, puis le meme hoodie marine sous un autre angle, et le
-            survol ne disait rien. Elle prend desormais la PIECE SUIVANTE de
-            la categorie : le marine appelle le noir. « Quand tu passes le
-            curseur sur l'ensemble bleu, qu'on voie le noir aussi, ca donne
-            un apercu de ce qu'il y a. »
+            assign kn_prop = ''
+            for kn_option in kn_product.options_with_values
+              assign kn_name = kn_option.name | downcase
+              if kn_name == 'couleur' or kn_name == 'coloris' or kn_name == 'color' or kn_name == 'colour'
+                assign kn_prop = kn_option.position | prepend: 'option'
+                break
+              endif
+            endfor
+            if kn_prop == ''
+              continue
+            endif
 
-            L'ordre reste : autre coloris, sinon piece suivante, sinon
-            deuxieme photo. Les vignettes qui marchaient deja — T-shirts, ou
-            KI porte trois coloris — ne changent pas de comportement.
-          endcomment
-          assign kn_hover = blank
-          for kn_variant in kn_lead.variants
-            if kn_variant.featured_media != blank and kn_variant.featured_media.id != kn_lead.featured_media.id
-              assign kn_hover = kn_variant.featured_media.preview_image
+            assign kn_variant = kn_product.variants | where: kn_prop, kn_target | first
+            if kn_variant == blank
+              continue
+            endif
+            capture kn_colour
+              render 'kn-cover-colour', product: kn_product
+            endcapture
+            assign kn_colour = kn_colour | strip
+            if kn_colour == kn_target
+              assign kn_candidate = kn_product.featured_image
+            else
+              assign kn_candidate = kn_variant.featured_media.preview_image
+            endif
+            if kn_candidate == blank
+              continue
+            endif
+
+            assign kn_lead = kn_product
+            assign kn_image = kn_candidate
+            assign kn_lead_colour = kn_target
+            break
+          endfor
+          if kn_lead != blank
+            assign kn_cursor = kn_at
+            break
+          endif
+        endfor
+
+        comment
+          Une categorie sans piece en couleur (Accessoires) garde sa premiere
+          piece en ligne, comme avant.
+        endcomment
+        if kn_lead == blank
+          for kn_product in kn_child.object.products offset: kn_offset limit: 1
+            assign kn_lead = kn_product
+            assign kn_image = kn_product.featured_image
+          endfor
+        endif
+        assign kn_used = kn_used | append: kn_lead.id | append: ','
+
+        comment
+          Survol. Demande du 22 septembre, rappelee le 9 octobre : « quand tu
+          passes le curseur sur l'ensemble bleu, qu'on voie le noir aussi, ca
+          donne un apercu de ce qu'il y a ». Le survol montre donc d'abord une
+          AUTRE piece de la categorie : le Tracksuit Basic appelle le Tracksuit
+          Zip. Depuis que le Basic existe en trois coloris, la regle « autre
+          coloris d'abord » montrait son jogger marine, et l'autre modele ne
+          paraissait plus.
+
+          Ordre : autre piece de la categorie, sinon autre coloris de la meme
+          piece (CrossOver, une piece par categorie), sinon deuxieme photo.
+        endcomment
+        assign kn_hover = nil
+        for kn_product in kn_child.object.products
+          if kn_product.id == kn_lead.id or kn_product.featured_image == blank
+            continue
+          endif
+          for kn_tag in kn_product.tags
+            assign kn_have = kn_tag | handleize
+            if kn_have == kn_wanted
+              assign kn_hover = kn_product.featured_image
               break
             endif
           endfor
+          if kn_hover != blank
+            break
+          endif
+        endfor
 
-          if kn_hover == blank
-            comment
-              On ne prend pas « l'index suivant » : la piece de couverture
-              n'est pas toujours la premiere de la categorie, et on tomberait
-              alors hors de la liste. On prend la premiere piece qui n'est
-              pas elle.
-            endcomment
-            for kn_sibling in kn_child.object.products limit: 12
-              if kn_sibling.id == kn_lead.id or kn_sibling.featured_image == blank
+        if kn_hover == blank and kn_lead_colour != ''
+          for kn_option in kn_lead.options_with_values
+            assign kn_name = kn_option.name | downcase
+            unless kn_name == 'couleur' or kn_name == 'coloris' or kn_name == 'color' or kn_name == 'colour'
+              continue
+            endunless
+            assign kn_prop = kn_option.position | prepend: 'option'
+            for kn_value in kn_option.values
+              if kn_value.name == kn_lead_colour
                 continue
               endif
-              assign kn_hover = kn_sibling.featured_image
-              break
+              assign kn_media = kn_lead.variants | where: kn_prop, kn_value.name | map: 'featured_media' | first
+              if kn_media != blank and kn_media.preview_image != blank
+                assign kn_hover = kn_media.preview_image
+                break
+              endif
             endfor
-          endif
+            break
+          endfor
+        endif
 
-          if kn_hover == blank
-            assign kn_hover = kn_lead.images[1]
-          endif
-        -%}
+        if kn_hover == blank
+          assign kn_hover = kn_lead.images[1]
+        endif
+      -%}
+      {%- if kn_lead != blank -%}
         <li>
           {%- render 'kn-hub-tile',
             url: kn_child.url,
-            image: kn_lead.featured_image,
+            image: kn_image,
             image_hover: kn_hover,
             title: kn_child.title,
             eager: kn_eager
           -%}
         </li>
-      {%- endfor -%}
+      {%- endif -%}
     {%- endif -%}
   {%- endfor -%}
 {%- endcapture -%}
