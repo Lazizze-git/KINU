@@ -68,7 +68,7 @@
   assign kn_hub = ''
   if kn_universe_link != nil and kn_active == 0 and current_tags == blank and collection.sort_by == blank
     capture kn_hub
-      render 'kn-collection-hub', link: kn_universe_link, pieces_title: kn_hub_pieces, all_label: kn_hub_all, collections_title: kn_hub_collections
+      render 'kn-collection-hub', link: kn_universe_link, pieces_title: kn_hub_pieces, all_label: kn_hub_all, collections_title: kn_hub_collections, blocks: section.blocks
     endcapture
   endif
   assign kn_hub = kn_hub | strip
@@ -205,7 +205,7 @@
   "name": "Collection KINŪ",
   "class": "kn-section-collection",
   "enabled_on": { "templates": ["collection"] },
-  "max_blocks": 12,
+  "max_blocks": 40,
   "settings": [
     { "type": "checkbox", "id": "show_breadcrumb", "label": "Afficher le fil d’Ariane", "default": true },
     { "type": "checkbox", "id": "show_universe", "label": "Sur-titre d’univers sur les cartes", "default": true, "info": "Masqué automatiquement sur la page de l’univers concerné." },
@@ -256,6 +256,17 @@
         { "type": "text", "id": "tag", "label": "Tag du rayon", "info": "Le tag filtré par l’entrée de menu, par exemple T-shirt." },
         { "type": "collection", "id": "collection", "label": "Univers concerné", "info": "Laisser vide pour tous les univers qui ont ce rayon." },
         { "type": "richtext", "id": "text", "label": "Texte", "info": "Posé au-dessus de la grille, sur la page de ce rayon seulement." }
+      ]
+    },
+    {
+      "type": "vignette",
+      "name": "Vignette de catégorie",
+      "settings": [
+        { "type": "paragraph", "content": "Choisit la photo d’une catégorie sur la page d’univers (Leggings, Shorts…). Sans photo, la vignette garde son choix automatique." },
+        { "type": "text", "id": "tag", "label": "Tag de la catégorie", "info": "Le tag filtré par l’entrée de menu, par exemple Legging, Short, T-shirt, Brassière, Veste." },
+        { "type": "collection", "id": "collection", "label": "Univers concerné", "info": "Laisser vide pour tous les univers qui ont cette catégorie." },
+        { "type": "image_picker", "id": "image", "label": "Photo" },
+        { "type": "image_picker", "id": "image_hover", "label": "Photo au survol", "info": "Vide : une autre pièce de la catégorie." }
       ]
     },
     {

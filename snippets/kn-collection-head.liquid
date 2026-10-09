@@ -23,6 +23,9 @@
   assign kn_universe_name = ''
   assign kn_universe_intro = ''
   for kn_block in blocks
+    if kn_block.type != 'universe'
+      continue
+    endif
     if kn_block.settings.collection.handle == kn_universe.handle
       assign kn_category = kn_block.settings.category
       assign kn_universe_name = kn_block.settings.universe_name | default: kn_block.settings.collection.title

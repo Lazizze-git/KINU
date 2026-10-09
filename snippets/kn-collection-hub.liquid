@@ -21,6 +21,8 @@
   @param {string} pieces_title - Titre du bloc des catégories.
   @param {string} all_label - Lien vers la liste complète des pièces.
   @param {string} collections_title - Titre du bloc des collections.
+  @param {object} [blocks] - Blocs de la section. Un bloc « Vignette de
+    catégorie » fixe la photo et la photo de survol d'une catégorie.
 {%- enddoc -%}
 
 {%- liquid
@@ -156,7 +158,42 @@
             assign kn_image = kn_product.featured_image
           endfor
         endif
-        assign kn_used = kn_used | append: kn_lead.id | append: ','
+
+        comment
+          Retours client du 9 octobre, deuxieme passe : le client choisit
+          lui-meme la photo de chaque vignette (le noir sur Leggings, le violet
+          sur Shorts...). Un bloc « Vignette de categorie » de la section
+          l'emporte sur le choix automatique ci-dessus. La rotation tourne
+          quand meme : une vignette laissee en automatique ne change pas de
+          photo quand on regle sa voisine.
+        endcomment
+        assign kn_pick = nil
+        for kn_block in blocks
+          if kn_block.type != 'vignette'
+            continue
+          endif
+          assign kn_block_tag = kn_block.settings.tag | handleize
+          if kn_block_tag != kn_wanted
+            continue
+          endif
+          assign kn_block_universe = kn_block.settings.collection.handle
+          if kn_block_universe != blank and kn_block_universe != collection.handle
+            continue
+          endif
+          assign kn_pick = kn_block
+          break
+        endfor
+        if kn_pick.settings.image != blank
+          assign kn_image = kn_pick.settings.image
+        endif
+
+        comment
+          Les vignettes se reconnaissent a leur fichier, pas a leur piece : une
+          photo choisie dans l'editeur ne dit pas a quelle piece elle
+          appartient. Voir la vignette de l'univers, plus bas.
+        endcomment
+        assign kn_file = kn_image.src | split: '?' | first | split: '/' | last
+        assign kn_used = kn_used | append: kn_file | append: ','
 
         comment
           Survol. Demande du 22 septembre, rappelee le 9 octobre : « quand tu
@@ -167,12 +204,20 @@
           coloris d'abord » montrait son jogger marine, et l'autre modele ne
           paraissait plus.
 
-          Ordre : autre piece de la categorie, sinon autre coloris de la meme
-          piece (CrossOver, une piece par categorie), sinon deuxieme photo.
+          Ordre : la photo de survol du bloc, sinon autre piece de la
+          categorie, sinon autre coloris de la meme piece (CrossOver, une piece
+          par categorie), sinon deuxieme photo.
         endcomment
-        assign kn_hover = nil
+        assign kn_hover = kn_pick.settings.image_hover
         for kn_product in kn_child.object.products
+          if kn_hover != blank
+            break
+          endif
           if kn_product.id == kn_lead.id or kn_product.featured_image == blank
+            continue
+          endif
+          assign kn_other_file = kn_product.featured_image.src | split: '?' | first | split: '/' | last
+          if kn_other_file == kn_file
             continue
           endif
           for kn_tag in kn_product.tags
@@ -213,7 +258,7 @@
         endif
       -%}
       {%- if kn_lead != blank -%}
-        <li>
+        <li {{ kn_pick.shopify_attributes }}>
           {%- render 'kn-hub-tile',
             url: kn_child.url,
             image: kn_image,
@@ -238,8 +283,12 @@
       assign kn_cover = collection.image
       if kn_cover == blank
         for kn_product in collection.products
-          assign kn_key = ',' | append: kn_product.id | append: ','
-          if kn_used contains kn_key or kn_product.featured_image == blank
+          if kn_product.featured_image == blank
+            continue
+          endif
+          assign kn_file = kn_product.featured_image.src | split: '?' | first | split: '/' | last
+          assign kn_key = ',' | append: kn_file | append: ','
+          if kn_used contains kn_key
             continue
           endif
           assign kn_cover = kn_product.featured_image
