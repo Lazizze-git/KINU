@@ -1,0 +1,34 @@
+{%- doc -%}
+  KINŪ — Coloris que porte la photographie de couverture d'une pièce.
+
+  C'est le coloris dont une variante a pour image la couverture ; à défaut, le
+  premier coloris de la liste (même règle que kn-product-card). N'écrit rien si
+  la pièce n'a pas d'option de couleur.
+
+  @param {object} product - La pièce.
+
+  @example
+  {%- capture kn_colour -%}{%- render 'kn-cover-colour', product: kn_product -%}{%- endcapture -%}
+{%- enddoc -%}
+
+{%- liquid
+  for kn_option in product.options_with_values
+    assign kn_name = kn_option.name | downcase
+    unless kn_name == 'couleur' or kn_name == 'coloris' or kn_name == 'color' or kn_name == 'colour'
+      continue
+    endunless
+
+    assign kn_prop = kn_option.position | prepend: 'option'
+    assign kn_found = kn_option.values.first.name
+    for kn_value in kn_option.values
+      assign kn_media = product.variants | where: kn_prop, kn_value.name | map: 'featured_media' | first
+      if kn_media != blank and kn_media.id == product.featured_media.id
+        assign kn_found = kn_value.name
+        break
+      endif
+    endfor
+
+    echo kn_found
+    break
+  endfor
+-%}
