@@ -39,6 +39,51 @@
             "intro": "Des pièces mixtes taillées pour la plus grande course possible du mouvement."
           }
         },
+        "vignette-femme-leggings": {
+          "type": "vignette",
+          "settings": {
+            "tag": "Legging",
+            "collection": "fluid-motion",
+            "image": "shopify://shop_images/legging-performance-fogo-01.jpg",
+            "image_hover": "shopify://shop_images/legging-everyday-brava-01.jpg"
+          }
+        },
+        "vignette-femme-shorts": {
+          "type": "vignette",
+          "settings": {
+            "tag": "Short",
+            "collection": "fluid-motion",
+            "image": "shopify://shop_images/short-everyday-brava-01.jpg",
+            "image_hover": "shopify://shop_images/short-performance-fogo-01.jpg"
+          }
+        },
+        "vignette-femme-tshirts": {
+          "type": "vignette",
+          "settings": {
+            "tag": "T-shirt",
+            "collection": "fluid-motion",
+            "image": "shopify://shop_images/tshirt-performance-fogo-04.jpg",
+            "image_hover": "shopify://shop_images/tshirt-everyday-brava-01.jpg"
+          }
+        },
+        "vignette-femme-brassieres": {
+          "type": "vignette",
+          "settings": {
+            "tag": "Brassière",
+            "collection": "fluid-motion",
+            "image": "shopify://shop_images/brassiere-everyday-luzia-02.jpg",
+            "image_hover": "shopify://shop_images/brassiere-performance-fogo-03.jpg"
+          }
+        },
+        "vignette-femme-vestes": {
+          "type": "vignette",
+          "settings": {
+            "tag": "Veste",
+            "collection": "fluid-motion",
+            "image": "shopify://shop_images/veste-performance-fogo-01.jpg",
+            "image_hover": "shopify://shop_images/veste-everyday-brava-02.jpg"
+          }
+        },
         "rayon-tshirts-unisexe": {
           "type": "rayon",
           "settings": {
@@ -48,7 +93,7 @@
           }
         }
       },
-      "block_order": ["universe-femme", "universe-homme", "universe-unisexe", "rayon-tshirts-unisexe"],
+      "block_order": ["universe-femme", "universe-homme", "universe-unisexe", "rayon-tshirts-unisexe", "vignette-femme-leggings", "vignette-femme-shorts", "vignette-femme-tshirts", "vignette-femme-brassieres", "vignette-femme-vestes"],
       "settings": {
         "show_breadcrumb": true,
         "show_universe": true,
