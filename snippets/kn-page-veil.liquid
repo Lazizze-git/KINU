@@ -1,0 +1,18 @@
+{%- doc -%}
+  KINŪ — Passage d'une page à l'autre (demande client d'octobre 2026, sur le
+  modèle d'Aimé Leon Dore).
+
+  Au clic sur un lien du site, la page s'efface sous un voile ivoire, le
+  header reste en place, et le symbole de la marque tourne seul au centre,
+  sans pastille. La page suivante apparaît ensuite en fondu
+  (kn-page-veil.css, transition de vue entre documents).
+
+  kn-page-veil.js décide quand le voile paraît. Décoratif pour les lecteurs
+  d'écran : la nouvelle page s'annonce d'elle-même.
+{%- enddoc -%}
+
+<div class="kn-veil" data-kn-veil aria-hidden="true">
+  <span class="kn-veil__mark">
+    {%- render 'kn-brand-mark', name: 'symbol', class: 'kn-veil__symbol' -%}
+  </span>
+</div>

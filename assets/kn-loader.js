@@ -1,11 +1,12 @@
 /**
  * KINŪ — Indicateur de chargement
  *
- * Montre le symbole de la marque pendant trois attentes :
+ * Montre le symbole de la marque pendant deux attentes :
  * - un ajout ou une mise à jour du panier (événement standard Shopify
  *   `shopify:cart:lines-update`, dont la promesse dit quand c'est fini) ;
- * - un filtrage du catalogue (`data-kn-loading="true"`, posé par kn-catalog.js) ;
- * - un changement de page qui tarde.
+ * - un filtrage du catalogue (`data-kn-loading="true"`, posé par kn-catalog.js).
+ *
+ * Le changement de page a son propre voile (kn-page-veil.js).
  *
  * Chaque attente est comptée à part : le symbole reste tant qu'une seule
  * n'est pas finie. Il ne paraît qu'après SHOW_DELAY, pour ne pas clignoter
@@ -15,7 +16,6 @@
   'use strict';
 
   var SHOW_DELAY = 200;
-  var NAVIGATION_DELAY = 350;
   var MIN_VISIBLE = 450;
   // Filet de sécurité : une attente dont on n'apprend jamais la fin ne doit
   // pas laisser le symbole tourner indéfiniment.
@@ -58,12 +58,11 @@
 
   /**
    * Ouvre une attente et renvoie la fonction qui la ferme.
-   * @param {string} [key] - Clé stable pour une attente qui peut se répéter.
    * @returns {() => void}
    */
-  function begin(key) {
+  function begin() {
     sequence += 1;
-    var id = key || 'wait-' + sequence;
+    var id = 'wait-' + sequence;
     pending.add(id);
     paint();
 
@@ -83,42 +82,6 @@
     if (promise && typeof promise.then === 'function') {
       promise.then(end, end);
     }
-  }
-
-  /**
-   * Un lien interne qui mène à une autre page. Les liens interceptés par un
-   * script (tiroir panier, panneau de menu) ont déjà annulé leur clic.
-   * @param {MouseEvent} event
-   * @returns {boolean}
-   */
-  function isPageNavigation(event) {
-    if (event.defaultPrevented || event.button !== 0) return false;
-    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false;
-
-    var target = event.target instanceof Element ? event.target.closest('a[href]') : null;
-    if (!(target instanceof HTMLAnchorElement)) return false;
-    if (target.target && target.target !== '_self') return false;
-    if (target.hasAttribute('download')) return false;
-
-    var url;
-    try {
-      url = new URL(target.href, window.location.href);
-    } catch (error) {
-      return false;
-    }
-    if (url.origin !== window.location.origin) return false;
-    if (url.protocol !== 'http:' && url.protocol !== 'https:') return false;
-
-    var samePage = url.pathname === window.location.pathname && url.search === window.location.search;
-    return !samePage;
-  }
-
-  /** @param {MouseEvent} event */
-  function onClick(event) {
-    if (!isPageNavigation(event)) return;
-    window.setTimeout(function () {
-      if (document.visibilityState === 'visible') begin('navigation');
-    }, NAVIGATION_DELAY - SHOW_DELAY);
   }
 
   /** Retour arrière depuis le cache : la page n'attend plus rien. */
@@ -155,7 +118,6 @@
     // En capture : l'événement est émis sur le formulaire, et la capture le
     // reçoit au niveau du document qu'il remonte ou non.
     document.addEventListener('shopify:cart:lines-update', onCartUpdate, true);
-    document.addEventListener('click', onClick);
     window.addEventListener('pageshow', onPageShow);
 
     new MutationObserver(onCatalogMutation).observe(document.body, {

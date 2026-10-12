@@ -1,0 +1,137 @@
+/* ==========================================================================
+   KINŪ — Passage d'une page à l'autre
+   --------------------------------------------------------------------------
+   1. Départ : un voile ivoire monte sous le header, le symbole paraît seul
+      au centre et tourne d'un mouvement continu.
+   2. Arrivée : la nouvelle page se pose en fondu par-dessus ce voile, le
+      header ne bouge pas (transition de vue entre documents, Chrome et
+      Safari ; ailleurs la page arrive simplement sur le même ivoire).
+   ========================================================================== */
+
+.kn-veil {
+  position: fixed;
+  inset: var(--kn-veil-top, 0px) 0 0;
+  z-index: 2147482000;
+  display: grid;
+  place-items: center;
+  background-color: var(--kn-ivory);
+  color: var(--kn-forest);
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--kn-dur-3) var(--kn-ease-out),
+    visibility 0s linear var(--kn-dur-3);
+}
+
+/* Le voile retient les clics pendant le départ : pas de double navigation.
+   Le header, au-dessus, reste utilisable. */
+.kn-veil.is-active {
+  pointer-events: auto;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--kn-dur-3) var(--kn-ease-out),
+    visibility 0s;
+}
+
+/* Le symbole attend que le voile soit posé : sur une page qui répond vite,
+   on ne voit qu'un fondu, jamais un logo qui clignote. */
+.kn-veil__mark {
+  display: block;
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    opacity var(--kn-dur-3) var(--kn-ease-out),
+    transform var(--kn-dur-4) var(--kn-ease-out);
+}
+
+.kn-veil.is-active .kn-veil__mark {
+  opacity: 1;
+  transform: none;
+  transition-delay: 220ms;
+}
+
+.kn-veil__symbol {
+  display: block;
+  width: 2rem;
+  height: 2rem;
+}
+
+/* Rotation linéaire : une vitesse constante, sans à-coup d'un tour à l'autre. */
+.kn-veil.is-active .kn-veil__symbol {
+  animation: kn-veil-spin 2.4s linear infinite;
+  will-change: transform;
+}
+
+/* Pendant le départ, le header transparent posé sur la bannière d'accueil
+   reprend son fond ivoire : sans image derrière lui, il serait illisible. */
+html.kn-is-leaving body.kn-header--over-media .kn-header[data-kn-header-transparent='true'] {
+  --kn-surface-bg: var(--kn-ivory);
+  --kn-surface-fg: var(--kn-ink);
+  --kn-surface-line: var(--kn-line);
+  --kn-surface-muted: var(--kn-grey);
+  --kn-surface-faint: var(--kn-faint);
+  --kn-surface-accent: var(--kn-forest);
+  --kn-bubble-bg: var(--kn-forest);
+  --kn-bubble-fg: var(--kn-ivory);
+}
+
+@keyframes kn-veil-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes kn-veil-breathe {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.35;
+  }
+}
+
+@keyframes kn-page-in {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+/* Arrivée. La page précédente (le voile) reste figée dessous pendant que la
+   nouvelle monte en fondu ; le header, extrait à part, ne bouge pas.
+   Les règles d'Horizon (base.css) ne s'activent qu'avec leurs propres types
+   de transition, posés par view-transitions.js, désactivé sur ce thème. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  #header-group {
+    view-transition-name: kn-header;
+  }
+
+  ::view-transition-old(root) {
+    animation: none;
+  }
+
+  ::view-transition-new(root) {
+    animation: kn-page-in 560ms var(--kn-ease-out) both;
+  }
+
+  ::view-transition-group(kn-header) {
+    animation-duration: var(--kn-dur-2);
+  }
+}
+
+/* Mouvement réduit : pas de glissement, le symbole respire au lieu de tourner. */
+@media (prefers-reduced-motion: reduce) {
+  .kn-veil__mark {
+    transform: none;
+  }
+
+  .kn-veil.is-active .kn-veil__symbol {
+    animation: kn-veil-breathe 1.4s ease-in-out infinite alternate;
+  }
+}

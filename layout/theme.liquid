@@ -50,6 +50,13 @@
         blocking="render"
         id="view-transition-render-blocker"
       >
+    {% else %}
+      {%- comment -%}
+        Passage de page KINŪ (kn-page-veil.css) : la nouvelle page attend que
+        son contenu principal soit lu avant de s'afficher, pour que le fondu
+        d'arrivée parte d'une page entière et non d'un écran à moitié peint.
+      {%- endcomment -%}
+      <link rel="expect" href="#MainContent" blocking="render">
     {% endif %}
 
     {%- render 'meta-tags' -%}
@@ -76,6 +83,7 @@
     {%- endcomment -%}
     {{ 'kn-horizon.css' | asset_url | stylesheet_tag }}
     {{ 'kn-loader.css' | asset_url | stylesheet_tag }}
+    {{ 'kn-page-veil.css' | asset_url | stylesheet_tag }}
 
     <script src="{{ 'kn-base.js' | asset_url }}" defer></script>
     <script src="{{ 'kn-chrome.js' | asset_url }}" defer></script>
@@ -84,6 +92,7 @@
     <script src="{{ 'kn-money.js' | asset_url }}" defer></script>
     <script src="{{ 'kn-product.js' | asset_url }}" defer></script>
     <script src="{{ 'kn-loader.js' | asset_url }}" defer></script>
+    <script src="{{ 'kn-page-veil.js' | asset_url }}" defer></script>
 
     {% if request.design_mode %}
       {%- render 'theme-editor' -%}
@@ -288,6 +297,7 @@
     </script>
 
     {% render 'kn-loader' %}
+    {% render 'kn-page-veil' %}
 
     {% render 'search-modal' %}
 

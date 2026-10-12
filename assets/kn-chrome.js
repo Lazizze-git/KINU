@@ -218,6 +218,8 @@
     for (var i = 0; i < dismissers.length; i += 1) {
       dismissers[i].addEventListener('click', close);
     }
+
+    closeMobileNav = close;
   }
 
   /* ------------------------------------------------------------------------
@@ -242,6 +244,12 @@
    */
   var closeActiveMenu = null;
 
+  /**
+   * Referme le menu mobile s'il est ouvert. Meme principe que closeActiveMenu.
+   * @type {(() => void) | null}
+   */
+  var closeMobileNav = null;
+
   (function () {
     var query = window.matchMedia('(min-width: 1024px)');
     /* Sous 1024 px, les panneaux n'existent plus : on ne laisse rien ouvert. */
@@ -254,6 +262,12 @@
        et ses ecouteurs de document partent aussi. */
     document.addEventListener('shopify:section:unload', function () {
       if (closeActiveMenu) closeActiveMenu();
+    });
+    /* Depart vers une autre page (kn-page-veil.js) : rien ne reste ouvert
+       au-dessus du voile. */
+    document.addEventListener('kn:leave', function () {
+      if (closeActiveMenu) closeActiveMenu();
+      if (closeMobileNav) closeMobileNav();
     });
   })();
 
