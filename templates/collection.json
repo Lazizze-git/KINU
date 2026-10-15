@@ -39,6 +39,14 @@
             "intro": "Des pièces mixtes taillées pour la plus grande course possible du mouvement."
           }
         },
+        "rayon-tshirts-unisexe": {
+          "type": "rayon",
+          "settings": {
+            "tag": "T-shirt",
+            "collection": "amplitude",
+            "text": "<p>Si KINŪ (絹) désigne la soie dans sa perfection finale, j’ai décomposé ce mot en deux forces: KI (気), l’énergie vitale universelle, et NŪ (ぬ), le flux et l’émergence du mouvement. KINŪ est le fil conducteur de cette énergie.</p><p>Deux pièces, une même origine. Le symbole devant, le nom qui se révèle au dos ou se niche en broderie : chacune porte une moitié de cette énergie.</p>"
+          }
+        },
         "vignette-femme-leggings": {
           "type": "vignette",
           "settings": {
@@ -83,21 +91,28 @@
             "image": "shopify://shop_images/veste-performance-fogo-01.jpg",
             "image_hover": "shopify://shop_images/veste-everyday-brava-02.jpg"
           }
-        },
-        "rayon-tshirts-unisexe": {
-          "type": "rayon",
-          "settings": {
-            "tag": "T-shirt",
-            "collection": "amplitude",
-            "text": "<p>Si KINŪ (絹) désigne la soie dans sa perfection finale, j’ai décomposé ce mot en deux forces : KI (気), l’énergie vitale universelle, et NŪ (ぬ), le flux et l’émergence du mouvement. KINŪ est le fil conducteur de cette énergie.</p><p>Deux pièces, une même origine. Le symbole devant, le nom qui se révèle au dos ou se niche en broderie : chacune porte une moitié de cette énergie.</p>"
-          }
         }
       },
-      "block_order": ["universe-femme", "universe-homme", "universe-unisexe", "rayon-tshirts-unisexe", "vignette-femme-leggings", "vignette-femme-shorts", "vignette-femme-tshirts", "vignette-femme-brassieres", "vignette-femme-vestes"],
+      "block_order": [
+        "universe-femme",
+        "universe-homme",
+        "universe-unisexe",
+        "rayon-tshirts-unisexe",
+        "vignette-femme-leggings",
+        "vignette-femme-shorts",
+        "vignette-femme-tshirts",
+        "vignette-femme-brassieres",
+        "vignette-femme-vestes"
+      ],
       "settings": {
         "show_breadcrumb": true,
         "show_universe": true,
         "products_per_page": 24,
+        "menu": "main-menu",
+        "hub_pieces_title": "",
+        "hub_all_label": "",
+        "hub_collections_title": "",
+        "rayons_all_label": "",
         "filter_label": "Filtrer",
         "sort_label": "Trier",
         "clear_label": "Tout effacer",
@@ -118,6 +133,7 @@
         "empty_filtered_action": "Effacer les filtres",
         "empty_text": "Cette collection n’a pas encore de pièces.",
         "empty_action": "Voir toutes les collections",
+        "empty_url": "",
         "more_label": "Voir plus de pièces",
         "progress_label": "[shown] sur [total]",
         "prev_label": "Précédent",
@@ -126,5 +142,7 @@
       }
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }
