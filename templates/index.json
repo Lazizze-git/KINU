@@ -12,10 +12,14 @@
     "hero": {
       "type": "kn-hero-video",
       "settings": {
+        "video_url": "",
+        "image": "shopify://shop_images/veste-performance-fogo-01.jpg",
         "image_alt": "Athlète en veste Performance KINŪ noire",
         "title": "Le vêtement technique, à l’échelle du geste.",
-        "scrim": 30,
-        "image": "shopify://shop_images/veste-performance-fogo-01.jpg"
+        "links_menu": "",
+        "link_label": "",
+        "link_url": "",
+        "scrim": 30
       }
     },
     "universes": {
@@ -28,7 +32,8 @@
             "collection_name": "Fluid-Motion",
             "description": "Brassières, leggings, shorts, t-shirts, vestes",
             "collection": "fluid-motion",
-            "image": "shopify://shop_images/veste-everyday-luzia-01.jpg"
+            "url": "",
+            "image": "shopify://shop_images/veste-everyday-luzia-04.jpg"
           }
         },
         "homme": {
@@ -38,6 +43,7 @@
             "collection_name": "CrossOver",
             "description": "T-shirts, shorts",
             "collection": "crossover",
+            "url": "",
             "image": "shopify://shop_images/t-shirt-crossover-01.jpg"
           }
         },
@@ -48,6 +54,7 @@
             "collection_name": "Amplitude",
             "description": "Accessoires, t-shirts, tracksuits",
             "collection": "amplitude",
+            "url": "",
             "image": "shopify://shop_images/tracksuit-zip-sweat-01.jpg"
           }
         }
@@ -102,6 +109,7 @@
       "type": "kn-featured-products",
       "settings": {
         "title": "Nouveautés",
+        "collection": "",
         "count": 8,
         "link_label": "Voir tout",
         "empty_text": "Les nouveautés de la saison arrivent très bientôt.",
