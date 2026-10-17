@@ -17,17 +17,22 @@
         "announcement_1": {
           "type": "kn_announcement",
           "settings": {
-            "text": "Livraison offerte en Suisse dès 90 CHF"
+            "text": "Livraison offerte en Suisse dès 90 CHF",
+            "link": ""
           }
         },
         "announcement_2": {
           "type": "kn_announcement",
           "settings": {
-            "text": "Retours gratuits sous 30 jours"
+            "text": "Retours gratuits sous 14 jours",
+            "link": ""
           }
         }
       },
-      "block_order": ["announcement_1", "announcement_2"],
+      "block_order": [
+        "announcement_1",
+        "announcement_2"
+      ],
       "settings": {
         "speed": 24,
         "dismissible": true,
@@ -41,38 +46,53 @@
           "type": "kn_universe",
           "settings": {
             "label": "Femme",
-            "overline": "Fluid-Motion"
+            "overline": "Fluid-Motion",
+            "link": ""
           }
         },
         "universe_homme": {
           "type": "kn_universe",
           "settings": {
             "label": "Homme",
-            "overline": "CrossOver"
+            "overline": "CrossOver",
+            "link": ""
           }
         },
         "universe_unisexe": {
           "type": "kn_universe",
           "settings": {
             "label": "Unisexe",
-            "overline": "Amplitude"
+            "overline": "Amplitude",
+            "link": ""
           }
         }
       },
-      "block_order": ["universe_femme", "universe_homme", "universe_unisexe"],
+      "block_order": [
+        "universe_femme",
+        "universe_homme",
+        "universe_unisexe"
+      ],
       "settings": {
         "wordmark": "KINŪ",
         "transparent_over_media": true,
         "menu": "main-menu",
+        "label_view_all": "",
+        "label_collections": "",
+        "label_pieces": "",
+        "legal_menu": "",
         "utility_menu": "aide",
         "nav_open_label": "Ouvrir la navigation",
         "nav_close_label": "Fermer la navigation",
         "nav_dialog_label": "Navigation principale",
+        "label_menu_toggle": "",
         "search_label": "Rechercher",
         "account_label": "Mon compte",
         "cart_label": "Panier"
       }
     }
   },
-  "order": ["kn_announcement", "kn_header"]
+  "order": [
+    "kn_announcement",
+    "kn_header"
+  ]
 }
