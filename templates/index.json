@@ -33,7 +33,7 @@
             "description": "Brassières, leggings, shorts, t-shirts, vestes",
             "collection": "fluid-motion",
             "url": "",
-            "image": "shopify://shop_images/veste-performance-fogo-01.jpg"
+            "image": "shopify://shop_images/legging-performance-fogo-01.jpg"
           }
         },
         "homme": {
@@ -44,7 +44,7 @@
             "description": "T-shirts, shorts",
             "collection": "crossover",
             "url": "",
-            "image": "shopify://shop_images/t-shirt-crossover-01.jpg"
+            "image": "shopify://shop_images/t-shirt-crossover-02.jpg"
           }
         },
         "unisexe": {
@@ -55,7 +55,7 @@
             "description": "Accessoires, t-shirts, tracksuits",
             "collection": "amplitude",
             "url": "",
-            "image": "shopify://shop_images/tracksuit-zip-sweat-01.jpg"
+            "image": "shopify://shop_images/tracksuit-basic-hoodie-01.jpg"
           }
         }
       },
