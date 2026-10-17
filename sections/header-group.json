@@ -24,7 +24,7 @@
         "announcement_2": {
           "type": "kn_announcement",
           "settings": {
-            "text": "Retours gratuits sous 14 jours",
+            "text": "Retours sous 14 jours",
             "link": ""
           }
         }
