@@ -108,7 +108,16 @@ html.kn-is-leaving body.kn-header--over-media .kn-header[data-kn-header-transpar
     navigation: auto;
   }
 
-  #header-group {
+  /* Le nom n'est posé que le temps du passage : un élément nommé isole ce
+     qu'il contient du reste de la page, et le verre dépoli du menu ne
+     pourrait plus flouter ce qu'il y a derrière lui. Départ : classe posée
+     au clic (kn-page-veil.js) ; arrivée : transition en cours. Deux règles
+     distinctes : un navigateur qui ignore l'une garde l'autre. */
+  html.kn-is-leaving #header-group {
+    view-transition-name: kn-header;
+  }
+
+  html:active-view-transition #header-group {
     view-transition-name: kn-header;
   }
 
