@@ -13,6 +13,10 @@
 
 {%- liquid
   assign kn_logo = section.settings.logo | default: settings.logo
+  assign kn_is_home = false
+  if template.name == 'index'
+    assign kn_is_home = true
+  endif
   assign kn_use_drawer = false
   if settings.cart_type == 'drawer' and template.name != 'cart'
     assign kn_use_drawer = true
@@ -66,11 +70,21 @@
       <a
         class="kn-header__logo"
         href="{{ routes.root_url }}"
-        {% if kn_logo != blank and section.settings.logo_light != blank %}
+        {% if kn_is_home and kn_logo != blank and section.settings.logo_light != blank %}
           data-kn-logo-pair
         {% endif %}
       >
-        {%- if kn_logo != blank -%}
+        {%- if kn_is_home == false -%}
+          {%- comment -%}
+            Hors de l'accueil, le symbole remplace le nom complet (demande
+            client du 18 octobre). Il prend la couleur du header comme le
+            logotype ; le nom de la boutique reste lu par les lecteurs d'écran.
+          {%- endcomment -%}
+          <span class="kn-header__wordmark">
+            {%- render 'kn-brand-mark', name: 'symbol', class: 'kn-header__symbol' -%}
+            <span class="kn-visually-hidden" translate="no">{{ section.settings.wordmark | escape }}</span>
+          </span>
+        {%- elsif kn_logo != blank -%}
           {{
             kn_logo
             | image_url: width: 480

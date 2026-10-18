@@ -694,6 +694,14 @@ body.kn-header--over-media
   height: var(--kn-logo-h);
 }
 
+/* Symbole des pages intérieures. Carré, il paraîtrait plus petit que le
+   logotype à hauteur égale : on lui donne un quart de plus. */
+.kn-header__symbol {
+  display: block;
+  width: auto;
+  height: calc(var(--kn-logo-h) * 1.25);
+}
+
 /* Compteur du panier — pastille (DA §7.1). Le composant natif d'Horizon
    pose `visually-hidden` quand le panier est vide : on ne la contrarie pas. */
 .kn-header__cart-icon {
