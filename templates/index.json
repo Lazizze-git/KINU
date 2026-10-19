@@ -12,6 +12,7 @@
     "hero": {
       "type": "kn-hero-video",
       "settings": {
+        "video": "shopify://files/videos/kinu-hero.mp4",
         "video_url": "",
         "image": "shopify://shop_images/veste-performance-fogo-01.jpg",
         "image_alt": "Athlète en veste Performance KINŪ noire",
