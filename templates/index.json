@@ -14,7 +14,6 @@
       "settings": {
         "video": "shopify://files/videos/kinu-hero.mp4",
         "video_url": "",
-        "image": "",
         "image_alt": "Film de marque KINŪ : athlètes en mouvement, du studio à la rue",
         "title": "Le vêtement technique, à l’échelle du geste.",
         "links_menu": "",
@@ -101,7 +100,7 @@
       ],
       "settings": {
         "title": "Des pièces pensées pour durer et conçues pour bouger avec toi.",
-        "text": "On ne suit pas une saison, on suit un mouvement. Chaque choix est fait pour rester juste, longtemps après le premier geste.",
+        "text": "On ne suit pas une saison, on suit un mouvement. Chaque choix est fait pour rester juste, longtemps après le premier mouvement.",
         "link_label": "NOTRE FABRICATION",
         "link_url": ""
       }
