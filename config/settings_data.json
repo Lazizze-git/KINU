@@ -11,7 +11,7 @@
   "current": {
     "logo_height": 36,
     "logo_height_mobile": 28,
-    "favicon": "shopify://shop_images/preview_241cf297-a232-4f68-b708-3a19c713a0d8.webp",
+    "favicon": "shopify://shop_images/preview_f9a026a8-52fa-45e5-afba-b916f86747bb.webp",
     "page_text_color": "{{ settings.color_palette.foreground }}",
     "type_body_font": "montserrat_n4",
     "type_subheading_font": "dm_sans_n5",
