@@ -641,10 +641,34 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
   display: block;
 }
 
+/* Logotype en haut de page, symbole dès qu'on défile (demande client du
+   20 octobre). Les deux occupent la même case de grille : la plus large
+   donne sa mesure, la permutation ne déplace rien. Le fondu est celui de
+   la couleur du header, pour que les deux gestes n'en fassent qu'un ; il
+   joue sur l'opacité seule, si bien que le nom reste lu par les lecteurs
+   d'écran quelle que soit la marque affichée. */
 .kn-header__logo {
-  display: inline-flex;
+  display: inline-grid;
   align-items: center;
+  justify-items: center;
   color: currentcolor;
+}
+
+.kn-header__logo-full,
+.kn-header__logo-mini {
+  grid-area: 1 / 1;
+  display: flex;
+  align-items: center;
+  transition: opacity var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-header__logo-mini,
+.kn-header.is-scrolled .kn-header__logo-full {
+  opacity: 0;
+}
+
+.kn-header.is-scrolled .kn-header__logo-mini {
+  opacity: 1;
 }
 
 .kn-header__logo-img {
@@ -694,7 +718,7 @@ body.kn-header--over-media
   height: var(--kn-logo-h);
 }
 
-/* Symbole des pages intérieures. Carré, il paraîtrait plus petit que le
+/* Symbole affiché au défilement. Carré, il paraîtrait plus petit que le
    logotype à hauteur égale : on lui donne un quart de plus. */
 .kn-header__symbol {
   display: block;

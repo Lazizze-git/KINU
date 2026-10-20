@@ -92,6 +92,9 @@
   /* Ce que le chrome retient au-dessus de la banniere. Posee ailleurs qu'en
      ouverture, elle passe sous un header qui occupe sa place dans le flux. */
   --kn-hero-chrome: calc(var(--kn-announce-h) + var(--kn-header-h) + var(--kn-stroke));
+
+  /* Corps du titre, partage avec la reserve de son masque (voir plus bas). */
+  --kn-fs-hero: clamp(1.5rem, 6vw, 3.75rem);
 }
 
 /* En ouverture de page, le header chevauche la banniere : seule la barre
@@ -233,14 +236,14 @@ body.kn-header--over-media .kn-hero {
   max-width: var(--kn-measure);
 }
 
-/* L'echelle `display` de la DA §4.2 — clamp(2.75rem, 11vw, 7rem), soit
-   jusqu'a 112 px — etait definie et utilisee nulle part. La banniere tournait
-   en `h1`, plafonne a 60 px : le geste typographique le plus fort du document
-   dormait. C'est lui qui porte l'ouverture. */
+/* Demande client du 20 octobre : le titre perd 45 % de son corps pour que
+   la banniere respire. L'echelle `display` (44 a 112 px) laisse place a
+   24 a 60 px, le plafond du `h1` ; l'interlignage et l'approche du `h1`
+   suivent, ceux du `display` serrant trop a cette taille. */
 .kn-hero__title {
-  font-size: var(--kn-fs-display);
-  line-height: var(--kn-lh-display);
-  letter-spacing: var(--kn-ls-display);
+  font-size: var(--kn-fs-hero);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
 }
 
 /* --------------------------------------------------------------------------
@@ -263,9 +266,9 @@ body.kn-header--over-media .kn-hero {
 
 .kn-hero__mask {
   /* La reserve se calcule sur le corps du titre, pas sur celui du masque : un
-     `em` vaut ici 16 px alors que le titre en fait jusqu'a 112, et 2 px de
+     `em` vaut ici 16 px alors que le titre en fait jusqu'a 60, et 2 px de
      reserve auraient coupe les jambages du « g » et l'accent du « a ». */
-  --kn-mask-air: calc(var(--kn-fs-display) * 0.16);
+  --kn-mask-air: calc(var(--kn-fs-hero) * 0.16);
 
   display: block;
   overflow: hidden;
