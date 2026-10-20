@@ -1,0 +1,22 @@
+{%- doc -%}
+  KINŪ — Favicon, partagé par les gabarits theme et password.
+
+  Le favicon choisi dans l'éditeur garde la main. À défaut, le symbole en
+  vert forêt, sans fond (demande client du 20 octobre) : en SVG, net à toute
+  taille et éclairci quand la barre d'onglets est sombre, où le vert forêt
+  disparaîtrait ; en PNG 32 px pour les navigateurs qui ne lisent pas le SVG.
+
+  @example
+  {% render 'kn-favicon' %}
+{%- enddoc -%}
+
+{%- if settings.favicon != blank -%}
+  <link
+    rel="icon"
+    type="image/png"
+    href="{{ settings.favicon | image_url: width: 32, height: 32 }}"
+  >
+{%- else -%}
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ 'kn-favicon-32.png' | asset_url }}">
+  <link rel="icon" type="image/svg+xml" href="{{ 'kn-favicon.svg' | asset_url }}">
+{%- endif -%}

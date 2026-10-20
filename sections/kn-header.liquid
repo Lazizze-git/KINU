@@ -13,10 +13,6 @@
 
 {%- liquid
   assign kn_logo = section.settings.logo | default: settings.logo
-  assign kn_is_home = false
-  if template.name == 'index'
-    assign kn_is_home = true
-  endif
   assign kn_use_drawer = false
   if settings.cart_type == 'drawer' and template.name != 'cart'
     assign kn_use_drawer = true
@@ -70,55 +66,59 @@
       <a
         class="kn-header__logo"
         href="{{ routes.root_url }}"
-        {% if kn_is_home and kn_logo != blank and section.settings.logo_light != blank %}
+        {% if kn_logo != blank and section.settings.logo_light != blank %}
           data-kn-logo-pair
         {% endif %}
       >
-        {%- if kn_is_home == false -%}
-          {%- comment -%}
-            Hors de l'accueil, le symbole remplace le nom complet (demande
-            client du 18 octobre). Il prend la couleur du header comme le
-            logotype ; le nom de la boutique reste lu par les lecteurs d'écran.
-          {%- endcomment -%}
-          <span class="kn-header__wordmark">
-            {%- render 'kn-brand-mark', name: 'symbol', class: 'kn-header__symbol' -%}
-            <span class="kn-visually-hidden" translate="no">{{ section.settings.wordmark | escape }}</span>
-          </span>
-        {%- elsif kn_logo != blank -%}
-          {{
-            kn_logo
-            | image_url: width: 480
-            | image_tag:
-              class: 'kn-header__logo-img kn-header__logo-img--dark',
-              widths: '120,180,240,360,480',
-              sizes: '(min-width: 1024px) 240px, 180px',
-              alt: shop.name,
-              loading: 'eager',
-              fetchpriority: 'high'
-          }}
-          {%- if section.settings.logo_light != blank -%}
+        {%- comment -%}
+          Demande client du 20 octobre, d'après Aimé Leon Dore : le nom complet
+          en haut de chaque page, le symbole dès qu'on défile, le nom de
+          nouveau au retour en haut. Les deux marques se superposent dans la
+          même case et basculent avec `is-scrolled` (kn-chrome.js), comme la
+          couleur du header : la barre ne bouge pas d'un pixel.
+        {%- endcomment -%}
+        <span class="kn-header__logo-full">
+          {%- if kn_logo != blank -%}
             {{
-              section.settings.logo_light
+              kn_logo
               | image_url: width: 480
               | image_tag:
-                class: 'kn-header__logo-img kn-header__logo-img--light',
+                class: 'kn-header__logo-img kn-header__logo-img--dark',
                 widths: '120,180,240,360,480',
                 sizes: '(min-width: 1024px) 240px, 180px',
-                alt: '',
-                loading: 'eager'
+                alt: shop.name,
+                loading: 'eager',
+                fetchpriority: 'high'
             }}
+            {%- if section.settings.logo_light != blank -%}
+              {{
+                section.settings.logo_light
+                | image_url: width: 480
+                | image_tag:
+                  class: 'kn-header__logo-img kn-header__logo-img--light',
+                  widths: '120,180,240,360,480',
+                  sizes: '(min-width: 1024px) 240px, 180px',
+                  alt: '',
+                  loading: 'eager'
+              }}
+            {%- endif -%}
+          {%- else -%}
+            {%- comment -%}
+              Sans logo image, le logotype officiel en SVG (kn-brand-mark) : il
+              prend la couleur du header. Le texte du réglage reste le nom lu
+              par les lecteurs d'écran.
+            {%- endcomment -%}
+            <span class="kn-header__wordmark">
+              {%- render 'kn-brand-mark', name: 'logotype', class: 'kn-header__logotype' -%}
+              <span class="kn-visually-hidden" translate="no">{{ section.settings.wordmark | escape }}</span>
+            </span>
           {%- endif -%}
-        {%- else -%}
-          {%- comment -%}
-            Sans logo image, le logotype officiel en SVG (kn-brand-mark) : il
-            prend la couleur du header. Le texte du réglage reste le nom lu
-            par les lecteurs d'écran.
-          {%- endcomment -%}
+        </span>
+        <span class="kn-header__logo-mini">
           <span class="kn-header__wordmark">
-            {%- render 'kn-brand-mark', name: 'logotype', class: 'kn-header__logotype' -%}
-            <span class="kn-visually-hidden" translate="no">{{ section.settings.wordmark | escape }}</span>
+            {%- render 'kn-brand-mark', name: 'symbol', class: 'kn-header__symbol' -%}
           </span>
-        {%- endif -%}
+        </span>
       </a>
     </div>
 
