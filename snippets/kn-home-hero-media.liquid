@@ -16,6 +16,13 @@
   assign poster_image = poster | default: video.preview_image
   assign alt_text = poster_image.alt | default: poster_alt | default: shop.name | escape
 
+  # Sans poster choisi, c'est la première image de la vidéo qui attend : elle
+  # se cadre comme la vidéo, au centre, sinon le fondu la ferait sauter.
+  assign poster_class = 'kn-img kn-hero__poster'
+  if poster == blank and video != blank
+    assign poster_class = 'kn-img kn-hero__poster kn-hero__poster--frame'
+  endif
+
   # Un seul MP4, choisi explicitement : le navigateur retient la première
   # source lisible, et l'ordre renvoyé par Shopify n'est pas garanti.
   assign mp4_url = ''
@@ -53,7 +60,7 @@
     | image_tag:
       widths: '480, 640, 828, 1080, 1280, 1600, 1920, 2400, 3200',
       sizes: '100vw',
-      class: 'kn-img kn-hero__poster',
+      class: poster_class,
       alt: alt_text,
       loading: 'eager',
       fetchpriority: 'high'

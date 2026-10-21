@@ -3,7 +3,8 @@
  *
  * Trois responsabilités, et rien d'autre :
  *  1. la bannière vidéo (sources posées en JS, donc jamais téléchargées quand
- *     le visiteur refuse le mouvement — DIRECTION-ARTISTIQUE.md §8) ;
+ *     le visiteur refuse le mouvement — DIRECTION-ARTISTIQUE.md §8 — et titre
+ *     effacé le temps du plan final qui porte le logo) ;
  *  2. le drapeau `kn-header--over-media` sur <body>, lu par le header ;
  *  3. le message du formulaire newsletter, restreint au formulaire réellement
  *     soumis quand plusieurs coexistent sur la page.
@@ -64,6 +65,23 @@
   }
 
   /**
+   * Le dernier plan de la vidéo peut porter le logo de la marque : la section
+   * en donne la durée, et le titre s'efface le temps de ce plan pour ne pas le
+   * couvrir. Il revient de lui-même quand la boucle repart de zéro.
+   * @param {HTMLVideoElement} video
+   */
+  function watchSignature(video) {
+    var hero = video.closest('.kn-hero');
+    var signature = hero ? parseFloat(hero.dataset.knSignature) : 0;
+    if (!(signature > 0)) return;
+
+    video.addEventListener('timeupdate', function () {
+      // Tant que la durée est inconnue (NaN), la comparaison reste fausse.
+      hero.classList.toggle('is-signing', video.duration - video.currentTime <= signature);
+    });
+  }
+
+  /**
    * Pose la source MP4 et démarre la lecture. La vidéo ne se substitue au
    * poster qu'une fois qu'elle joue réellement : aucun cadre noir.
    * @param {HTMLVideoElement} video
@@ -86,6 +104,8 @@
     video.addEventListener('playing', function () {
       video.classList.add('is-playing');
     });
+
+    watchSignature(video);
 
     video.load();
     attemptPlay(video);
@@ -124,6 +144,8 @@
       Array.prototype.forEach.call(videos, function (video) {
         video.pause();
         video.classList.remove('is-playing');
+        var hero = video.closest('.kn-hero');
+        if (hero) hero.classList.remove('is-signing');
       });
       return;
     }
