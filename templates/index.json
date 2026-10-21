@@ -19,7 +19,9 @@
         "links_menu": "",
         "link_label": "",
         "link_url": "",
-        "scrim": 30
+        "scrim": 30,
+        "subtitles": true,
+        "signature": 4
       }
     },
     "universes": {

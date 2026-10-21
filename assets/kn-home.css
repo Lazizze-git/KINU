@@ -132,6 +132,12 @@ body.kn-header--over-media .kn-hero {
   object-position: 50% 22%;
 }
 
+/* Sans poster choisi, la premiere image de la video attend a sa place : elle
+   garde le cadrage de la video, faute de quoi le fondu la ferait sauter. */
+.kn-hero__poster--frame {
+  object-position: 50% 50%;
+}
+
 /* La vidéo se substitue au poster une fois qu'elle joue réellement :
    aucun cadre noir, aucun saut. Sous mouvement réduit, elle n'arrive jamais. */
 .kn-hero__video {
@@ -220,6 +226,59 @@ body.kn-header--over-media .kn-hero {
   .kn-hero__content {
     padding-block-end: var(--kn-space-xl);
   }
+}
+
+/* Demande client du 21 octobre : la video porte ses sous-titres, incrustes
+   entre 82,7 et 85,3 % de sa hauteur et centres. Le titre recouvrait les plus
+   longs sur ordinateur et passait dessous sur mobile : il se pose desormais
+   juste au-dessus, a tous les formats.
+
+   `cover` cale la video sur le cadre de deux facons, que les unites `cq`
+   suivent toutes deux :
+   - cadre plus haut que 16:9 (mobile, tablette, la plupart des portables) :
+     la video prend la hauteur et rogne les cotes, les sous-titres commencent
+     a 17,3 % du bas ;
+   - cadre plus large : elle prend la largeur et rogne haut et bas, ils
+     commencent 0,327 hauteur de video (9/16 de la largeur) sous le milieu.
+   Le plus petit des deux ecarts est le bon. Quand un ecran tres large rogne
+   les sous-titres, la reserve d'origine reprend la main. */
+.kn-hero--subtitles .kn-hero__frame {
+  container-type: size;
+}
+
+.kn-hero--subtitles .kn-hero__content {
+  --kn-hero-sub-gap: var(--kn-space-md);
+  --kn-hero-sub-rest: var(--kn-space-lg);
+
+  padding-block-end: max(
+    var(--kn-hero-sub-rest),
+    calc(min(17.3cqh, 50cqh - 18.39cqw) + var(--kn-hero-sub-gap))
+  );
+}
+
+@media (min-width: 1024px) {
+  .kn-hero--subtitles .kn-hero__content {
+    --kn-hero-sub-gap: var(--kn-space-lg);
+    --kn-hero-sub-rest: var(--kn-space-xl);
+  }
+}
+
+/* Le dernier plan de la video porte le logo de la marque : le titre s'efface
+   le temps de cette signature et revient avec la boucle (kn-home.js pose la
+   classe). La visibilite suit l'opacite, pour que rien de masque ne prenne
+   le focus. */
+.kn-hero__content {
+  transition:
+    opacity var(--kn-dur-4) var(--kn-ease-state),
+    visibility 0s linear 0s;
+}
+
+.kn-hero.is-signing .kn-hero__content {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--kn-dur-4) var(--kn-ease-state),
+    visibility 0s linear var(--kn-dur-4);
 }
 
 /* Seul bloc de texte posé bord à bord : il doit tenir compte de l'encoche

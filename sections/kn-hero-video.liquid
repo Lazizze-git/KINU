@@ -28,9 +28,10 @@
 
 {%- if has_media -%}
   <div
-    class="kn-hero"
+    class="kn-hero{% if has_text and s.subtitles %} kn-hero--subtitles{% endif %}"
     {% if has_text %}
       style="--kn-hero-scrim: {{ s.scrim }}%;"
+      {% if s.signature > 0 %}data-kn-signature="{{ s.signature }}"{% endif %}
     {% endif %}
   >
     <div class="kn-hero__frame">
@@ -168,6 +169,24 @@
       "unit": "%",
       "default": 30,
       "info": "Appliqué uniquement lorsqu'un titre est posé sur la vidéo."
+    },
+    {
+      "type": "checkbox",
+      "id": "subtitles",
+      "label": "Sous-titres incrustés dans la vidéo",
+      "default": false,
+      "info": "À cocher si la vidéo affiche ses sous-titres en bas de l'image : le titre se pose juste au-dessus, sur mobile, tablette et ordinateur."
+    },
+    {
+      "type": "range",
+      "id": "signature",
+      "label": "Plan final avec le logo",
+      "min": 0,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 0,
+      "info": "Durée du dernier plan de la vidéo, celui qui porte le logo. Le titre s'efface pendant ce temps pour ne pas le couvrir, puis revient avec la boucle. À 0, il reste toujours affiché."
     }
   ],
   "presets": [
