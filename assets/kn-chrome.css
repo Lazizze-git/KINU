@@ -370,14 +370,14 @@ body.kn-header--over-media .kn-header[data-kn-header-transparent='true']:not(.is
   color: var(--kn-surface-accent);
 }
 
+/* Demande client du 22 octobre, d'apres Kith : sur ordinateur aussi, le logo
+   tient le centre. La grille garde ses trois colonnes du telephone, les deux
+   laterales egales, si bien que le logo reste au milieu exact de la barre
+   quelle que soit la longueur des rubriques. Les rubriques prennent la case
+   du burger, a gauche. */
 @media (min-width: 1024px) {
   .kn-header__row {
-    grid-template-columns: auto 1fr auto;
     column-gap: var(--kn-space-lg);
-  }
-
-  .kn-header__brand {
-    justify-self: start;
   }
 
   .kn-header__nav {
