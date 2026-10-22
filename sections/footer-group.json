@@ -31,7 +31,7 @@
         "column_maison": {
           "type": "kn_column",
           "settings": {
-            "title": "Maison",
+            "title": "KINŪ",
             "menu": "maison"
           }
         },
@@ -43,10 +43,15 @@
           }
         }
       },
-      "block_order": ["column_boutique", "column_aide", "column_maison", "column_legal"],
+      "block_order": [
+        "column_boutique",
+        "column_aide",
+        "column_maison",
+        "column_legal"
+      ],
       "settings": {
         "show_newsletter": true,
-        "newsletter_tag": "Lettre",
+        "newsletter_tag": "newsletter",
         "newsletter_title": "Rester informé",
         "newsletter_text": "Nouveautés, réassorts et coulisses. Un message par mois, pas davantage.",
         "newsletter_placeholder": "Adresse e-mail",
@@ -54,14 +59,21 @@
         "newsletter_success": "Merci, votre inscription est enregistrée.",
         "newsletter_error": "Cette adresse e-mail n’a pas pu être enregistrée.",
         "social_instagram": "https://www.instagram.com/kinuathletics",
+        "social_tiktok": "",
+        "social_facebook": "",
+        "social_pinterest": "",
+        "social_youtube": "",
         "show_language": true,
         "language_label": "Choisir la langue",
         "brand_name": "KINŪ",
+        "brand_signature": "Silk in Motion",
         "credit_label": "Site",
         "credit_name": "We Are Brothers",
         "credit_url": "https://wearebrothers.ch"
       }
     }
   },
-  "order": ["kn_footer"]
+  "order": [
+    "kn_footer"
+  ]
 }
