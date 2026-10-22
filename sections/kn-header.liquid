@@ -1,8 +1,12 @@
 {%- comment -%}
   KINŪ — Header
   Telephone : [burger] — [logo] — [recherche · compte · panier].
-  Ordinateur : [logo] — [Femme · Homme · Unisexe] — [icones], le burger cede la
+  Ordinateur : [Femme · Homme · Unisexe] — [logo] — [icones], le burger cede la
   place aux libelles (amendement du 27 aout, DIRECTION-ARTISTIQUE.md §7.1).
+  Demande client du 22 octobre, d'apres Kith : le logo passe au centre et les
+  rubriques prennent sa place a gauche, la barre ne laissait plus que du vide
+  en son milieu. Le logo suit la navigation dans le code, pour que l'ordre du
+  clavier reste celui de l'ecran.
   « Toutes les collections » a quitte la barre le 15 septembre : les
   collections se rangent desormais sous chaque univers. Chaque univers qui a
   des categories ou des collections deroule son panneau sous le header
@@ -60,66 +64,6 @@
         </span>
         <span class="kn-visually-hidden">{{ section.settings.nav_open_label | escape }}</span>
       </button>
-    </div>
-
-    <div class="kn-header__brand">
-      <a
-        class="kn-header__logo"
-        href="{{ routes.root_url }}"
-        {% if kn_logo != blank and section.settings.logo_light != blank %}
-          data-kn-logo-pair
-        {% endif %}
-      >
-        {%- comment -%}
-          Demande client du 20 octobre, d'après Aimé Leon Dore : le nom complet
-          en haut de chaque page, le symbole dès qu'on défile, le nom de
-          nouveau au retour en haut. Les deux marques se superposent dans la
-          même case et basculent avec `is-scrolled` (kn-chrome.js), comme la
-          couleur du header : la barre ne bouge pas d'un pixel.
-        {%- endcomment -%}
-        <span class="kn-header__logo-full">
-          {%- if kn_logo != blank -%}
-            {{
-              kn_logo
-              | image_url: width: 480
-              | image_tag:
-                class: 'kn-header__logo-img kn-header__logo-img--dark',
-                widths: '120,180,240,360,480',
-                sizes: '(min-width: 1024px) 240px, 180px',
-                alt: shop.name,
-                loading: 'eager',
-                fetchpriority: 'high'
-            }}
-            {%- if section.settings.logo_light != blank -%}
-              {{
-                section.settings.logo_light
-                | image_url: width: 480
-                | image_tag:
-                  class: 'kn-header__logo-img kn-header__logo-img--light',
-                  widths: '120,180,240,360,480',
-                  sizes: '(min-width: 1024px) 240px, 180px',
-                  alt: '',
-                  loading: 'eager'
-              }}
-            {%- endif -%}
-          {%- else -%}
-            {%- comment -%}
-              Sans logo image, le logotype officiel en SVG (kn-brand-mark) : il
-              prend la couleur du header. Le texte du réglage reste le nom lu
-              par les lecteurs d'écran.
-            {%- endcomment -%}
-            <span class="kn-header__wordmark">
-              {%- render 'kn-brand-mark', name: 'logotype', class: 'kn-header__logotype' -%}
-              <span class="kn-visually-hidden" translate="no">{{ section.settings.wordmark | escape }}</span>
-            </span>
-          {%- endif -%}
-        </span>
-        <span class="kn-header__logo-mini">
-          <span class="kn-header__wordmark">
-            {%- render 'kn-brand-mark', name: 'symbol', class: 'kn-header__symbol' -%}
-          </span>
-        </span>
-      </a>
     </div>
 
     {%- comment -%}
@@ -229,6 +173,66 @@
         </ul>
       </nav>
     {%- endif -%}
+
+    <div class="kn-header__brand">
+      <a
+        class="kn-header__logo"
+        href="{{ routes.root_url }}"
+        {% if kn_logo != blank and section.settings.logo_light != blank %}
+          data-kn-logo-pair
+        {% endif %}
+      >
+        {%- comment -%}
+          Demande client du 20 octobre, d'après Aimé Leon Dore : le nom complet
+          en haut de chaque page, le symbole dès qu'on défile, le nom de
+          nouveau au retour en haut. Les deux marques se superposent dans la
+          même case et basculent avec `is-scrolled` (kn-chrome.js), comme la
+          couleur du header : la barre ne bouge pas d'un pixel.
+        {%- endcomment -%}
+        <span class="kn-header__logo-full">
+          {%- if kn_logo != blank -%}
+            {{
+              kn_logo
+              | image_url: width: 480
+              | image_tag:
+                class: 'kn-header__logo-img kn-header__logo-img--dark',
+                widths: '120,180,240,360,480',
+                sizes: '(min-width: 1024px) 240px, 180px',
+                alt: shop.name,
+                loading: 'eager',
+                fetchpriority: 'high'
+            }}
+            {%- if section.settings.logo_light != blank -%}
+              {{
+                section.settings.logo_light
+                | image_url: width: 480
+                | image_tag:
+                  class: 'kn-header__logo-img kn-header__logo-img--light',
+                  widths: '120,180,240,360,480',
+                  sizes: '(min-width: 1024px) 240px, 180px',
+                  alt: '',
+                  loading: 'eager'
+              }}
+            {%- endif -%}
+          {%- else -%}
+            {%- comment -%}
+              Sans logo image, le logotype officiel en SVG (kn-brand-mark) : il
+              prend la couleur du header. Le texte du réglage reste le nom lu
+              par les lecteurs d'écran.
+            {%- endcomment -%}
+            <span class="kn-header__wordmark">
+              {%- render 'kn-brand-mark', name: 'logotype', class: 'kn-header__logotype' -%}
+              <span class="kn-visually-hidden" translate="no">{{ section.settings.wordmark | escape }}</span>
+            </span>
+          {%- endif -%}
+        </span>
+        <span class="kn-header__logo-mini">
+          <span class="kn-header__wordmark">
+            {%- render 'kn-brand-mark', name: 'symbol', class: 'kn-header__symbol' -%}
+          </span>
+        </span>
+      </a>
+    </div>
 
     <div class="kn-header__actions">
       <button
