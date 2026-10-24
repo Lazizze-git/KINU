@@ -32,24 +32,34 @@
     ne bouge pas d'un pixel (titre ancre en bas a gauche, DM Sans, taille 100 %).
     La taille est un coefficient de l'echelle de la DA ; la police libre vient
     de la bibliotheque Shopify, choisie par le client dans l'editeur.
+
+    La position se regle au pourcentage pres, sur deux curseurs : 0 % colle le
+    bloc en haut ou a gauche de la zone utile, 100 % en bas ou a droite, 50 %
+    le centre. Le bloc ne se place que si un curseur quitte sa valeur d'origine,
+    soit 0 en horizontal et 100 en vertical. Les lignes du titre suivent leur
+    position : a gauche sous 34 %, centrees jusqu'a 66 %, a droite au-dela.
+    Chaque ligne de ce commentaire commence par un mot courant, sans quoi
+    Shopify la lirait comme une balise : ce bloc est une balise groupee.
   endcomment
   assign kn_text_mods = ''
+  assign kn_place_style = ''
   assign kn_scale = s.title_scale | default: 100 | divided_by: 100.0
   assign kn_font = s.title_font_custom
   assign kn_font_custom = false
   if has_text
-    case s.text_vertical
-      when 'top'
-        assign kn_text_mods = kn_text_mods | append: ' kn-hero--v-top'
-      when 'center'
-        assign kn_text_mods = kn_text_mods | append: ' kn-hero--v-center'
-    endcase
-    case s.text_horizontal
-      when 'center'
-        assign kn_text_mods = kn_text_mods | append: ' kn-hero--h-center'
-      when 'end'
+    assign kn_x = s.pos_x | default: 0
+    assign kn_y = s.pos_y | default: 100
+    if kn_x != 0 or kn_y != 100
+      assign kn_x_rest = 100 | minus: kn_x
+      assign kn_y_rest = 100 | minus: kn_y
+      assign kn_place_style = ' --kn-hero-cols: ' | append: kn_x | append: 'fr auto ' | append: kn_x_rest | append: 'fr; --kn-hero-rows: ' | append: kn_y | append: 'fr auto ' | append: kn_y_rest | append: 'fr;'
+      assign kn_text_mods = kn_text_mods | append: ' kn-hero--placed'
+      if kn_x > 66
         assign kn_text_mods = kn_text_mods | append: ' kn-hero--h-end'
-    endcase
+      elsif kn_x > 33
+        assign kn_text_mods = kn_text_mods | append: ' kn-hero--h-center'
+      endif
+    endif
     case s.title_font
       when 'text'
         assign kn_text_mods = kn_text_mods | append: ' kn-hero--font-text'
@@ -77,7 +87,7 @@
   <div
     class="kn-hero{% if has_text and s.subtitles %} kn-hero--subtitles{% endif %}{{ kn_text_mods }}"
     {% if has_text %}
-      style="--kn-hero-scrim: {{ s.scrim }}%; --kn-hero-scale: {{ kn_scale }};
+      style="--kn-hero-scrim: {{ s.scrim }}%; --kn-hero-scale: {{ kn_scale }};{{ kn_place_style }}
         {%- if kn_font_custom %} --kn-hero-font: '{{ kn_font_family | escape }}', {{ kn_font.fallback_families | escape }}; --kn-hero-font-style: {{ kn_font.style }}; --kn-hero-font-weight: {{ kn_font.weight }};{% endif -%}
       "
       {% if s.signature > 0 %}data-kn-signature="{{ s.signature }}"{% endif %}
@@ -242,27 +252,26 @@
       "content": "Mise en forme du titre"
     },
     {
-      "type": "select",
-      "id": "text_vertical",
-      "label": "Position verticale",
-      "options": [
-        { "value": "bottom", "label": "En bas" },
-        { "value": "center", "label": "Au centre" },
-        { "value": "top", "label": "En haut" }
-      ],
-      "default": "bottom",
-      "info": "Par défaut, le titre est ancré en bas du cadre. Si la vidéo porte des sous-titres incrustés, gardez « En bas » : le titre se pose alors juste au-dessus."
+      "type": "range",
+      "id": "pos_x",
+      "label": "Position horizontale",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 0,
+      "info": "0 % = collé à gauche (position d'origine), 50 % = centré, 100 % = collé à droite."
     },
     {
-      "type": "select",
-      "id": "text_horizontal",
-      "label": "Alignement",
-      "options": [
-        { "value": "start", "label": "À gauche" },
-        { "value": "center", "label": "Centré" },
-        { "value": "end", "label": "À droite" }
-      ],
-      "default": "start"
+      "type": "range",
+      "id": "pos_y",
+      "label": "Position verticale",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "default": 100,
+      "info": "100 % = en bas (position d'origine), 50 % = au milieu, 0 % = en haut, sous le menu. Avec des sous-titres dans la vidéo, 100 % pose le titre juste au-dessus."
     },
     {
       "type": "range",

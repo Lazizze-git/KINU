@@ -360,9 +360,17 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 > par le code. Quatre réglages, tous à leur valeur d'origine par défaut : une
 > bannière laissée telle quelle reste celle de la DA, titre ancré en bas à
 > gauche, DM Sans (rendu vérifié au pixel près, sur ordinateur et mobile).
-> Position : bas, centre ou haut ; en haut, le titre se pose sous le header quand
-> celui-ci chevauche la bannière, et le retrait des sous-titres ne s'applique
-> plus. Alignement : gauche, centré, droite. Taille : un curseur de 50 à 200 %
+> Position : deux curseurs au pourcentage près (« trop en gros », a dit le
+> client des trois positions du premier jet). Le bloc titre et entrées se place
+> dans la zone utile de la bannière : de gauche à droite entre les gouttières, de
+> haut en bas entre le header, quand il chevauche la bannière, et la réserve du
+> bas, celle des sous-titres quand la vidéo en porte. 0 % colle le bloc au
+> premier bord, 100 % au dernier, 50 % le centre ; l'origine est 0 en
+> horizontal, 100 en vertical. Une grille de trois pistes par axe, dont celle du
+> milieu est le bloc : pas de transformation, le texte reste net et le bloc ne
+> sort jamais de la zone. Les lignes suivent la position : à gauche sous 34 %,
+> centrées jusqu'à 66 %, à droite au-delà. Sur téléphone le titre occupe toute
+> la largeur, seul le curseur vertical y joue. Taille : un curseur de 50 à 200 %
 > de l'échelle du 20 octobre (24 à 60 px), soit de 12 à 120 px ; au-delà de
 > 100 %, la mesure du bloc grandit avec le titre, pour qu'il ne se casse pas en
 > colonne. Police : DM Sans, Montserrat (posée en 400, seul poids chargé, pour

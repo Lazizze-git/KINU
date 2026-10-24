@@ -340,10 +340,46 @@ body.kn-header--over-media .kn-hero {
   font-weight: var(--kn-hero-font-weight, var(--kn-fw-bold));
 }
 
-/* Alignement horizontal. Le bloc garde sa mesure ; c'est lui qu'on pousse. */
+/* Position du titre, au pourcentage pres (reglages « Position horizontale » et
+   « Position verticale »). Le bloc titre + entrees se place dans la zone utile
+   de la banniere : de gauche a droite entre les gouttieres, de haut en bas
+   entre le header et la reserve du bas — celle des sous-titres quand la video
+   en porte. 0 % colle le bloc au premier bord, 100 % au dernier, 50 % le centre.
+
+   Une grille de trois pistes par axe, dont la piste du milieu est le bloc : les
+   deux autres se partagent l'espace restant dans la proportion du reglage
+   (`30fr auto 70fr`). Pas de transformation : le texte reste net, et le bloc ne
+   sort jamais de la zone, quelle que soit sa taille.
+
+   Les variables --kn-hero-cols et --kn-hero-rows sont posees en ligne par la
+   section, et seulement quand un curseur quitte sa valeur d'origine. */
+.kn-hero--placed .kn-hero__content {
+  top: 0;
+  padding-block-start: var(--kn-space-lg);
+}
+
+/* En ouverture de page le header transparent chevauche la banniere : la zone
+   utile commence sous lui. */
+body.kn-header--over-media .kn-hero--placed .kn-hero__content {
+  padding-block-start: calc(var(--kn-header-h) + var(--kn-space-lg));
+}
+
+.kn-hero--placed .kn-hero__content > .kn-container {
+  display: grid;
+  grid-template-columns: var(--kn-hero-cols);
+  grid-template-rows: var(--kn-hero-rows);
+  height: 100%;
+}
+
+.kn-hero--placed .kn-hero__inner {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* Les lignes suivent la position du bloc : a gauche sous 34 %, centrees
+   jusqu'a 66 %, a droite au-dela (la section pose la classe). */
 .kn-hero--h-center .kn-hero__inner {
   justify-items: center;
-  margin-inline: auto;
   text-align: center;
 }
 
@@ -353,37 +389,11 @@ body.kn-header--over-media .kn-hero {
 
 .kn-hero--h-end .kn-hero__inner {
   justify-items: end;
-  margin-inline-start: auto;
   text-align: end;
 }
 
 .kn-hero--h-end .kn-hero__entries {
   justify-content: flex-end;
-}
-
-/* Position verticale. Hors du bas, le retrait des sous-titres n'a plus lieu
-   d'etre : ils sont en bas de la video, le titre ne s'en approche pas. */
-.kn-hero--v-center .kn-hero__content,
-.kn-hero--v-top .kn-hero__content {
-  top: 0;
-  bottom: 0;
-  display: flex;
-  padding-block: 0;
-}
-
-.kn-hero--v-center .kn-hero__content {
-  align-items: center;
-}
-
-.kn-hero--v-top .kn-hero__content {
-  align-items: flex-start;
-  padding-block-start: var(--kn-space-lg);
-}
-
-/* En ouverture de page le header transparent chevauche la banniere : le
-   titre se pose sous lui, pas dessous. */
-body.kn-header--over-media .kn-hero--v-top .kn-hero__content {
-  padding-block-start: calc(var(--kn-header-h) + var(--kn-space-lg));
 }
 
 /* --------------------------------------------------------------------------
