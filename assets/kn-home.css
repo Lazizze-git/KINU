@@ -305,6 +305,78 @@ body.kn-header--over-media .kn-hero {
   letter-spacing: -0.025em;
 }
 
+/* Mise en forme du titre, reglable dans l'editeur (demande client du 24
+   octobre : essayer position, taille et police sans toucher au code).
+
+   Chaque reglage a une valeur par defaut qui ne pose aucune classe : la
+   banniere reste celle de la DA, titre ancre en bas a gauche, en DM Sans.
+   Ces regles viennent APRES celles des sous-titres et du pied de bannière : a
+   specificite egale, la derniere gagne. */
+
+/* Taille : meme gamme fluide, plus petite ou plus grande que le defaut. La
+   reserve du masque (--kn-mask-air) se calcule sur cette variable et suit. */
+.kn-hero--size-sm {
+  --kn-fs-hero: clamp(1.25rem, 4vw, 2.5rem);
+}
+
+.kn-hero--size-lg {
+  --kn-fs-hero: clamp(2rem, 8.5vw, 5rem);
+}
+
+/* Police : Montserrat n'est chargee qu'en 400 (type_body_font). Le 700 du h1
+   serait synthetise par le navigateur : on pose donc le 400. */
+.kn-hero--font-text .kn-hero__title {
+  font-family: var(--kn-font-text);
+  font-weight: var(--kn-fw-regular);
+  letter-spacing: -0.02em;
+}
+
+/* Alignement horizontal. Le bloc garde sa mesure ; c'est lui qu'on pousse. */
+.kn-hero--h-center .kn-hero__inner {
+  justify-items: center;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.kn-hero--h-center .kn-hero__entries {
+  justify-content: center;
+}
+
+.kn-hero--h-end .kn-hero__inner {
+  justify-items: end;
+  margin-inline-start: auto;
+  text-align: end;
+}
+
+.kn-hero--h-end .kn-hero__entries {
+  justify-content: flex-end;
+}
+
+/* Position verticale. Hors du bas, le retrait des sous-titres n'a plus lieu
+   d'etre : ils sont en bas de la video, le titre ne s'en approche pas. */
+.kn-hero--v-center .kn-hero__content,
+.kn-hero--v-top .kn-hero__content {
+  top: 0;
+  bottom: 0;
+  display: flex;
+  padding-block: 0;
+}
+
+.kn-hero--v-center .kn-hero__content {
+  align-items: center;
+}
+
+.kn-hero--v-top .kn-hero__content {
+  align-items: flex-start;
+  padding-block-start: var(--kn-space-lg);
+}
+
+/* En ouverture de page le header transparent chevauche la banniere : le
+   titre se pose sous lui, pas dessous. */
+body.kn-header--over-media .kn-hero--v-top .kn-hero__content {
+  padding-block-start: calc(var(--kn-header-h) + var(--kn-space-lg));
+}
+
 /* --------------------------------------------------------------------------
    Sequence d'ouverture (DA §8, points 3 et 2)
 

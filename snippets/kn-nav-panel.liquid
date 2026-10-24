@@ -146,6 +146,10 @@
           regle dans l'editeur passe devant ; sans lui, on retombe sur les
           politiques renseignees dans Shopify — celles qui sont vides ne
           renvoient aucun lien, la liste ne montre donc jamais de page morte.
+
+          Demande client du 24 octobre : la meme liste en pied de page et dans
+          le panneau faisait doublon. Le reglage « Afficher les mentions legales
+          dans le panneau » les masque ; elles restent alors en pied de page.
         {%- endcomment -%}
         {%- liquid
           assign kn_legal = linklists[section.settings.legal_menu].links
@@ -153,6 +157,9 @@
           if kn_legal_size == 0
             assign kn_legal_size = shop.policies.size
           endif
+          unless section.settings.show_legal
+            assign kn_legal_size = 0
+          endunless
         -%}
         {%- if kn_legal_size > 0 -%}
           <ul class="kn-nav__legal" role="list">

@@ -24,11 +24,42 @@
   if has_text and kn_entries.size > 0
     assign show_entries = true
   endif
+
+  comment
+    Demande client du 24 octobre : essayer la position, la taille et la police
+    du titre depuis l'editeur, sans passer par le code. Chaque reglage a une
+    valeur par defaut qui ne pose aucune classe : une banniere laissee telle
+    quelle ne change pas d'un pixel (titre ancre en bas a gauche, DM Sans).
+  endcomment
+  assign kn_text_mods = ''
+  if has_text
+    case s.text_vertical
+      when 'top'
+        assign kn_text_mods = kn_text_mods | append: ' kn-hero--v-top'
+      when 'center'
+        assign kn_text_mods = kn_text_mods | append: ' kn-hero--v-center'
+    endcase
+    case s.text_horizontal
+      when 'center'
+        assign kn_text_mods = kn_text_mods | append: ' kn-hero--h-center'
+      when 'end'
+        assign kn_text_mods = kn_text_mods | append: ' kn-hero--h-end'
+    endcase
+    case s.title_size
+      when 'small'
+        assign kn_text_mods = kn_text_mods | append: ' kn-hero--size-sm'
+      when 'large'
+        assign kn_text_mods = kn_text_mods | append: ' kn-hero--size-lg'
+    endcase
+    if s.title_font == 'text'
+      assign kn_text_mods = kn_text_mods | append: ' kn-hero--font-text'
+    endif
+  endif
 -%}
 
 {%- if has_media -%}
   <div
-    class="kn-hero{% if has_text and s.subtitles %} kn-hero--subtitles{% endif %}"
+    class="kn-hero{% if has_text and s.subtitles %} kn-hero--subtitles{% endif %}{{ kn_text_mods }}"
     {% if has_text %}
       style="--kn-hero-scrim: {{ s.scrim }}%;"
       {% if s.signature > 0 %}data-kn-signature="{{ s.signature }}"{% endif %}
@@ -187,6 +218,55 @@
       "unit": "s",
       "default": 0,
       "info": "Durée du dernier plan de la vidéo, celui qui porte le logo. Le titre s'efface pendant ce temps pour ne pas le couvrir, puis revient avec la boucle. À 0, il reste toujours affiché."
+    },
+    {
+      "type": "header",
+      "content": "Mise en forme du titre"
+    },
+    {
+      "type": "select",
+      "id": "text_vertical",
+      "label": "Position verticale",
+      "options": [
+        { "value": "bottom", "label": "En bas" },
+        { "value": "center", "label": "Au centre" },
+        { "value": "top", "label": "En haut" }
+      ],
+      "default": "bottom",
+      "info": "Par défaut, le titre est ancré en bas du cadre. Si la vidéo porte des sous-titres incrustés, gardez « En bas » : le titre se pose alors juste au-dessus."
+    },
+    {
+      "type": "select",
+      "id": "text_horizontal",
+      "label": "Alignement",
+      "options": [
+        { "value": "start", "label": "À gauche" },
+        { "value": "center", "label": "Centré" },
+        { "value": "end", "label": "À droite" }
+      ],
+      "default": "start"
+    },
+    {
+      "type": "select",
+      "id": "title_size",
+      "label": "Taille du titre",
+      "options": [
+        { "value": "small", "label": "Petit" },
+        { "value": "medium", "label": "Moyen" },
+        { "value": "large", "label": "Grand" }
+      ],
+      "default": "medium"
+    },
+    {
+      "type": "select",
+      "id": "title_font",
+      "label": "Police du titre",
+      "options": [
+        { "value": "display", "label": "DM Sans (titres)" },
+        { "value": "text", "label": "Montserrat (texte courant)" }
+      ],
+      "default": "display",
+      "info": "Les deux polices de la marque. Pour changer la police de tout le site : Paramètres du thème, Typographie."
     }
   ],
   "presets": [

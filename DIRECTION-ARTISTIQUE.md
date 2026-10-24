@@ -355,6 +355,19 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 > échelle, avec le même soulignement révélé, décalées de 60 ms. Le réglage
 > « Entrées sous le titre » choisit le menu ; sans menu, le lien unique revient.
 
+> **Amendement du 24 octobre 2026 — le titre se règle depuis l'éditeur.** Le
+> client veut essayer la position, la taille et la police du titre sans passer
+> par le code. Quatre réglages, tous à leur valeur d'origine par défaut : une
+> bannière laissée telle quelle reste celle de la DA, titre ancré en bas à
+> gauche, DM Sans (rendu vérifié au pixel près, sur ordinateur et mobile).
+> Position : bas, centre ou haut ; en haut, le titre se pose sous le header quand
+> celui-ci chevauche la bannière, et le retrait des sous-titres ne s'applique
+> plus. Alignement : gauche, centré, droite. Taille : petit (20 à 40 px), moyen
+> (24 à 60 px, l'échelle du 20 octobre), grand (32 à 80 px). Police : DM Sans ou
+> Montserrat, les deux seules de la marque ; Montserrat est posée en 400, seul
+> poids chargé, pour que le 700 du `h1` ne soit pas synthétisé. Une autre police
+> se règle pour tout le site, dans les paramètres du thème.
+
 ---
 
 ## 7. Composants clés
@@ -460,6 +473,17 @@ Niveau 1 en `--kn-fs-h4` DM Sans 500, capitales, chasse positive, ivoire ; nivea
 > l'éditeur, elles reprennent les politiques renseignées dans Shopify, si bien
 > qu'une politique non rédigée n'expose jamais de page morte.
 
+> **Amendement du 24 octobre 2026 — une seule liste légale.** La même liste en
+> pied de page et dans le panneau faisait doublon, et leurs contenus différaient :
+> le pied de page portait un menu réglé à la main, le panneau reprenait
+> automatiquement toutes les politiques de Shopify. Le réglage « Afficher les
+> mentions légales dans le panneau » les masque : décoché, elles ne vivent plus
+> qu'en pied de page. Le menu « footer » alimente la colonne Légal et, si le
+> réglage est rétabli, le panneau : une seule liste à tenir à jour, dans
+> Contenu → Menus. L'écart entre deux rangées passe de 31 à 24 px (interlignage
+> 1,3 et 5 px de remplissage) ; la cible reste à 24 px, le minimum du WCAG 2.2
+> (2.5.8).
+
 > **Amendement du 15 septembre 2026 — un niveau de plus.** Chaque univers
 > déplié enchaîne : « Tout voir » (sa page à étages, §7.7), ses catégories, puis
 > un groupe **COLLECTIONS** sous un filet, intitulé à l'échelle d'étiquette en
@@ -557,6 +581,16 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 > l'éclaircir, le même jour que le territoire Homme. Le site n'a désormais plus
 > aucun aplat encre : l'encre reste la couleur du texte, des boutons primaires
 > et des filets, elle ne peint plus aucune surface.
+
+> **Amendement du 24 octobre 2026 — les écarts du pied de page se règlent.** Le
+> client les trouve trop grands entre le titre d'une colonne et ses liens. Deux
+> curseurs dans la section, « Écart entre le titre et les liens » (ordinateur
+> seulement : sur téléphone le titre est un accordéon à zone tactile fixe) et
+> « Écart entre les liens », valent 24 et 8 px par défaut, soit l'ancien rendu ;
+> ils sont posés à 12 et 4 px. La colonne Légal porte des libellés courts :
+> Conditions générales, Confidentialité, Remboursement, Expédition, Mentions
+> légales. À 170 px de colonne, « Politique de confidentialité » passe sur deux
+> lignes et creuse l'écart qu'on voulait réduire.
 >
 > La surface passe à INONDÉE, dont la gamme est déjà conçue pour de l'ivoire sur
 > du vert, et le fond descend d'un cran vers `--kn-forest-deep`. Ce n'est pas une
