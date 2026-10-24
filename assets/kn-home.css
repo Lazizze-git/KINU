@@ -93,8 +93,10 @@
      ouverture, elle passe sous un header qui occupe sa place dans le flux. */
   --kn-hero-chrome: calc(var(--kn-announce-h) + var(--kn-header-h) + var(--kn-stroke));
 
-  /* Corps du titre, partage avec la reserve de son masque (voir plus bas). */
-  --kn-fs-hero: clamp(1.5rem, 6vw, 3.75rem);
+  /* Corps du titre, partage avec la reserve de son masque (voir plus bas).
+     Le coefficient vient du reglage « Taille du titre » de l'editeur ; a 1
+     (100 %), on retrouve l'echelle de la DA, 24 a 60 px. */
+  --kn-fs-hero: calc(clamp(1.5rem, 6vw, 3.75rem) * var(--kn-hero-scale, 1));
 }
 
 /* En ouverture de page, le header chevauche la banniere : seule la barre
@@ -288,11 +290,14 @@ body.kn-header--over-media .kn-hero {
   padding-inline-end: max(var(--kn-gutter), env(safe-area-inset-right));
 }
 
+/* La mesure suit la taille quand le titre grandit (reglage « Taille du
+   titre » au-dessus de 100 %) : sans cela, un titre a 200 % se casserait en une
+   colonne de six lignes. En dessous de 100 %, ou par defaut, elle ne bouge pas. */
 .kn-hero__inner {
   display: grid;
   justify-items: start;
   gap: var(--kn-space-md);
-  max-width: var(--kn-measure);
+  max-width: calc(var(--kn-measure) * max(1, var(--kn-hero-scale, 1)));
 }
 
 /* Demande client du 20 octobre : le titre perd 45 % de son corps pour que
@@ -313,15 +318,10 @@ body.kn-header--over-media .kn-hero {
    Ces regles viennent APRES celles des sous-titres et du pied de bannière : a
    specificite egale, la derniere gagne. */
 
-/* Taille : meme gamme fluide, plus petite ou plus grande que le defaut. La
-   reserve du masque (--kn-mask-air) se calcule sur cette variable et suit. */
-.kn-hero--size-sm {
-  --kn-fs-hero: clamp(1.25rem, 4vw, 2.5rem);
-}
-
-.kn-hero--size-lg {
-  --kn-fs-hero: clamp(2rem, 8.5vw, 5rem);
-}
+/* Taille : le reglage « Taille du titre » pose --kn-hero-scale en ligne sur
+   la banniere (50 a 200 %), lu plus haut par --kn-fs-hero. La gamme reste
+   fluide et la reserve du masque (--kn-mask-air) se calcule sur la meme
+   variable : rien d'autre a regler ici. */
 
 /* Police : Montserrat n'est chargee qu'en 400 (type_body_font). Le 700 du h1
    serait synthetise par le navigateur : on pose donc le 400. */
@@ -329,6 +329,15 @@ body.kn-header--over-media .kn-hero {
   font-family: var(--kn-font-text);
   font-weight: var(--kn-fw-regular);
   letter-spacing: -0.02em;
+}
+
+/* Police libre, prise dans la bibliotheque Shopify depuis l'editeur. La
+   section pose le nom, le style et le poids choisis (--kn-hero-font*) et
+   fournit le @font-face ; DM Sans reste le repli si une variable manque. */
+.kn-hero--font-custom .kn-hero__title {
+  font-family: var(--kn-hero-font, var(--kn-font-display));
+  font-style: var(--kn-hero-font-style, normal);
+  font-weight: var(--kn-hero-font-weight, var(--kn-fw-bold));
 }
 
 /* Alignement horizontal. Le bloc garde sa mesure ; c'est lui qu'on pousse. */

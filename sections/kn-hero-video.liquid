@@ -28,10 +28,15 @@
   comment
     Demande client du 24 octobre : essayer la position, la taille et la police
     du titre depuis l'editeur, sans passer par le code. Chaque reglage a une
-    valeur par defaut qui ne pose aucune classe : une banniere laissee telle
-    quelle ne change pas d'un pixel (titre ancre en bas a gauche, DM Sans).
+    valeur par defaut qui ne change rien : une banniere laissee telle quelle
+    ne bouge pas d'un pixel (titre ancre en bas a gauche, DM Sans, taille 100 %).
+    La taille est un coefficient de l'echelle de la DA ; la police libre vient
+    de la bibliotheque Shopify, choisie par le client dans l'editeur.
   endcomment
   assign kn_text_mods = ''
+  assign kn_scale = s.title_scale | default: 100 | divided_by: 100.0
+  assign kn_font = s.title_font_custom
+  assign kn_font_custom = false
   if has_text
     case s.text_vertical
       when 'top'
@@ -45,23 +50,36 @@
       when 'end'
         assign kn_text_mods = kn_text_mods | append: ' kn-hero--h-end'
     endcase
-    case s.title_size
-      when 'small'
-        assign kn_text_mods = kn_text_mods | append: ' kn-hero--size-sm'
-      when 'large'
-        assign kn_text_mods = kn_text_mods | append: ' kn-hero--size-lg'
+    case s.title_font
+      when 'text'
+        assign kn_text_mods = kn_text_mods | append: ' kn-hero--font-text'
+      when 'custom'
+        if kn_font != blank
+          assign kn_font_custom = true
+          assign kn_font_family = kn_font.family | remove: '"' | remove: "'"
+          assign kn_text_mods = kn_text_mods | append: ' kn-hero--font-custom'
+        endif
     endcase
-    if s.title_font == 'text'
-      assign kn_text_mods = kn_text_mods | append: ' kn-hero--font-text'
-    endif
   endif
 -%}
 
 {%- if has_media -%}
+  {%- comment -%}
+    Police libre : Shopify fournit le @font-face (fichier hébergé sur son CDN) ;
+    nom, style et poids passent par des variables sur la bannière, lues par
+    kn-home.css. Une police système ne produit aucun @font-face, et c'est normal.
+  {%- endcomment -%}
+  {%- if kn_font_custom -%}
+    {%- style -%}
+      {{ kn_font | font_face: font_display: 'swap' }}
+    {%- endstyle -%}
+  {%- endif -%}
   <div
     class="kn-hero{% if has_text and s.subtitles %} kn-hero--subtitles{% endif %}{{ kn_text_mods }}"
     {% if has_text %}
-      style="--kn-hero-scrim: {{ s.scrim }}%;"
+      style="--kn-hero-scrim: {{ s.scrim }}%; --kn-hero-scale: {{ kn_scale }};
+        {%- if kn_font_custom %} --kn-hero-font: '{{ kn_font_family | escape }}', {{ kn_font.fallback_families | escape }}; --kn-hero-font-style: {{ kn_font.style }}; --kn-hero-font-weight: {{ kn_font.weight }};{% endif -%}
+      "
       {% if s.signature > 0 %}data-kn-signature="{{ s.signature }}"{% endif %}
     {% endif %}
   >
@@ -247,15 +265,15 @@
       "default": "start"
     },
     {
-      "type": "select",
-      "id": "title_size",
+      "type": "range",
+      "id": "title_scale",
       "label": "Taille du titre",
-      "options": [
-        { "value": "small", "label": "Petit" },
-        { "value": "medium", "label": "Moyen" },
-        { "value": "large", "label": "Grand" }
-      ],
-      "default": "medium"
+      "min": 50,
+      "max": 200,
+      "step": 5,
+      "unit": "%",
+      "default": 100,
+      "info": "100 % = la taille d'origine. Glissez pour agrandir ou réduire : le titre reste adapté à chaque écran."
     },
     {
       "type": "select",
@@ -263,10 +281,18 @@
       "label": "Police du titre",
       "options": [
         { "value": "display", "label": "DM Sans (titres)" },
-        { "value": "text", "label": "Montserrat (texte courant)" }
+        { "value": "text", "label": "Montserrat (texte courant)" },
+        { "value": "custom", "label": "Autre police…" }
       ],
       "default": "display",
-      "info": "Les deux polices de la marque. Pour changer la police de tout le site : Paramètres du thème, Typographie."
+      "info": "DM Sans et Montserrat sont les deux polices de la marque. « Autre police… » ouvre la bibliothèque Shopify pour essayer n'importe quelle police, sans code."
+    },
+    {
+      "type": "font_picker",
+      "id": "title_font_custom",
+      "label": "Choisir la police",
+      "default": "dm_sans_n7",
+      "visible_if": "{{ section.settings.title_font == 'custom' }}"
     }
   ],
   "presets": [

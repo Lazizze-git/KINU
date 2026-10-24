@@ -362,11 +362,14 @@ Le réglage Horizon `page_width: "narrow"` est conservé, mais on force `--page-
 > gauche, DM Sans (rendu vérifié au pixel près, sur ordinateur et mobile).
 > Position : bas, centre ou haut ; en haut, le titre se pose sous le header quand
 > celui-ci chevauche la bannière, et le retrait des sous-titres ne s'applique
-> plus. Alignement : gauche, centré, droite. Taille : petit (20 à 40 px), moyen
-> (24 à 60 px, l'échelle du 20 octobre), grand (32 à 80 px). Police : DM Sans ou
-> Montserrat, les deux seules de la marque ; Montserrat est posée en 400, seul
-> poids chargé, pour que le 700 du `h1` ne soit pas synthétisé. Une autre police
-> se règle pour tout le site, dans les paramètres du thème.
+> plus. Alignement : gauche, centré, droite. Taille : un curseur de 50 à 200 %
+> de l'échelle du 20 octobre (24 à 60 px), soit de 12 à 120 px ; au-delà de
+> 100 %, la mesure du bloc grandit avec le titre, pour qu'il ne se casse pas en
+> colonne. Police : DM Sans, Montserrat (posée en 400, seul poids chargé, pour
+> que le 700 du `h1` ne soit pas synthétisé) ou « Autre police… », qui ouvre la
+> bibliothèque Shopify : le client essaie n'importe quelle police sans code, la
+> section en fournit le `@font-face`. Ce choix ne vaut que pour ce titre ; la
+> police du reste du site se règle dans les paramètres du thème.
 
 ---
 
