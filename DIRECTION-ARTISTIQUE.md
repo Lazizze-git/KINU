@@ -624,6 +624,31 @@ Aucun bouton ne se déplace, ne grossit ni ne prend d'ombre au survol : **seule 
 - **Produit** : **deux colonnes desktop** — galerie 7/12 à gauche, colonne de lecture 5/12 à droite qui enchaîne achat puis caractéristiques ; une colonne mobile (galerie plein cadre, puis achat, puis caractéristiques). Le placement est explicite en grille : l'ordre du DOM reste galerie / achat / caractéristiques, qui est l'ordre de lecture juste sur petit écran et au clavier. Les accordéons se replient sur les deux formats, Description ouverte par défaut. Sélecteurs de taille en carrés de 44 px, filet 1 px, sélection = remplissage encre. La quantité est un choix comme les autres : même étiquette en capitales grises que `COULEUR` et `TAILLE`, contrôle dessous, puis le bouton d'ajout pleine largeur — jamais un bloc sans nom posé à côté du bouton. Accordéons (Description / Matière & entretien / Livraison) en filets 1 px, sans fond, chevrons 12 px.
 - **Guide des tailles** (amendement du 16 septembre 2026) : le panneau de mensurations s'ouvre par un lien posé contre l'étiquette `TAILLE`, au moment où la question se pose. Il lit d'abord le métachamp de la pièce ; à défaut, le tableau commun réglé dans l'éditeur, une ligne par taille, colonnes séparées par une barre verticale. Une maison qui n'a qu'une grille de mensurations la saisit une fois pour tout le catalogue ; une pièce qui sort du lot garde son propre tableau. Sans l'un ni l'autre, ni lien ni panneau : mieux vaut pas de guide qu'un guide vide.
 
+### 7.8 Page de contact
+
+> **Amendement du 24 octobre 2026 — la page de contact quitte Horizon.** Retour
+> client : « elle est horrible ». Elle n'était qu'un titre, un bloc de texte à la
+> mise en forme d'Horizon (titre et sous-titres à la même taille) et, tout en
+> bas, un formulaire à moitié de largeur dont les champs n'avaient pour libellé
+> qu'un texte d'attente. Elle est désormais rendue par la section `kn-contact` :
+> sur-titre et `H1` sur la surface claire, un filet de 1 px, puis deux colonnes
+> sur la grille de 12 (§5.2) — le texte de la page à gauche (5 colonnes,
+> l'accroche à l'échelle `lead`, les sous-titres au niveau `h3`, les listes en
+> filets sans puces), le formulaire à droite (6 colonnes). Sur téléphone et
+> tablette, une seule colonne, le texte d'abord puisqu'il renvoie à « ce
+> formulaire ». Le texte reste celui du client (Boutique en ligne, Pages,
+> Contact) ; le formulaire se règle dans l'éditeur.
+>
+> Un seul champ, comme au §7.4 : un trait sous le texte, mais avec un libellé
+> visible au-dessus (étiquette `--kn-fs-label`, grise, qui passe à l'encre au
+> focus). Nom et e-mail sur une rangée, sujet (liste réglable, une entrée par
+> ligne) et numéro de commande sur la suivante, puis le message et le bouton
+> primaire. Les champs obligatoires portent un astérisque. Après l'envoi, le
+> message remplace les champs et reçoit le focus ; en cas d'erreur, un message
+> `role="alert"` précède le formulaire et le champ e-mail passe au rouge
+> d'erreur. Un bloc « Coordonnées » (e-mail, Instagram) n'apparaît que s'il est
+> rempli.
+
 ---
 
 ## 8. Motion

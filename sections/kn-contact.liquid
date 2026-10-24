@@ -1,0 +1,317 @@
+{{ 'kn-contact.css' | asset_url | stylesheet_tag }}
+
+{%- liquid
+  assign s = section.settings
+
+  comment
+    Demande client du 24 octobre : la page de contact « etait horrible ». Elle
+    n'etait qu'un titre, un bloc de texte et, tout en bas, un formulaire a
+    moitie de largeur dont les champs n'avaient pour libelle qu'un texte
+    d'attente. Le texte de la page (Boutique en ligne, Pages, Contact) reste
+    celui que le client ecrit : il se pose a gauche, le formulaire a droite.
+  endcomment
+  assign kn_has_content = false
+  if page.content != blank
+    assign kn_has_content = true
+  endif
+
+  assign kn_has_topics = false
+  if s.topics != blank
+    assign kn_has_topics = true
+    assign kn_topics = s.topics | newline_to_br | split: '<br />'
+  endif
+
+  assign kn_field_topic = s.label_topic | default: 'Sujet'
+  assign kn_field_order = s.label_order | default: 'Numéro de commande'
+
+  assign kn_has_direct = false
+  if s.email != blank or s.instagram_url != blank
+    assign kn_has_direct = true
+  endif
+-%}
+
+<div class="kn-contact" data-kn-surface="light">
+  <div class="kn-container">
+    <header class="kn-contact__head">
+      {%- if s.eyebrow != blank -%}
+        <p class="kn-label kn-contact__eyebrow">{{ s.eyebrow | escape }}</p>
+      {%- endif -%}
+      <h1 class="kn-contact__title">{{ page.title | escape }}</h1>
+    </header>
+
+    <div class="kn-contact__grid{% unless kn_has_content %} kn-contact__grid--solo{% endunless %}">
+      {%- if kn_has_content -%}
+        <div class="kn-contact__text">{{ page.content }}</div>
+      {%- endif -%}
+
+      <div class="kn-contact__panel">
+        {%- form 'contact', id: 'kn-contact-form', class: 'kn-contact__form' -%}
+          {%- if form.posted_successfully? -%}
+            <div class="kn-contact__done" role="status" tabindex="-1" autofocus>
+              <h2 class="kn-contact__done-title">{{ s.success_title | escape }}</h2>
+              {%- if s.success_text != blank -%}
+                <p class="kn-contact__done-text">{{ s.success_text | escape }}</p>
+              {%- endif -%}
+              <a class="kn-label kn-underline kn-contact__done-link" href="{{ routes.root_url }}">
+                {{- s.success_link | default: 'Retour à la boutique' | escape -}}
+              </a>
+            </div>
+          {%- else -%}
+            {%- if form.errors -%}
+              <p class="kn-contact__error kn-sm" id="kn-contact-error" role="alert" tabindex="-1" autofocus>
+                {{- s.error_text | escape -}}
+              </p>
+            {%- endif -%}
+
+            <div class="kn-contact__row">
+              <div class="kn-field">
+                <label class="kn-label kn-field__label" for="kn-contact-name">{{ s.label_name | escape }}</label>
+                <input
+                  class="kn-input"
+                  id="kn-contact-name"
+                  type="text"
+                  name="contact[name]"
+                  value="{% if form.name %}{{ form.name | escape }}{% elsif customer %}{{ customer.name | escape }}{% endif %}"
+                  autocomplete="name"
+                >
+              </div>
+
+              <div class="kn-field">
+                <label class="kn-label kn-field__label" for="kn-contact-email">
+                  {{- s.label_email | escape }} <span aria-hidden="true">*</span>
+                </label>
+                <input
+                  class="kn-input"
+                  id="kn-contact-email"
+                  type="email"
+                  name="contact[email]"
+                  value="{% if form.email %}{{ form.email | escape }}{% elsif customer %}{{ customer.email | escape }}{% endif %}"
+                  autocomplete="email"
+                  spellcheck="false"
+                  autocapitalize="off"
+                  required
+                  aria-required="true"
+                  {% if form.errors contains 'email' %}
+                    aria-invalid="true"
+                    aria-describedby="kn-contact-error"
+                  {% endif %}
+                >
+              </div>
+            </div>
+
+            <div class="kn-contact__row">
+              {%- if kn_has_topics -%}
+                <div class="kn-field">
+                  <label class="kn-label kn-field__label" for="kn-contact-topic">{{ kn_field_topic | escape }}</label>
+                  <select class="kn-input kn-contact__select" id="kn-contact-topic" name="contact[{{ kn_field_topic | escape }}]">
+                    <option value="">{{ s.topic_placeholder | escape }}</option>
+                    {%- for kn_raw in kn_topics -%}
+                      {%- assign kn_topic = kn_raw | strip -%}
+                      {%- if kn_topic != blank -%}
+                        <option value="{{ kn_topic | escape }}">{{ kn_topic | escape }}</option>
+                      {%- endif -%}
+                    {%- endfor -%}
+                  </select>
+                </div>
+              {%- endif -%}
+
+              <div class="kn-field">
+                <label class="kn-label kn-field__label" for="kn-contact-order">{{ kn_field_order | escape }}</label>
+                <input
+                  class="kn-input"
+                  id="kn-contact-order"
+                  type="text"
+                  name="contact[{{ kn_field_order | escape }}]"
+                  autocomplete="off"
+                >
+              </div>
+            </div>
+
+            <div class="kn-field">
+              <label class="kn-label kn-field__label" for="kn-contact-body">
+                {{- s.label_message | escape }} <span aria-hidden="true">*</span>
+              </label>
+              <textarea
+                class="kn-input kn-contact__textarea"
+                id="kn-contact-body"
+                name="contact[body]"
+                rows="6"
+                required
+                aria-required="true"
+              >
+                {{- form.body -}}
+              </textarea>
+            </div>
+
+            <button type="submit" class="kn-btn kn-btn--primary kn-contact__submit">
+              {{- s.submit_label | escape -}}
+            </button>
+
+            {%- if s.required_note != blank -%}
+              <p class="kn-contact__note kn-sm">{{ s.required_note | escape }}</p>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endform -%}
+
+        {%- if kn_has_direct -%}
+          <div class="kn-contact__direct">
+            {%- if s.direct_title != blank -%}
+              <p class="kn-label kn-contact__direct-title">{{ s.direct_title | escape }}</p>
+            {%- endif -%}
+            <ul class="kn-contact__direct-list" role="list">
+              {%- if s.email != blank -%}
+                <li><a class="kn-underline" href="mailto:{{ s.email | escape }}">{{ s.email | escape }}</a></li>
+              {%- endif -%}
+              {%- if s.instagram_url != blank -%}
+                <li>
+                  <a class="kn-underline" href="{{ s.instagram_url }}" rel="noopener">
+                    {{- s.instagram_label | default: s.instagram_url | escape -}}
+                  </a>
+                </li>
+              {%- endif -%}
+            </ul>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "KINŪ · Contact",
+  "tag": "section",
+  "class": "kn-contact-section",
+  "settings": [
+    {
+      "type": "paragraph",
+      "content": "Le texte à gauche du formulaire s'écrit dans Boutique en ligne, Pages, Contact. Cette section règle le formulaire et les coordonnées."
+    },
+    {
+      "type": "header",
+      "content": "Titre"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Sur-titre",
+      "default": "Nous écrire",
+      "info": "Petit texte au-dessus du titre. Laissez vide pour le retirer."
+    },
+    {
+      "type": "header",
+      "content": "Formulaire"
+    },
+    {
+      "type": "text",
+      "id": "label_name",
+      "label": "Champ nom",
+      "default": "Nom"
+    },
+    {
+      "type": "text",
+      "id": "label_email",
+      "label": "Champ e-mail",
+      "default": "Adresse e-mail"
+    },
+    {
+      "type": "text",
+      "id": "label_topic",
+      "label": "Champ sujet",
+      "default": "Sujet"
+    },
+    {
+      "type": "text",
+      "id": "topic_placeholder",
+      "label": "Invite du sujet",
+      "default": "Choisissez un sujet"
+    },
+    {
+      "type": "textarea",
+      "id": "topics",
+      "label": "Sujets proposés (un par ligne)",
+      "default": "Une commande en cours\nUn retour ou un échange\nUne pièce ou une taille\nAutre question",
+      "info": "Laissez vide pour retirer la liste. Le sujet choisi arrive dans l'e-mail que vous recevez."
+    },
+    {
+      "type": "text",
+      "id": "label_order",
+      "label": "Champ numéro de commande",
+      "default": "Numéro de commande"
+    },
+    {
+      "type": "text",
+      "id": "label_message",
+      "label": "Champ message",
+      "default": "Message"
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Bouton",
+      "default": "Envoyer"
+    },
+    {
+      "type": "text",
+      "id": "required_note",
+      "label": "Mention des champs obligatoires",
+      "default": "* Champs obligatoires"
+    },
+    {
+      "type": "header",
+      "content": "Messages"
+    },
+    {
+      "type": "text",
+      "id": "success_title",
+      "label": "Titre après envoi",
+      "default": "Message envoyé"
+    },
+    {
+      "type": "text",
+      "id": "success_text",
+      "label": "Texte après envoi",
+      "default": "Merci, nous revenons vers vous dès que possible."
+    },
+    {
+      "type": "text",
+      "id": "success_link",
+      "label": "Lien après envoi",
+      "default": "Retour à la boutique"
+    },
+    {
+      "type": "text",
+      "id": "error_text",
+      "label": "Message d'erreur",
+      "default": "Votre message n'est pas parti. Vérifiez votre adresse e-mail et réessayez."
+    },
+    {
+      "type": "header",
+      "content": "Coordonnées (facultatif)"
+    },
+    {
+      "type": "text",
+      "id": "direct_title",
+      "label": "Titre du bloc",
+      "default": "Coordonnées"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Adresse e-mail affichée",
+      "info": "Laissez vide pour ne pas l'afficher."
+    },
+    {
+      "type": "text",
+      "id": "instagram_label",
+      "label": "Texte du lien Instagram"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Lien Instagram",
+      "info": "Laissez vide pour ne pas l'afficher."
+    }
+  ]
+}
+{% endschema %}

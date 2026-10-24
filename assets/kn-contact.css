@@ -1,0 +1,282 @@
+/* ==========================================================================
+   KINŪ — Page de contact
+   --------------------------------------------------------------------------
+   Chargée par la section kn-contact elle-même, donc seulement sur la page de
+   contact. Titre, texte de la page à gauche, formulaire à droite : sur
+   ordinateur la grille à douze colonnes du §5.2, sur téléphone une seule
+   colonne, le texte d'abord puisque la page renvoie à « ce formulaire ».
+
+   Un seul champ, comme partout (§7.4) : un texte, un trait dessous. La
+   différence avec l'ancien formulaire : chaque champ a son libellé visible,
+   posé au-dessus. Un texte d'attente disparaît dès qu'on tape ; un libellé
+   reste, et c'est lui que lit un lecteur d'écran.
+   ========================================================================== */
+
+.kn-contact {
+  padding-block: var(--kn-space-xl) var(--kn-section-y);
+}
+
+/* --------------------------------------------------------------------------
+   1. Titre
+   -------------------------------------------------------------------------- */
+
+.kn-contact__head {
+  display: grid;
+  gap: var(--kn-space-xs);
+  margin-block-end: var(--kn-space-lg);
+  padding-block-end: var(--kn-space-lg);
+  border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+@media (min-width: 768px) {
+  .kn-contact__head {
+    margin-block-end: var(--kn-space-xl);
+    padding-block-end: var(--kn-space-xl);
+  }
+}
+
+.kn-contact__eyebrow {
+  margin: 0;
+  color: var(--kn-surface-muted);
+}
+
+/* --------------------------------------------------------------------------
+   2. Grille
+   -------------------------------------------------------------------------- */
+
+.kn-contact__grid {
+  display: grid;
+  gap: var(--kn-space-2xl);
+}
+
+@media (min-width: 1024px) {
+  .kn-contact__grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--kn-grid-gap);
+    align-items: start;
+  }
+
+  .kn-contact__text {
+    grid-column: 1 / span 5;
+  }
+
+  .kn-contact__panel {
+    grid-column: 7 / span 6;
+  }
+
+  /* Page sans texte : le formulaire reprend la place de gauche. */
+  .kn-contact__grid--solo .kn-contact__panel {
+    grid-column: 1 / span 6;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. Texte de la page (écrit dans Pages, Contact)
+   Le client le tape dans un éditeur de texte riche : on ne connaît ni le
+   nombre de titres ni celui des listes, seulement leur nature.
+   -------------------------------------------------------------------------- */
+
+/* La colonne prend toute la largeur dont elle dispose : les filets des listes
+   vont jusqu'au bord, comme celui du titre. C'est le texte, pas le filet, qui
+   tient la mesure de 68 caractères (§4.2). */
+.kn-contact__text > :first-child {
+  margin-block-start: 0;
+}
+
+.kn-contact__text :is(p, h2, h3) {
+  max-width: var(--kn-measure);
+}
+
+.kn-contact__text p {
+  margin: 0 0 var(--kn-space-sm);
+}
+
+/* La phrase d'ouverture est l'accroche de la page. */
+.kn-contact__text > p:first-child {
+  font-size: var(--kn-fs-lead);
+  line-height: 1.55;
+}
+
+.kn-contact__text h2,
+.kn-contact__text h3 {
+  margin: var(--kn-space-xl) 0 var(--kn-space-sm);
+  font-size: var(--kn-fs-h3);
+  font-weight: var(--kn-fw-medium);
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+}
+
+/* Une liste de réponses : un filet entre chacune, pas de puces. */
+.kn-contact__text ul,
+.kn-contact__text ol {
+  margin: var(--kn-space-sm) 0 var(--kn-space-md);
+  padding: 0;
+  list-style: none;
+  border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-contact__text li {
+  padding-block: var(--kn-space-sm);
+  padding-inline-end: max(0px, calc(100% - var(--kn-measure)));
+  border-block-end: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-contact__text strong {
+  font-family: var(--kn-font-ui);
+  font-weight: var(--kn-fw-medium);
+}
+
+.kn-contact__text a {
+  text-decoration: underline;
+  text-decoration-thickness: var(--kn-stroke);
+  text-underline-offset: 0.2em;
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-contact__text a:hover {
+  color: var(--kn-surface-accent);
+}
+
+/* --------------------------------------------------------------------------
+   4. Formulaire
+   -------------------------------------------------------------------------- */
+
+.kn-contact__form {
+  display: grid;
+  gap: var(--kn-space-lg);
+}
+
+/* Deux champs par rangée dès 640 px. Un champ resté seul (le sujet retiré, par
+   exemple) garde sa colonne : la rangée garde sa grille. */
+.kn-contact__row {
+  display: grid;
+  gap: var(--kn-space-lg);
+}
+
+@media (min-width: 640px) {
+  .kn-contact__row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.kn-field {
+  display: grid;
+  gap: var(--kn-space-3xs);
+  align-content: start;
+}
+
+.kn-field__label {
+  color: var(--kn-surface-muted);
+  transition: color var(--kn-dur-2) var(--kn-ease-state);
+}
+
+.kn-field:focus-within .kn-field__label {
+  color: var(--kn-surface-fg);
+}
+
+.kn-contact__textarea {
+  min-height: 9rem;
+  resize: vertical;
+  line-height: var(--kn-lh-body);
+}
+
+/* La liste déroulante garde le trait bas du champ : on retire la flèche du
+   navigateur, qui est une boîte, et on pose le chevron du système (§7.1). */
+.kn-contact__select {
+  padding-inline-end: var(--kn-space-lg);
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8' fill='none' stroke='%231b1a16' stroke-width='1.5'%3E%3Cpath d='M1 1.5 6 6.5 11 1.5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 center;
+  background-size: 0.75rem 0.5rem;
+  cursor: pointer;
+}
+
+/* Tant qu'aucun sujet n'est choisi, l'invite se lit comme un texte d'attente. */
+.kn-contact__select:has(option[value=""]:checked) {
+  color: var(--kn-surface-muted);
+}
+
+.kn-contact__form .kn-input[aria-invalid="true"] {
+  border-bottom-color: var(--kn-error);
+}
+
+/* Le message reçoit le focus au rechargement pour être annoncé : sans cadre,
+   il se lit comme un texte, pas comme un champ. */
+.kn-contact__error {
+  margin: 0;
+  color: var(--kn-error);
+}
+
+.kn-contact__error:focus {
+  outline: none;
+}
+
+.kn-contact__submit {
+  justify-self: start;
+}
+
+.kn-contact__note {
+  margin: calc(var(--kn-space-xs) * -1) 0 0;
+  color: var(--kn-surface-muted);
+}
+
+/* Envoyé : le message remplace les champs, et reçoit le focus pour que le
+   lecteur d'écran l'annonce après le rechargement de la page. */
+.kn-contact__done {
+  display: grid;
+  gap: var(--kn-space-sm);
+  justify-items: start;
+  padding-block-start: var(--kn-space-md);
+  border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-contact__done:focus {
+  outline: none;
+}
+
+.kn-contact__done-title {
+  margin: 0;
+  font-size: var(--kn-fs-h3);
+  font-weight: var(--kn-fw-medium);
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+}
+
+.kn-contact__done-text {
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   5. Coordonnées directes (facultatif)
+   -------------------------------------------------------------------------- */
+
+.kn-contact__direct {
+  display: grid;
+  gap: var(--kn-space-xs);
+  margin-block-start: var(--kn-space-xl);
+  padding-block-start: var(--kn-space-md);
+  border-block-start: var(--kn-stroke) solid var(--kn-surface-line);
+}
+
+.kn-contact__direct-title {
+  margin: 0;
+  color: var(--kn-surface-muted);
+}
+
+.kn-contact__direct-list {
+  display: grid;
+  gap: var(--kn-space-xs);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Le lien mesure une ligne de haut : un pseudo-élément porte sa zone tactile
+   à 44 px sans déplacer le soulignement (§7.1). */
+.kn-contact__direct-list a::before {
+  content: "";
+  position: absolute;
+  inset: -0.75rem -0.5rem;
+}
