@@ -50,8 +50,8 @@
         "column_legal"
       ],
       "settings": {
-        "head_gap": 12,
-        "link_gap": 4,
+        "head_gap": 4,
+        "link_gap": 0,
         "show_newsletter": true,
         "newsletter_tag": "newsletter",
         "newsletter_title": "Rester informé",
