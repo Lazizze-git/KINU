@@ -111,7 +111,7 @@
       "type": "kn-featured-products",
       "settings": {
         "title": "Nouveautés",
-        "collection": "",
+        "collection": "nouveautes",
         "count": 8,
         "link_label": "Voir tout",
         "empty_text": "Les nouveautés de la saison arrivent très bientôt.",
