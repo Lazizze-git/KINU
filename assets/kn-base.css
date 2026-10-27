@@ -425,6 +425,7 @@ a {
   display: block;
   aspect-ratio: var(--kn-ratio, var(--kn-ratio-card));
   overflow: hidden;
+  /* Arrondi leger des photos, jeton pose dans custom.css (DA, 21/09/2026). */
   border-radius: var(--kn-radius-media);
   background-color: var(--kn-media-bg);
 }

@@ -112,7 +112,9 @@
   /* Demande client du 21/09/2026 : un arrondi leger sur les photographies,
      et sur elles seules. Boutons, champs et filets gardent l'angle vif. Une
      photo bord a bord (galerie produit sur telephone) reste droite : un
-     arrondi contre le bord de l'ecran se lirait comme un accident. */
+     arrondi contre le bord de l'ecran se lirait comme un accident.
+     Envoye sur le theme le 27/10/2026 : la synchronisation du 21/09 avait
+     manque ce fichier et kn-base.css, l'arrondi n'etait jamais apparu. */
   --kn-radius-media:  6px;
   --kn-radius-pill:   999px;
   --kn-stroke:        1px;
