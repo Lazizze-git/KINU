@@ -55,7 +55,7 @@
         "show_newsletter": true,
         "newsletter_tag": "newsletter",
         "newsletter_title": "Rester informé",
-        "newsletter_text": "Nouveautés, réassorts et coulisses. Un message par mois, pas davantage.",
+        "newsletter_text": "Nouveautés, réassorts et coulisses. Pas de spam, juste l’essentiel.",
         "newsletter_placeholder": "Adresse e-mail",
         "newsletter_cta": "S’inscrire",
         "newsletter_success": "Merci, votre inscription est enregistrée.",
