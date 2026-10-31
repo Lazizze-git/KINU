@@ -104,6 +104,7 @@
     "variant_button_border_width": 1,
     "variant_button_radius": 0,
     "variant_button_width": "equal-width-buttons",
+    "kn_preorder_note": "<p>Précommande ouverte jusqu’au 15 novembre. Expédition estimée 4 à 6 semaines après cette date.</p>",
     "content_for_index": [],
     "color_palette": {
       "background": "#F7F5F0",
