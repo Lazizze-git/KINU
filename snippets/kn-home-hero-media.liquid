@@ -40,10 +40,11 @@
     assign mp4_url_sm = ''
     assign mp4_url_xs = ''
     for source in video.sources
-      if source.format == 'mp4' and source.height == 720
+      assign kn_h = source.height | plus: 0
+      if source.format == 'mp4' and kn_h == 720
         assign mp4_url_sm = source.url
       endif
-      if source.format == 'mp4' and source.height == 480
+      if source.format == 'mp4' and kn_h == 480
         assign mp4_url_xs = source.url
       endif
     endfor
