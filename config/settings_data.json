@@ -106,6 +106,13 @@
     "variant_button_width": "equal-width-buttons",
     "kn_preorder_note": "<p>Précommande ouverte jusqu’au 15 novembre. Expédition estimée 4 à 6 semaines après cette date.</p>",
     "content_for_index": [],
+    "blocks": {
+      "13070091535480640111": {
+        "type": "shopify://apps/attrac/blocks/app-embed/b783956d-47a9-4434-91ad-4ec960bd74b0",
+        "disabled": false,
+        "settings": {}
+      }
+    },
     "color_palette": {
       "background": "#F7F5F0",
       "foreground": "#1B1A16",
