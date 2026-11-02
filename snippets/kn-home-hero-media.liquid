@@ -49,6 +49,22 @@
       endif
     endfor
 
+    # En vitrine, Shopify n'expose souvent que le 1080p dans video.sources,
+    # alors que le CDN sert aussi les rendus 720p et 480p au meme endroit.
+    # Leurs noms suivent un schema fixe (HD-720p-4.5Mbps, SD-480p-1.5Mbps) :
+    # on les deduit du nom du 1080p. Si l'un manquait, kn-home.js retombe
+    # sur le 1080p a la premiere erreur de lecture.
+    if mp4_url contains 'HD-1080p-' and mp4_url contains 'Mbps-'
+      assign kn_parts = mp4_url | split: 'HD-1080p-'
+      assign kn_tail = kn_parts.last | split: 'Mbps-'
+      if mp4_url_sm == blank
+        assign mp4_url_sm = kn_parts.first | append: 'HD-720p-4.5Mbps-' | append: kn_tail.last
+      endif
+      if mp4_url_xs == blank
+        assign mp4_url_xs = kn_parts.first | append: 'SD-480p-1.5Mbps-' | append: kn_tail.last
+      endif
+    endif
+
     if mp4_url == blank
       for source in video.sources
         if source.format == 'mp4' and mp4_url == blank

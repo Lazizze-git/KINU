@@ -133,6 +133,19 @@
     var source = document.createElement('source');
     source.type = 'video/mp4';
     source.src = src;
+    // Une version allégée introuvable ne doit pas priver la page de vidéo :
+    // à la première erreur, on repasse sur la source principale.
+    if (video.dataset.knSrc && src !== video.dataset.knSrc) {
+      source.addEventListener(
+        'error',
+        function () {
+          source.src = /** @type {string} */ (video.dataset.knSrc);
+          video.load();
+          attemptPlay(video);
+        },
+        { once: true }
+      );
+    }
     video.appendChild(source);
     video.dataset.knReady = 'true';
 
