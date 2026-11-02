@@ -23,6 +23,18 @@
     {%- endcomment -%}
     <script>document.documentElement.setAttribute('data-kn-js', '');</script>
 
+    {%- comment -%}
+      Filet de securite (demande client du 2 novembre 2026) : un lien partage
+      vers une adresse qui n'existe pas (bio, QR code, message...) affichait
+      « Page introuvable » au lieu de l'accueil. Toute page 404 renvoie
+      desormais vers l'accueil, en gardant les parametres de suivi (utm, etc.).
+      L'editeur de theme garde l'acces a la page 404 pour pouvoir la modifier.
+    {%- endcomment -%}
+    {%- if template.name == '404' and request.design_mode == false -%}
+      <script>window.location.replace({{ routes.root_url | json }} + window.location.search);</script>
+      <noscript><meta http-equiv="refresh" content="0; url={{ routes.root_url }}"></noscript>
+    {%- endif -%}
+
     {%- render 'kn-favicon' -%}
 
     {% comment %}
