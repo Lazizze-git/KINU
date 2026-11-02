@@ -793,6 +793,19 @@ body:has(.kn-pdp) .kn-territory-surface {
   border-bottom: var(--kn-stroke) solid var(--kn-line);
 }
 
+/* Quand la réassurance ferme la colonne d'achat, son filet du bas sert aussi
+   de filet du haut aux accordéons. Sans cela, l'écart de la grille et la
+   marge des accordéons s'additionnaient entre deux filets et laissaient une
+   case vide sous « Livraison offerte » (retour client du 2 novembre 2026). */
+.kn-pdp__layout:has(.kn-pdp__info > .kn-assure:last-child) .kn-pdp__spec {
+  margin-top: calc(-1 * var(--kn-space-lg));
+}
+
+.kn-pdp__layout:has(.kn-pdp__info > .kn-assure:last-child) .kn-acc {
+  margin-top: 0;
+  border-top: 0;
+}
+
 .kn-acc__sum {
   display: flex;
   align-items: center;

@@ -1832,6 +1832,20 @@ body.kn-header--over-media
   letter-spacing: var(--kn-ls-label);
   text-transform: uppercase;
   color: var(--kn-grey);
+  /* Le bouton hérite d'un overflow caché et d'une largeur calée sur la zone
+     tactile : en capitales espacées, « Effacer » y était rogné des deux côtés.
+     Il prend désormais la largeur de son mot, sans jamais se faire écraser
+     par le champ. */
+  flex: 0 0 auto;
+  width: auto;
+  min-width: max-content;
+  padding-inline: var(--padding-sm, 12px);
+  overflow: visible;
+  white-space: nowrap;
+}
+
+.search-modal .search-input {
+  min-width: 0;
 }
 
 .search-modal .predictive-search-form__content,
