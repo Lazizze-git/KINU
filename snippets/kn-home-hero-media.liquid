@@ -34,6 +34,20 @@
         assign mp4_height = source.height
       endif
     endfor
+    # Versions plus legeres pour les telephones et les connexions lentes :
+    # en 1080p, la video d'accueil pese plus de 40 Mo (retour client du
+    # 2 novembre 2026 : « il charge super lentement »).
+    assign mp4_url_sm = ''
+    assign mp4_url_xs = ''
+    for source in video.sources
+      if source.format == 'mp4' and source.height == 720
+        assign mp4_url_sm = source.url
+      endif
+      if source.format == 'mp4' and source.height == 480
+        assign mp4_url_xs = source.url
+      endif
+    endfor
+
     if mp4_url == blank
       for source in video.sources
         if source.format == 'mp4' and mp4_url == blank
@@ -72,6 +86,8 @@
     class="kn-hero__video"
     data-kn-hero-video
     data-kn-src="{{ mp4_url }}"
+    {% if mp4_url_sm != blank %}data-kn-src-sm="{{ mp4_url_sm }}"{% endif %}
+    {% if mp4_url_xs != blank %}data-kn-src-xs="{{ mp4_url_xs }}"{% endif %}
     autoplay
     muted
     loop

@@ -86,13 +86,48 @@
    * poster qu'une fois qu'elle joue réellement : aucun cadre noir.
    * @param {HTMLVideoElement} video
    */
+  /**
+   * Choisit la version de la vidéo selon l'écran et la connexion. Le 1080p
+   * pèse plus de 40 Mo : un téléphone reçoit le 720p, une connexion lente ou
+   * en mode économie de données le 480p.
+   * @param {HTMLVideoElement} video
+   * @returns {string|undefined}
+   */
+  function pickSource(video) {
+    var data = video.dataset;
+    var connection = /** @type {any} */ (navigator).connection;
+    var slow =
+      connection &&
+      (connection.saveData === true || /(^|-)(2g|3g)$/.test(String(connection.effectiveType || '')));
+    if (slow && data.knSrcXs) return data.knSrcXs;
+    if (window.matchMedia('(max-width: 749px)').matches && data.knSrcSm) return data.knSrcSm;
+    return data.knSrc;
+  }
+
   function startVideo(video) {
     if (video.dataset.knReady === 'true') {
       attemptPlay(video);
       return;
     }
 
-    var src = video.dataset.knSrc;
+    // La vidéo attend que la page ait fini de charger : le poster tient la
+    // place, et le flux ne dispute plus la bande passante aux images, aux
+    // styles et aux scripts de la page.
+    if (document.readyState !== 'complete') {
+      if (video.dataset.knWaiting === 'true') return;
+      video.dataset.knWaiting = 'true';
+      window.addEventListener(
+        'load',
+        function () {
+          video.dataset.knWaiting = '';
+          if (!motion.matches) startVideo(video);
+        },
+        { once: true }
+      );
+      return;
+    }
+
+    var src = pickSource(video);
     if (!src) return;
 
     var source = document.createElement('source');
