@@ -900,9 +900,11 @@ body:has(.kn-pdp) .kn-territory-surface {
 
 .kn-sticky__text {
   display: flex;
+  flex: 0 1 auto;
   flex-direction: column;
   gap: var(--kn-space-3xs);
   min-width: 0;
+  max-width: 50%;
 }
 
 .kn-sticky__name {
@@ -913,8 +915,9 @@ body:has(.kn-pdp) .kn-territory-surface {
   white-space: nowrap;
 }
 
+/* Le bouton occupe toute la place restante : plus de vide à droite du bandeau. */
 .kn-sticky__button {
-  flex: none;
+  flex: 1 1 auto;
   width: auto;
   min-height: var(--kn-ctrl-h);
 }
