@@ -12,7 +12,7 @@
     "hero": {
       "type": "kn-hero-video",
       "settings": {
-        "video": "shopify://files/videos/kinu-hero.mp4",
+        "video": "shopify://files/videos/KINŪ_NoLogo_SUBS.mp4",
         "video_url": "",
         "image_alt": "Film de marque KINŪ : athlètes en mouvement, du studio à la rue",
         "title": "Le vêtement technique, à l’échelle du geste.",
@@ -21,7 +21,12 @@
         "link_url": "",
         "scrim": 30,
         "subtitles": true,
-        "signature": 4
+        "signature": 4,
+        "pos_x": 0,
+        "pos_y": 100,
+        "title_scale": 100,
+        "title_font": "display",
+        "title_font_custom": "dm_sans_n7"
       }
     },
     "universes": {
