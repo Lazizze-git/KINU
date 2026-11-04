@@ -6,6 +6,7 @@
   lang="{{ request.locale.iso_code }}"
 >
   <head>
+
     {%- comment -%}
       Ce drapeau doit etre pose avant la premiere peinture.
 
@@ -105,7 +106,54 @@
     {% endif %}
 
     {{ content_for_header }}
-  </head>
+      {% if page.handle == 'faq' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {"@type": "Question", "name": "Que signifie KINŪ ?", "acceptedAnswer": {"@type": "Answer", "text": "KINŪ signifie « soie » en japonais, une matière légère qui suit chaque geste sans le retenir. Le nom se lit aussi en deux syllabes : KI, le souffle vital, et NŪ, le flux du mouvement."}},
+    {"@type": "Question", "name": "Qui est derrière KINŪ ?", "acceptedAnswer": {"@type": "Answer", "text": "KINŪ est une marque lausannoise fondée par Jorge Monteiro, qui la développe seul et en est le premier ambassadeur. Sa signature : « Move with intention »."}},
+    {"@type": "Question", "name": "Comment est née la marque ?", "acceptedAnswer": {"@type": "Answer", "text": "KINŪ est la relance, sous un nouveau nom, d'une première marque dédiée au jiu-jitsu, un sport où chaque centimètre de tissu compte. L'idée a été élargie au mouvement sous toutes ses formes : training, running, yoga et quotidien."}},
+    {"@type": "Question", "name": "Où sont fabriqués les vêtements KINŪ ?", "acceptedAnswer": {"@type": "Answer", "text": "Les pièces sont conçues à Lausanne et fabriquées en Chine. Nous préférons le dire clairement plutôt que de laisser planer le doute."}},
+    {"@type": "Question", "name": "KINŪ a-t-elle une démarche responsable ?", "acceptedAnswer": {"@type": "Answer", "text": "Oui. Nos commandes sont expédiées dans des emballages compostables, et nous privilégions des pièces durables, pensées pour être portées longtemps."}},
+    {"@type": "Question", "name": "Quels produits proposez-vous ?", "acceptedAnswer": {"@type": "Answer", "text": "Trois univers : Fluid Motion, des leggings et brassières de sport pour femme ; CrossOver, des vêtements de training pour homme ; et Amplitude, des pièces unisexes du quotidien (t-shirts KI et NŪ, tracksuits). Nous proposons aussi des chaussettes."}},
+    {"@type": "Question", "name": "Quelle différence entre les leggings Fluid Motion Everyday et Performance ?", "acceptedAnswer": {"@type": "Answer", "text": "Les deux sont en Nylon et Spandex. La version Performance (75 % Nylon, 25 % Spandex) contient plus d'élasthanne : elle offre plus de maintien et de compression, pour les entraînements intenses. La version Everyday (78 % Nylon, 22 % Spandex) est plus souple, pensée pour les séances légères, le quotidien, le yoga ou le pilates."}},
+    {"@type": "Question", "name": "Pour quels sports les vêtements sont-ils conçus ?", "acceptedAnswer": {"@type": "Answer", "text": "Pour le training, le running, le yoga et le pilates, mais aussi pour le quotidien. Les pièces Performance et CrossOver sont faites pour les séances exigeantes, les pièces Amplitude pour l'avant et l'après."}},
+    {"@type": "Question", "name": "En quelles matières sont les pièces CrossOver ?", "acceptedAnswer": {"@type": "Answer", "text": "Le t-shirt CrossOver est en 100 % polyester. Le short CrossOver est en 87 % polyester et 13 % spandex, avec un cuissard de compression intégré."}},
+    {"@type": "Question", "name": "En quelles matières sont les pièces Amplitude ?", "acceptedAnswer": {"@type": "Answer", "text": "Le t-shirt KI est en 100 % coton, 280 g/m². Le t-shirt NŪ est en 75 % coton et 25 % Sorona, 240 g/m². Le tracksuit Basic est en French Terry 85 % coton et 15 % polyester, 420 g/m². Le tracksuit Zip est en 64 % coton et 36 % polyester, 365 g/m²."}},
+    {"@type": "Question", "name": "Quelles tailles proposez-vous ?", "acceptedAnswer": {"@type": "Answer", "text": "Nos pièces existent du XS au 2XL. Le guide des tailles détaillé, en centimètres, se trouve sur chaque fiche produit."}},
+    {"@type": "Question", "name": "Comment taillent les t-shirts et tracksuits Amplitude ?", "acceptedAnswer": {"@type": "Answer", "text": "Les pièces Amplitude ont une coupe relaxed, légèrement oversize. Prenez votre taille habituelle pour un tombé ample, ou une taille en dessous si vous préférez une coupe plus près du corps."}},
+    {"@type": "Question", "name": "Puis-je échanger ma taille ?", "acceptedAnswer": {"@type": "Answer", "text": "Oui. En cas d'échange de taille, le renvoi de la nouvelle pièce est offert. Il suffit de nous contacter dans les 14 jours suivant la réception."}},
+    {"@type": "Question", "name": "Quand les pièces sont-elles disponibles ?", "acceptedAnswer": {"@type": "Answer", "text": "Certaines pièces sont déjà disponibles. Le premier drop sort en précommande, avec une expédition environ 4 semaines après la clôture. Les dates sont annoncées sur Instagram et par newsletter."}},
+    {"@type": "Question", "name": "Quels sont les frais de livraison en Suisse ?", "acceptedAnswer": {"@type": "Answer", "text": "La livraison standard en Suisse coûte 7.50 CHF. Elle est offerte dès 90 CHF d'achat."}},
+    {"@type": "Question", "name": "Livrez-vous à l'étranger ?", "acceptedAnswer": {"@type": "Answer", "text": "Oui, nous expédions vers vingt-sept pays en Europe, en Amérique du Nord, au Proche-Orient, en Asie et en Océanie. Les frais de livraison internationale sont calculés au moment du paiement."}},
+    {"@type": "Question", "name": "Puis-je retourner une pièce ?", "acceptedAnswer": {"@type": "Answer", "text": "Vous disposez de 14 jours à compter de la réception pour retourner un article non porté, non lavé et muni de ses étiquettes d'origine. Les frais de retour sont à votre charge. Le remboursement est effectué sur le moyen de paiement utilisé, dans les 5 jours suivant la réception et la vérification du retour."}},
+    {"@type": "Question", "name": "Comment entretenir mes vêtements KINŪ ?", "acceptedAnswer": {"@type": "Answer", "text": "Les pièces techniques Fluid Motion et CrossOver se lavent à 30 °C, sans assouplissant. Les pièces en coton Amplitude se lavent à 30 °C et sèchent à l'air libre, sans sèche-linge. Le détail de chaque pièce figure sur sa fiche produit."}}
+  ]
+}
+</script>
+{% endif %}
+{% if template.name == 'index' %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "{{ shop.url }}/#organization",
+  "name": "KINŪ",
+  "alternateName": ["KINU", "KINŪ Athletics", "Kinu Athletics"],
+  "url": "{{ shop.url }}",
+  {% if shop.brand.logo %}"logo": "https:{{ shop.brand.logo | image_url: width: 600 }}",{% endif %}
+  "description": "KINŪ est une marque lausannoise de vêtements de sport techniques : leggings et brassières Fluid Motion pour femme, vêtements de training CrossOver pour homme et pièces unisexes Amplitude, pour le training, le running, le yoga et le quotidien.",
+  "slogan": "Move with intention",
+  "foundingLocation": {"@type": "Place", "name": "Lausanne, Suisse"},
+  "founder": {"@type": "Person", "name": "Jorge Monteiro"},
+  "email": "{{ shop.email }}",
+  "sameAs": ["https://www.instagram.com/kinuathletics/"]
+}
+</script>
+{% endif %}
+</head>
 
   {%- comment -%}
     Territoire de collection KINŪ (DIRECTION-ARTISTIQUE.md §3.4 R3).
