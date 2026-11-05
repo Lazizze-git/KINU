@@ -1280,9 +1280,9 @@ body:has(.kn-sticky.is-visible) .kn-footer {
   gap: var(--kn-space-2xs);
 }
 
-/* Sous le bouton d'ajout au panier (demande client du 22 septembre 2026). */
-.kn-buy__guide {
-  margin-block-start: var(--kn-space-sm);
+/* A droite de la legende Taille (demande client du 5 novembre 2026). */
+.kn-opt__guide {
+  margin-inline-start: auto;
   padding: 0;
   border: 0;
   background: none;

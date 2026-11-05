@@ -10,6 +10,14 @@
 {%- enddoc -%}
 
 {%- unless product.has_only_default_variant -%}
+  {%- comment -%}
+    Le lien vers le guide des tailles se pose a droite de la legende de la
+    premiere option de taille, la ou la question se pose (demande client du
+    5 novembre 2026 ; il etait sous le bouton depuis le 22 septembre). Une
+    seule fois : sur les tracksuits, « Taille haut » le porte, « Taille bas »
+    non.
+  {%- endcomment -%}
+  {%- assign kn_guide_done = false -%}
   <div class="kn-opt">
     {%- for kn_option in product.options_with_values -%}
       {%- liquid
@@ -47,6 +55,18 @@
           <legend class="kn-opt__legend">
             <span class="kn-label kn-opt__name">{{ kn_option.name }}</span>
             <span class="kn-opt__value" data-kn-option-value>{{ kn_option.selected_value }}</span>
+            {%- unless kn_guide_done -%}
+              {%- assign kn_opt_lower = kn_option.name | downcase -%}
+              {%- if kn_opt_lower contains 'taille' or kn_opt_lower contains 'size' -%}
+                {%- render 'kn-product-size-guide-link',
+                  product: product,
+                  opts: opts,
+                  section_id: section_id,
+                  class_name: 'kn-opt__guide'
+                -%}
+                {%- assign kn_guide_done = true -%}
+              {%- endif -%}
+            {%- endunless -%}
           </legend>
 
           <div class="kn-opt__list kn-opt__list--{{ kn_style }}">

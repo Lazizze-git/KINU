@@ -1,8 +1,10 @@
 {%- doc -%}
-  KINŪ — Lien vers le guide des tailles, sous le bouton d'ajout au panier.
+  KINŪ — Lien vers le guide des tailles.
 
-  Demande client du 22 septembre 2026 : le lien quitte la légende de l'option
-  Taille pour passer sous le bouton. Il n'apparaît que si la pièce a une option
+  Rendu dans la légende de la première option de taille (kn-product-options),
+  à droite du libellé : demande client du 5 novembre 2026, qui revient sur
+  celle du 22 septembre (le lien était passé sous le bouton). Il n'apparaît
+  que si la pièce a une option
   de taille et que kn-product-sizes saura dessiner un tableau — celui de la
   pièce (métachamp), sinon le tableau commun réglé dans l'éditeur. Pas de lien
   vers un panneau vide.
@@ -10,6 +12,7 @@
   @param {object} product
   @param {object} opts
   @param {string} section_id
+  @param {string} [class_name] - Classe de placement, `kn-opt__guide` par défaut.
 {%- enddoc -%}
 
 {%- liquid
@@ -35,7 +38,7 @@
 {%- if kn_has_guide -%}
   <button
     type="button"
-    class="kn-label kn-underline kn-buy__guide"
+    class="kn-label kn-underline {{ class_name | default: 'kn-opt__guide' }}"
     data-kn-sizes-open="kn-sizes-{{ section_id }}"
   >
     {{- opts.label_size_guide | default: 'Guide des tailles' -}}
