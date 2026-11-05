@@ -1610,9 +1610,14 @@ summary.kn-nav__level1:hover {
    `max()` plutot qu'une addition : sur un ecran sans encoche, `env()` vaut 0
    et le rembourrage d'origine est conserve tel quel. */
 #cart-drawer .cart-drawer__summary,
-#cart-drawer [class*="cart-drawer__summary"],
-#cart-drawer .cart__ctas {
+#cart-drawer [class*="cart-drawer__summary"] {
   padding-bottom: max(var(--kn-space-md), env(safe-area-inset-bottom, 0px));
+}
+
+/* La reserve ne se pose qu'une fois : appliquee aussi au bloc du bouton,
+   qui est dans le pied, elle laissait 48 px vides sous « Passer commande ». */
+#cart-drawer .cart-drawer__summary .cart__ctas {
+  padding-bottom: 0;
 }
 
 /* La ligne d'article, dans la typographie de la maison.
@@ -1678,9 +1683,49 @@ summary.kn-nav__level1:hover {
   text-align: end;
 }
 
-/* Un filet entre les articles, aucun au-dessus du premier. */
-#cart-drawer .cart-items__table-row + .cart-items__table-row {
-  border-block-start: var(--kn-stroke) solid var(--kn-line);
+/* Un filet entre les articles, aucun au-dessus du premier.
+
+   Horizon trace deja ce filet sous chaque ligne (filet + marge de 20 px) : un
+   second filet pose en haut de la ligne suivante doublait la separation et
+   venait raser la vignette et le nom de l'article, qui paraissaient coupes
+   (5 novembre 2026). On garde le seul filet d'Horizon, a la teinte maison. */
+#cart-drawer .cart-drawer__items .cart-items__table-row {
+  border-block-end-color: var(--kn-line);
+}
+
+/* Le fondu de `scroll-hint` effacait le haut et le bas de la liste : dans un
+   tiroir de telephone, ou la liste ne montre qu'un article et demi, il
+   donnait l'impression d'une ligne tranchee. Le filet du pied suffit a
+   signaler la suite. */
+#cart-drawer scroll-hint.cart-drawer__items,
+#cart-drawer scroll-hint.cart-drawer__content {
+  /* Le fondu est ecrit en style en ligne par `scrolling.js`. */
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+}
+
+/* Le pied ouvrait sur deux filets a 18 px d'ecart : le sien et celui du bloc
+   Reduction. Un seul reste. */
+#cart-drawer .cart-drawer__summary .cart-actions {
+  border-block-start: 0;
+}
+
+/* Sur telephone, le pied collant prenait 297 px d'un ecran de 640 et ne
+   laissait que 250 px a la liste. Ecarts resserres, en-tete aminci : la
+   liste gagne pres de 100 px sans rien retirer. */
+@media (max-width: 749px) {
+  #cart-drawer .theme-drawer__header {
+    padding-block: var(--kn-space-xs);
+  }
+
+  #cart-drawer .cart-drawer__summary {
+    gap: var(--kn-space-sm);
+    padding-block-start: var(--kn-space-xs);
+  }
+
+  #cart-drawer .cart-drawer__summary .cart-totals {
+    gap: var(--kn-space-sm);
+  }
 }
 
 /* Selecteur de quantite : filet 1 px, angle vif (DA §7.5). */
