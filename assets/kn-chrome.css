@@ -1025,6 +1025,19 @@ body.kn-header--over-media
   }
 }
 
+/* Horizon (base.css) passe tout `summary:hover` a 80 % d'encre. Sur
+   telephone, le survol reste colle apres un tap : le titre de la rubrique
+   ouverte, dans le menu comme dans le pied de page, virait a l'encre sur le
+   vert et devenait illisible (5 novembre 2026). Les rangees gardent leur
+   teinte ; R7 reste prioritaire au survol souris (specificite superieure). */
+summary.kn-nav__level1:hover {
+  color: var(--kn-ivory);
+}
+
+.kn-footer__summary:hover {
+  color: inherit;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .kn-nav__arrow {
     transition: opacity var(--kn-dur-2) var(--kn-ease-state);
@@ -1343,6 +1356,15 @@ body.kn-header--over-media
   margin-block-start: var(--kn-space-xl);
   padding-block-start: var(--kn-space-md);
   border-block-start: var(--kn-stroke) solid var(--kn-line-invert);
+}
+
+/* Sur telephone, le dernier accordeon porte deja son filet bas : celui de la
+   base en dessinait un second, un vide plus bas (5 novembre 2026). */
+@media (max-width: 767px) {
+  .kn-footer__base {
+    padding-block-start: 0;
+    border-block-start: 0;
+  }
 }
 
 .kn-footer__social {

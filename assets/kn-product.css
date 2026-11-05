@@ -929,9 +929,12 @@ body:has(.kn-pdp) .kn-territory-surface {
   cursor: not-allowed;
 }
 
-/* Le bandeau ne doit jamais recouvrir la fin de page. */
-body:has(.kn-sticky.is-visible) {
-  padding-bottom: var(--kn-space-3xl);
+/* Le bandeau ne doit jamais recouvrir la fin de page. La reserve se prend
+   dans le pied de page, pas sous le <body> : posee sur le body, elle laissait
+   voir une bande ivoire entre le vert du pied de page et le bandeau
+   (5 novembre 2026). */
+body:has(.kn-sticky.is-visible) .kn-footer {
+  padding-block-end: calc(var(--kn-space-xl) + var(--kn-space-3xl));
 }
 
 @media (min-width: 768px) {
@@ -939,8 +942,8 @@ body:has(.kn-sticky.is-visible) {
     display: none;
   }
 
-  body:has(.kn-sticky.is-visible) {
-    padding-bottom: 0;
+  body:has(.kn-sticky.is-visible) .kn-footer {
+    padding-block-end: var(--kn-space-xl);
   }
 }
 

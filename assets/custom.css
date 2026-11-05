@@ -323,3 +323,39 @@
   --font-h5--size: var(--kn-fs-sm);
   --font-h6--size: var(--kn-fs-label);
 }
+
+/* --------------------------------------------------------------------------
+   Popup « Precommande ouverte » (appli AppHero, injectee hors du theme)
+   L'appli ecrit Helvetica en style en ligne sur le titre et le bouton : on
+   les ramene a la typo du site, d'ou les !important. Sur telephone, la photo
+   (portrait) etait centree dans un cadre paysage de 210 px et coupait les
+   tetes : cadre plus haut, cadrage cale sur le haut du groupe
+   (5 novembre 2026).
+   -------------------------------------------------------------------------- */
+.aph_pop_pop .aph_pop_title {
+  font-family: var(--kn-font-display) !important;
+  font-weight: var(--kn-fw-medium) !important;
+  letter-spacing: -0.01em;
+}
+
+.aph_pop_pop .aph_pop_ctaBtn {
+  font-family: var(--kn-font-ui) !important;
+  font-weight: var(--kn-fw-medium) !important;
+  font-size: 0.8125rem !important;
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
+}
+
+@media (max-width: 767px) {
+  .aph_pop_pop .aph_pop_img {
+    height: min(300px, 38vh) !important;
+    align-items: stretch !important;
+  }
+
+  .aph_pop_pop .aph_pop_img img {
+    width: 100%;
+    height: 100% !important;
+    object-fit: cover;
+    object-position: 50% 12%;
+  }
+}
