@@ -14,7 +14,14 @@
 
 {%- liquid
   assign poster_image = poster | default: video.preview_image
-  assign alt_text = poster_image.alt | default: poster_alt | default: shop.name | escape
+  # Le texte alternatif d'une image de fichier ne se traduit pas dans Shopify.
+  # Hors langue principale, on prend d'abord celui de la section, traduit
+  # dans Traduire et adapter (6 novembre 2026).
+  if request.locale.primary
+    assign alt_text = poster_image.alt | default: poster_alt | default: shop.name | escape
+  else
+    assign alt_text = poster_alt | default: poster_image.alt | default: shop.name | escape
+  endif
 
   # Sans poster choisi, c'est la première image de la vidéo qui attend : elle
   # se cadre comme la vidéo, au centre, sinon le fondu la ferait sauter.
