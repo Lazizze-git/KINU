@@ -22,6 +22,41 @@
       "coupe": "Coupe",
       "entretien": "Entretien",
       "origine": "Origine"
+    },
+    "contact": {
+      "eyebrow": "Nous écrire",
+      "name": "Nom",
+      "email": "Adresse e-mail",
+      "topic": "Sujet",
+      "topic_placeholder": "Choisissez un sujet",
+      "topics": "Une commande en cours\nUn retour ou un échange\nUne pièce ou une taille\nAutre question",
+      "order": "Numéro de commande",
+      "message": "Message",
+      "submit": "Envoyer",
+      "required_note": "* Champs obligatoires",
+      "success_title": "Message envoyé",
+      "success_text": "Merci, nous revenons vers vous dès que possible.",
+      "success_link": "Retour à la boutique",
+      "error": "Votre message n'est pas parti. Vérifiez votre adresse e-mail et réessayez.",
+      "direct_title": "Coordonnées"
+    },
+    "preorder": {
+      "button": "Précommander",
+      "status": "En précommande",
+      "badge": "Précommande",
+      "property": "Précommande",
+      "property_value": "Oui"
+    },
+    "product": {
+      "origin": "L’origine",
+      "size_guide": "Guide des tailles",
+      "close": "Fermer"
+    },
+    "card": {
+      "from": "Dès"
+    },
+    "collections": {
+      "view": "Voir {{ title }}"
     }
   },
   "blocks": {

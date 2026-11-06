@@ -42,7 +42,7 @@
       « Precommande : Oui », le client sait quoi ne pas expedier tout de suite.
     {%- endcomment -%}
     {%- if preorder -%}
-      <input type="hidden" name="properties[Précommande]" value="Oui">
+      <input type="hidden" name="properties[{{ 'kinu.preorder.property' | t }}]" value="{{ 'kinu.preorder.property_value' | t }}">
     {%- endif -%}
 
     <div class="kn-buy__actions">

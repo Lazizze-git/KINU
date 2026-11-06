@@ -15,14 +15,53 @@
     assign kn_has_content = true
   endif
 
-  assign kn_has_topics = false
-  if s.topics != blank
-    assign kn_has_topics = true
-    assign kn_topics = s.topics | newline_to_br | split: '<br />'
-  endif
+  comment
+    Demande client du 6 novembre 2026 : le formulaire restait en français sur
+    la version anglaise. Les réglages laissés à leur valeur par défaut ne sont
+    pas enregistrés dans le modèle, donc Traduire et adapter ne les voit pas.
+    Les défauts du schéma sont retirés : un champ vide prend le texte des
+    fichiers de langue (kinu.contact), en français ou en anglais selon la
+    langue du visiteur. Un texte saisi dans l'éditeur reste prioritaire et se
+    traduit alors dans Traduire et adapter.
+  endcomment
+  assign kn_t_eyebrow = 'kinu.contact.eyebrow' | t
+  assign kn_t_name = 'kinu.contact.name' | t
+  assign kn_t_email = 'kinu.contact.email' | t
+  assign kn_t_topic = 'kinu.contact.topic' | t
+  assign kn_t_topic_placeholder = 'kinu.contact.topic_placeholder' | t
+  assign kn_t_topics = 'kinu.contact.topics' | t
+  assign kn_t_order = 'kinu.contact.order' | t
+  assign kn_t_message = 'kinu.contact.message' | t
+  assign kn_t_submit = 'kinu.contact.submit' | t
+  assign kn_t_required = 'kinu.contact.required_note' | t
+  assign kn_t_success_title = 'kinu.contact.success_title' | t
+  assign kn_t_success_text = 'kinu.contact.success_text' | t
+  assign kn_t_success_link = 'kinu.contact.success_link' | t
+  assign kn_t_error = 'kinu.contact.error' | t
+  assign kn_t_direct = 'kinu.contact.direct_title' | t
 
-  assign kn_field_topic = s.label_topic | default: 'Sujet'
-  assign kn_field_order = s.label_order | default: 'Numéro de commande'
+  assign kn_eyebrow = s.eyebrow | default: kn_t_eyebrow
+  assign kn_label_name = s.label_name | default: kn_t_name
+  assign kn_label_email = s.label_email | default: kn_t_email
+  assign kn_topic_placeholder = s.topic_placeholder | default: kn_t_topic_placeholder
+  assign kn_label_message = s.label_message | default: kn_t_message
+  assign kn_submit = s.submit_label | default: kn_t_submit
+  assign kn_required = s.required_note | default: kn_t_required
+  assign kn_success_title = s.success_title | default: kn_t_success_title
+  assign kn_success_text = s.success_text | default: kn_t_success_text
+  assign kn_success_link = s.success_link | default: kn_t_success_link
+  assign kn_error = s.error_text | default: kn_t_error
+  assign kn_direct_title = s.direct_title | default: kn_t_direct
+
+  assign kn_field_topic = s.label_topic | default: kn_t_topic
+  assign kn_field_order = s.label_order | default: kn_t_order
+
+  assign kn_topics_raw = s.topics | default: kn_t_topics
+  assign kn_has_topics = false
+  if kn_topics_raw != blank
+    assign kn_has_topics = true
+    assign kn_topics = kn_topics_raw | newline_to_br | split: '<br />'
+  endif
 
   assign kn_has_direct = false
   if s.email != blank or s.instagram_url != blank
@@ -33,8 +72,8 @@
 <div class="kn-contact" data-kn-surface="light">
   <div class="kn-container">
     <header class="kn-contact__head">
-      {%- if s.eyebrow != blank -%}
-        <p class="kn-label kn-contact__eyebrow">{{ s.eyebrow | escape }}</p>
+      {%- if kn_eyebrow != blank -%}
+        <p class="kn-label kn-contact__eyebrow">{{ kn_eyebrow | escape }}</p>
       {%- endif -%}
       <h1 class="kn-contact__title">{{ page.title | escape }}</h1>
     </header>
@@ -48,24 +87,24 @@
         {%- form 'contact', id: 'kn-contact-form', class: 'kn-contact__form' -%}
           {%- if form.posted_successfully? -%}
             <div class="kn-contact__done" role="status" tabindex="-1" autofocus>
-              <h2 class="kn-contact__done-title">{{ s.success_title | escape }}</h2>
-              {%- if s.success_text != blank -%}
-                <p class="kn-contact__done-text">{{ s.success_text | escape }}</p>
+              <h2 class="kn-contact__done-title">{{ kn_success_title | escape }}</h2>
+              {%- if kn_success_text != blank -%}
+                <p class="kn-contact__done-text">{{ kn_success_text | escape }}</p>
               {%- endif -%}
               <a class="kn-label kn-underline kn-contact__done-link" href="{{ routes.root_url }}">
-                {{- s.success_link | default: 'Retour à la boutique' | escape -}}
+                {{- kn_success_link | escape -}}
               </a>
             </div>
           {%- else -%}
             {%- if form.errors -%}
               <p class="kn-contact__error kn-sm" id="kn-contact-error" role="alert" tabindex="-1" autofocus>
-                {{- s.error_text | escape -}}
+                {{- kn_error | escape -}}
               </p>
             {%- endif -%}
 
             <div class="kn-contact__row">
               <div class="kn-field">
-                <label class="kn-label kn-field__label" for="kn-contact-name">{{ s.label_name | escape }}</label>
+                <label class="kn-label kn-field__label" for="kn-contact-name">{{ kn_label_name | escape }}</label>
                 <input
                   class="kn-input"
                   id="kn-contact-name"
@@ -78,7 +117,7 @@
 
               <div class="kn-field">
                 <label class="kn-label kn-field__label" for="kn-contact-email">
-                  {{- s.label_email | escape }} <span aria-hidden="true">*</span>
+                  {{- kn_label_email | escape }} <span aria-hidden="true">*</span>
                 </label>
                 <input
                   class="kn-input"
@@ -104,7 +143,7 @@
                 <div class="kn-field">
                   <label class="kn-label kn-field__label" for="kn-contact-topic">{{ kn_field_topic | escape }}</label>
                   <select class="kn-input kn-contact__select" id="kn-contact-topic" name="contact[{{ kn_field_topic | escape }}]">
-                    <option value="">{{ s.topic_placeholder | escape }}</option>
+                    <option value="">{{ kn_topic_placeholder | escape }}</option>
                     {%- for kn_raw in kn_topics -%}
                       {%- assign kn_topic = kn_raw | strip -%}
                       {%- if kn_topic != blank -%}
@@ -129,7 +168,7 @@
 
             <div class="kn-field">
               <label class="kn-label kn-field__label" for="kn-contact-body">
-                {{- s.label_message | escape }} <span aria-hidden="true">*</span>
+                {{- kn_label_message | escape }} <span aria-hidden="true">*</span>
               </label>
               <textarea
                 class="kn-input kn-contact__textarea"
@@ -144,19 +183,19 @@
             </div>
 
             <button type="submit" class="kn-btn kn-btn--primary kn-contact__submit">
-              {{- s.submit_label | escape -}}
+              {{- kn_submit | escape -}}
             </button>
 
-            {%- if s.required_note != blank -%}
-              <p class="kn-contact__note kn-sm">{{ s.required_note | escape }}</p>
+            {%- if kn_required != blank -%}
+              <p class="kn-contact__note kn-sm">{{ kn_required | escape }}</p>
             {%- endif -%}
           {%- endif -%}
         {%- endform -%}
 
         {%- if kn_has_direct -%}
           <div class="kn-contact__direct">
-            {%- if s.direct_title != blank -%}
-              <p class="kn-label kn-contact__direct-title">{{ s.direct_title | escape }}</p>
+            {%- if kn_direct_title != blank -%}
+              <p class="kn-label kn-contact__direct-title">{{ kn_direct_title | escape }}</p>
             {%- endif -%}
             <ul class="kn-contact__direct-list" role="list">
               {%- if s.email != blank -%}
@@ -195,8 +234,7 @@
       "type": "text",
       "id": "eyebrow",
       "label": "Sur-titre",
-      "default": "Nous écrire",
-      "info": "Petit texte au-dessus du titre. Laissez vide pour le retirer."
+      "info": "Petit texte au-dessus du titre. Vide : « Nous écrire », traduit selon la langue du visiteur."
     },
     {
       "type": "header",
@@ -206,56 +244,55 @@
       "type": "text",
       "id": "label_name",
       "label": "Champ nom",
-      "default": "Nom"
+      "info": "Vide : texte par défaut, traduit selon la langue du visiteur."
     },
     {
       "type": "text",
       "id": "label_email",
       "label": "Champ e-mail",
-      "default": "Adresse e-mail"
+      "info": "Vide : texte par défaut, traduit selon la langue du visiteur."
     },
     {
       "type": "text",
       "id": "label_topic",
       "label": "Champ sujet",
-      "default": "Sujet"
+      "info": "Vide : texte par défaut, traduit selon la langue du visiteur."
     },
     {
       "type": "text",
       "id": "topic_placeholder",
       "label": "Invite du sujet",
-      "default": "Choisissez un sujet"
+      "info": "Vide : texte par défaut, traduit selon la langue du visiteur."
     },
     {
       "type": "textarea",
       "id": "topics",
       "label": "Sujets proposés (un par ligne)",
-      "default": "Une commande en cours\nUn retour ou un échange\nUne pièce ou une taille\nAutre question",
-      "info": "Laissez vide pour retirer la liste. Le sujet choisi arrive dans l'e-mail que vous recevez."
+      "info": "Vide : liste par défaut, traduite selon la langue du visiteur. Le sujet choisi arrive dans l'e-mail que vous recevez."
     },
     {
       "type": "text",
       "id": "label_order",
       "label": "Champ numéro de commande",
-      "default": "Numéro de commande"
+      "info": "Vide : texte par défaut, traduit selon la langue du visiteur."
     },
     {
       "type": "text",
       "id": "label_message",
       "label": "Champ message",
-      "default": "Message"
+      "info": "Vide : texte par défaut, traduit selon la langue du visiteur."
     },
     {
       "type": "text",
       "id": "submit_label",
       "label": "Bouton",
-      "default": "Envoyer"
+      "info": "Vide : texte par défaut, traduit selon la langue du visiteur."
     },
     {
       "type": "text",
       "id": "required_note",
       "label": "Mention des champs obligatoires",
-      "default": "* Champs obligatoires"
+      "info": "Vide : texte par défaut, traduit selon la langue du visiteur."
     },
     {
       "type": "header",
@@ -265,25 +302,25 @@
       "type": "text",
       "id": "success_title",
       "label": "Titre après envoi",
-      "default": "Message envoyé"
+      "info": "Vide : texte par défaut, traduit selon la langue du visiteur."
     },
     {
       "type": "text",
       "id": "success_text",
       "label": "Texte après envoi",
-      "default": "Merci, nous revenons vers vous dès que possible."
+      "info": "Vide : texte par défaut, traduit selon la langue du visiteur."
     },
     {
       "type": "text",
       "id": "success_link",
       "label": "Lien après envoi",
-      "default": "Retour à la boutique"
+      "info": "Vide : texte par défaut, traduit selon la langue du visiteur."
     },
     {
       "type": "text",
       "id": "error_text",
       "label": "Message d'erreur",
-      "default": "Votre message n'est pas parti. Vérifiez votre adresse e-mail et réessayez."
+      "info": "Vide : texte par défaut, traduit selon la langue du visiteur."
     },
     {
       "type": "header",
@@ -293,7 +330,7 @@
       "type": "text",
       "id": "direct_title",
       "label": "Titre du bloc",
-      "default": "Coordonnées"
+      "info": "Vide : texte par défaut, traduit selon la langue du visiteur."
     },
     {
       "type": "text",

@@ -60,8 +60,14 @@
   assign kn_label_add = kn_s.label_add_to_cart
   assign kn_label_in_stock = kn_s.label_in_stock
   if kn_preorder
-    assign kn_label_add = settings.kn_preorder_button | default: kn_label_add
-    assign kn_label_in_stock = settings.kn_preorder_status | default: kn_label_in_stock
+    comment
+      Reglages vides par defaut : le libelle vient des fichiers de langue
+      (kinu.preorder), en francais ou en anglais selon le visiteur.
+    endcomment
+    assign kn_t_preorder_button = 'kinu.preorder.button' | t
+    assign kn_t_preorder_status = 'kinu.preorder.status' | t
+    assign kn_label_add = settings.kn_preorder_button | default: kn_t_preorder_button
+    assign kn_label_in_stock = settings.kn_preorder_status | default: kn_t_preorder_status
     if kn_can_add
       assign kn_btn_label = kn_label_add
     endif
@@ -241,7 +247,7 @@
 
     { "type": "header", "content": "Informations" },
     { "type": "text", "id": "title_description", "label": "Titre — Description", "default": "Description" },
-    { "type": "text", "id": "title_origin", "label": "Titre — Origine", "default": "L’origine", "info": "Volet affiché uniquement sur les pièces dont le métachamp « Récit d’origine » est rempli." },
+    { "type": "text", "id": "title_origin", "label": "Titre — Origine", "info": "Volet affiché uniquement sur les pièces dont le métachamp « Récit d’origine » est rempli. Vide : « L’origine », traduit selon la langue du visiteur." },
     { "type": "text", "id": "title_material", "label": "Titre — Matière", "default": "Matière & entretien" },
     { "type": "richtext", "id": "text_material", "label": "Texte de repli — Matière" },
     { "type": "checkbox", "id": "show_shipping", "label": "Afficher le volet Livraison", "info": "Masqué à la demande du client (octobre 2026) : le coût de livraison est calculé au paiement et le seuil de gratuité figure déjà sous le bouton.", "default": false },

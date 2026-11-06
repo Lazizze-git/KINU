@@ -32,7 +32,7 @@
       assign kn_eyebrow = kn_block.settings.eyebrow | default: kn_target.title
       assign kn_cta = kn_block.settings.link_label
       if kn_cta == blank
-        assign kn_cta = 'Voir ' | append: kn_target.title
+        assign kn_cta = 'kinu.collections.view' | t: title: kn_target.title
       endif
       assign kn_lazy = 'lazy'
       if forloop.first

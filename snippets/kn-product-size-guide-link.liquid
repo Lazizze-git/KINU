@@ -16,6 +16,7 @@
 {%- enddoc -%}
 
 {%- liquid
+  assign kn_t_size_guide = 'kinu.product.size_guide' | t
   assign kn_has_size = false
   for kn_option in product.options_with_values
     assign kn_opt_lower = kn_option.name | downcase
@@ -41,6 +42,6 @@
     class="kn-label kn-underline {{ class_name | default: 'kn-opt__guide' }}"
     data-kn-sizes-open="kn-sizes-{{ section_id }}"
   >
-    {{- opts.label_size_guide | default: 'Guide des tailles' -}}
+    {{- opts.label_size_guide | default: kn_t_size_guide -}}
   </button>
 {%- endif -%}

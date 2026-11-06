@@ -2128,19 +2128,19 @@
         "type": "text",
         "id": "kn_preorder_button",
         "label": "Bouton d’ajout",
-        "default": "Précommander"
+        "info": "Vide : « Précommander », traduit selon la langue du visiteur."
       },
       {
         "type": "text",
         "id": "kn_preorder_status",
         "label": "Disponibilité",
-        "default": "En précommande"
+        "info": "Vide : « En précommande », traduit selon la langue du visiteur."
       },
       {
         "type": "text",
         "id": "kn_preorder_badge",
         "label": "Pastille des vignettes",
-        "default": "Précommande"
+        "info": "Vide : « Précommande », traduit selon la langue du visiteur."
       },
       {
         "type": "richtext",
