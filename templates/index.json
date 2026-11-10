@@ -96,7 +96,7 @@
           "type": "pillar",
           "settings": {
             "key": "Élan",
-            "text": "Une coupe qui suit le geste, jamais l'inverse."
+            "text": "Une coupe qui suit le geste, jamais l’inverse."
           }
         }
       },
@@ -106,8 +106,8 @@
         "pillar-3"
       ],
       "settings": {
-        "title": "Des pièces pensées pour durer et conçues pour bouger avec toi.",
-        "text": "On ne suit pas une saison, on suit un mouvement. Chaque choix est fait pour rester juste, séance après séance.",
+        "title": "Des vêtements de sport conçus pour bouger avec toi.",
+        "text": "On ne suit pas une saison, on suit un mouvement. Conçus à Lausanne, pour le training, le running et le quotidien.",
         "link_label": "NOTRE FABRICATION",
         "link_url": ""
       }
