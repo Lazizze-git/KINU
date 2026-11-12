@@ -113,7 +113,7 @@
             {%- endcomment -%}
             <div class="kn-hero__inner">
               <span class="kn-hero__mask">
-                <h1 class="kn-hero__title">{{ s.title | escape }}</h1>
+                <h1 class="kn-hero__title">{{ s.title | escape | newline_to_br }}</h1>
               </span>
               {%- if show_entries -%}
                 <ul class="kn-hero__entries" role="list">
@@ -196,7 +196,7 @@
       "content": "Texte posé sur la vidéo"
     },
     {
-      "type": "text",
+      "type": "textarea",
       "id": "title",
       "label": "Titre",
       "info": "Laissez vide pour une bannière purement visuelle, sans voile."
