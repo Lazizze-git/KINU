@@ -1431,9 +1431,12 @@ body:has(.kn-sticky.is-visible) .kn-footer {
   display: none;
 }
 @media (min-width: 768px) {
-  @media (min-width: 768px) {
   .kn-pdp {
     --kn-gal-ratio: 1 / 1;
+  }
+
+  .kn-pdp__layout {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 5fr);
   }
 
   .kn-gal__frame img {
