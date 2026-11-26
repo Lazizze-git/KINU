@@ -1430,3 +1430,12 @@ body:has(.kn-sticky.is-visible) .kn-footer {
 .kn-pdp__territory {
   display: none;
 }
+@media (min-width: 768px) {
+  .kn-pdp {
+    --kn-gal-ratio: 4 / 5;
+  }
+
+  .kn-gal__frame {
+    max-height: calc(100svh - var(--kn-header-h) - 7rem);
+  }
+}
