@@ -1399,3 +1399,34 @@ body:has(.kn-sticky.is-visible) .kn-footer {
 .kn-pdp__inner:has(.kn-pdp__breadcrumb) {
   padding-top: var(--kn-space-sm);
 }
+.kn-pdp__inner {
+  --kn-pdp-pad: var(--kn-gutter);
+}
+
+@media (min-width: 768px) {
+  .kn-pdp__inner {
+    --kn-pdp-pad: var(--kn-space-lg);
+    max-width: none;
+    padding-inline: var(--kn-pdp-pad);
+  }
+
+  .kn-recos__inner {
+    max-width: none;
+    padding-inline: var(--kn-space-lg);
+  }
+}
+
+.kn-pdp__inner:has(.kn-pdp__breadcrumb) {
+  padding-top: 0;
+}
+
+.kn-pdp__breadcrumb {
+  margin-inline: calc(-1 * var(--kn-pdp-pad));
+  margin-bottom: var(--kn-space-md);
+  padding: var(--kn-space-xs) var(--kn-pdp-pad);
+  border-bottom: var(--kn-stroke) solid var(--kn-line);
+}
+
+.kn-pdp__territory {
+  display: none;
+}
