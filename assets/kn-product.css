@@ -1385,3 +1385,11 @@ body:has(.kn-sticky.is-visible) .kn-footer {
 
 .kn-sizes__note > :first-child { margin-top: 0; }
 .kn-sizes__note > :last-child { margin-bottom: 0; }
+.kn-pdp__inner {
+  padding-bottom: var(--kn-space-xl);
+}
+
+.kn-recos__inner {
+  padding-top: var(--kn-space-sm);
+  padding-bottom: var(--kn-space-2xl);
+}
