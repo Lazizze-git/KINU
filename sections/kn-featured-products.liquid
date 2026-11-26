@@ -1,5 +1,19 @@
 {%- liquid
   assign s = section.settings
+  assign kn_qa_title = s.quick_add_title
+  if kn_qa_title == blank
+    if request.locale.iso_code == 'fr'
+      assign kn_qa_title = 'Ajout rapide'
+    else
+      assign kn_qa_title = 'Quick add'
+    endif
+  endif
+  assign kn_qa_add = 'actions.add_to_cart' | t
+  assign kn_qa_add = s.quick_add_label | default: kn_qa_add
+  assign kn_qa_sold = 'products.product.sold_out' | t
+  assign kn_qa_sold = s.quick_add_sold_out | default: kn_qa_sold
+  assign kn_qa_close = 'actions.close' | t
+  assign kn_qa_close = s.quick_add_close | default: kn_qa_close
   assign target_collection = s.collection
   assign kn_products = target_collection.products
   assign kn_link_url = target_collection.url
@@ -50,7 +64,7 @@
                   class="kn-qa__open"
                   data-kn-qa-open="kn-qa-{{ product.id }}"
                   aria-haspopup="dialog"
-                  aria-label="{{ s.quick_add_title | escape }} : {{ product.title | escape }}"
+                  aria-label="{{ kn_qa_title | escape }} : {{ product.title | escape }}"
                 >
                   {%- render 'kn-icon', name: 'cart', size: 20 -%}
                 </button>
@@ -76,12 +90,12 @@
           >
             <div class="kn-qa__sheet" data-kn-surface="light">
               <div class="kn-qa__head">
-                <h3 class="kn-qa__heading" id="kn-qa-heading-{{ product.id }}">{{ s.quick_add_title | escape }}</h3>
+                <h3 class="kn-qa__heading" id="kn-qa-heading-{{ product.id }}">{{ kn_qa_title | escape }}</h3>
                 <button
                   type="button"
                   class="kn-qa__close"
                   data-kn-qa-close
-                  aria-label="{{ s.quick_add_close | escape }}"
+                  aria-label="{{ kn_qa_close | escape }}"
                 >
                   {%- render 'kn-icon', name: 'close', size: 20 -%}
                 </button>
@@ -165,10 +179,10 @@
                       ref="addToCartButton"
                       on:click="/handleClick"
                       data-kn-qa-submit
-                      data-label-add="{{ s.quick_add_label | escape }}"
-                      data-label-sold-out="{{ s.quick_add_sold_out | escape }}"
+                      data-label-add="{{ kn_qa_add | escape }}"
+                      data-label-sold-out="{{ kn_qa_sold | escape }}"
                     >
-                      <span data-kn-qa-label>{{ s.quick_add_label | escape }}</span>
+                      <span data-kn-qa-label>{{ kn_qa_add | escape }}</span>
                     </button>
                   </add-to-cart-component>
 
@@ -556,25 +570,25 @@
       "type": "text",
       "id": "quick_add_title",
       "label": "Titre du panneau",
-      "default": "Ajout rapide"
+      "info": "Vide : « Ajout rapide » en français, « Quick add » dans les autres langues."
     },
     {
       "type": "text",
       "id": "quick_add_label",
       "label": "Libellé du bouton d'ajout",
-      "default": "Ajouter au panier"
+      "info": "Vide : le libellé du thème, traduit dans chaque langue."
     },
     {
       "type": "text",
       "id": "quick_add_sold_out",
       "label": "Libellé quand la taille est épuisée",
-      "default": "Épuisé"
+      "info": "Vide : le libellé du thème, traduit dans chaque langue."
     },
     {
       "type": "text",
       "id": "quick_add_close",
       "label": "Libellé du bouton de fermeture",
-      "default": "Fermer"
+      "info": "Vide : le libellé du thème, traduit dans chaque langue."
     },
     {
       "type": "header",
