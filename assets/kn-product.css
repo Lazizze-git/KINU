@@ -1399,3 +1399,10 @@ body:has(.kn-sticky.is-visible) .kn-footer {
 .kn-pdp__inner:has(.kn-pdp__breadcrumb) {
   padding-top: var(--kn-space-sm);
 }
+.kn-pdp__territory {
+  display: none;
+}
+
+.kn-pdp__breadcrumb {
+  margin-bottom: var(--kn-space-md);
+}
