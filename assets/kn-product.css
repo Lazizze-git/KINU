@@ -443,6 +443,9 @@ body:has(.kn-pdp) .kn-territory-surface {
 .kn-opt__value {
   font-family: var(--kn-font-ui);
   font-size: var(--kn-fs-label);
+  font-weight: var(--kn-fw-medium);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
 }
 
 .kn-opt__list {
