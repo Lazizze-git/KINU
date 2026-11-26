@@ -11,8 +11,20 @@
   "sections": {
     "main": {
       "type": "kn-main-product",
+      "blocks": {
+        "assurance_shipping": {
+          "type": "assurance",
+          "settings": {
+            "icon": "truck",
+            "text": "Livraison offerte dès CHF 90"
+          }
+        }
+      },
+      "block_order": [
+        "assurance_shipping"
+      ],
       "settings": {
-        "show_breadcrumb": false,
+        "show_breadcrumb": true,
         "label_women": "Femme",
         "label_men": "Homme",
         "label_unisex": "Unisexe",
@@ -43,27 +55,24 @@
         "label_model": "Modèle 3D",
         "label_size_guide": "Guide des tailles",
         "size_guide_title": "Guide des tailles",
+        "size_guide_rows": "",
         "size_guide_note": "<p>Mesures de la pièce en centimètres, prises avant le port, sans étirer la matière. Entre deux tailles, choisissez la plus grande pour une coupe détendue.</p>",
         "title_description": "Description",
+        "title_origin": "",
         "title_material": "Matière & entretien",
+        "text_material": "",
         "show_shipping": false,
         "title_shipping": "Livraison & retours",
         "text_shipping": ""
-      },
-      "blocks": {
-        "assurance_shipping": {
-          "type": "assurance",
-          "settings": { "icon": "truck", "text": "Livraison offerte dès CHF 90" }
-        }
-      },
-      "block_order": ["assurance_shipping"]
+      }
     },
     "complete_the_look": {
       "type": "kn-product-recommendations",
       "settings": {
         "heading": "Complétez la tenue",
         "recommendation_type": "complementary",
-        "products_to_show": 4
+        "products_to_show": 4,
+        "product": ""
       }
     },
     "recommendations": {
@@ -71,9 +80,14 @@
       "settings": {
         "heading": "Vous aimerez aussi",
         "recommendation_type": "related",
-        "products_to_show": 4
+        "products_to_show": 4,
+        "product": ""
       }
     }
   },
-  "order": ["main", "complete_the_look", "recommendations"]
+  "order": [
+    "main",
+    "complete_the_look",
+    "recommendations"
+  ]
 }
