@@ -105,7 +105,7 @@
         "vignette-femme-vestes"
       ],
       "settings": {
-        "show_breadcrumb": true,
+        "show_breadcrumb": false,
         "show_universe": true,
         "products_per_page": 24,
         "menu": "main-menu",
