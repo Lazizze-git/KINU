@@ -1293,7 +1293,15 @@
 }
 
 .kn-hub .kn-home-head__title {
-  font-size: 1.25rem;
+  font-size: var(--kn-fs-label);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
+}
+
+.kn-hub .kn-hub__name {
+  font-size: var(--kn-fs-label);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
 }
 
 .kn-hub .kn-home-body {
