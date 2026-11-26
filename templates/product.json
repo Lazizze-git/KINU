@@ -24,7 +24,7 @@
         "assurance_shipping"
       ],
       "settings": {
-        "show_breadcrumb": true,
+        "show_breadcrumb": false,
         "label_women": "Femme",
         "label_men": "Homme",
         "label_unisex": "Unisexe",
