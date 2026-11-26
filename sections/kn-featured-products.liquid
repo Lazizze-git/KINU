@@ -122,6 +122,9 @@
                 {%- form 'product', product, id: kn_form_id, data-type: 'add-to-cart-form' -%}
                   <input type="hidden" name="id" ref="variantId" value="{{ kn_variant.id }}">
                   <input type="hidden" name="quantity" value="1">
+                  {%- if product.metafields.custom.precommande.value == true -%}
+                    <input type="hidden" name="properties[{{ 'kinu.preorder.property' | t }}]" value="{{ 'kinu.preorder.property_value' | t }}">
+                  {%- endif -%}
 
                   {%- unless product.has_only_default_variant -%}
                     {%- for option in product.options_with_values -%}
@@ -177,7 +180,13 @@
                 <script type="application/json" data-kn-qa-variants>
                   [
                     {%- for variant in product.variants -%}
-                      {"id": {{ variant.id }}, "available": {{ variant.available | json }}, "options": {{ variant.options | json }}}{% unless forloop.last %},{% endunless %}
+                      {%- liquid
+                        assign kn_vimg = ''
+                        if variant.featured_image != blank
+                          assign kn_vimg = variant.featured_image | image_url: width: 400
+                        endif
+                      -%}
+                      {"id": {{ variant.id }}, "available": {{ variant.available | json }}, "options": {{ variant.options | json }}, "image": {{ kn_vimg | json }}}{% unless forloop.last %},{% endunless %}
                     {%- endfor -%}
                   ]
                 </script>
@@ -437,6 +446,12 @@
       input.value = variant ? String(variant.id) : '';
       button.disabled = !canAdd;
       label.textContent = canAdd ? button.getAttribute('data-label-add') : soldOut;
+
+      var media = dialog.querySelector('.kn-qa__media img');
+      if (media && variant && variant.image && media.getAttribute('src') !== variant.image) {
+        media.removeAttribute('srcset');
+        media.src = variant.image;
+      }
 
       selects.forEach(function (select, selectIndex) {
         [].forEach.call(select.options, function (option) {
