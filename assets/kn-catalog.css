@@ -491,7 +491,8 @@
    que la phrase de contexte, pose entre l'en-tete et la barre d'outils : le
    visiteur lit ce que raconte le rayon avant de voir ses pieces. */
 .kn-collection__story {
-  margin-block: var(--kn-space-md) var(--kn-space-lg);
+  margin-block: 0 var(--kn-space-lg);
+  max-width: min(100%, 85ch);
 }
 
 .kn-collection__story > :first-child {
