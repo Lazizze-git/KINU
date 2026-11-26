@@ -99,6 +99,10 @@
     endif
   endfor
 
+   if product.handle == 'ki'
+    assign kn_image_alt = product.images[1]
+    assign kn_colour_option = blank
+  endif
   if kn_colour_option != blank and kn_image != blank
     assign kn_colour_prop = kn_colour_option.position | prepend: 'option'
     assign kn_shown_colour = kn_colour_option.values.first.name
