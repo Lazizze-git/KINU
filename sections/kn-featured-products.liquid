@@ -36,11 +36,156 @@
     {%- if product_count > 0 -%}
       <div class="kn-products__grid kn-home-body">
         {%- for product in kn_products limit: s.count -%}
-          <div class="kn-reveal">
+          <div class="kn-reveal kn-qa">
             {%- render 'kn-product-card', product: product -%}
+            {%- comment -%}
+              Ajout rapide : le bouton rond se pose sur le coin bas droit de la
+              photo. Le cadre transparent reprend le format de l'image pour
+              que le bouton suive la photo à toutes les largeurs.
+            {%- endcomment -%}
+            {%- if product.available -%}
+              <div class="kn-qa__frame">
+                <button
+                  type="button"
+                  class="kn-qa__open"
+                  data-kn-qa-open="kn-qa-{{ product.id }}"
+                  aria-haspopup="dialog"
+                  aria-label="{{ s.quick_add_title | escape }} : {{ product.title | escape }}"
+                >
+                  {%- render 'kn-icon', name: 'cart', size: 20 -%}
+                </button>
+              </div>
+            {%- endif -%}
           </div>
         {%- endfor -%}
       </div>
+
+      {%- comment -%}
+        Un panneau par produit, posé après la grille : un dialogue natif passe
+        au premier plan quoi qu'il y ait autour. Le formulaire est celui
+        d'Horizon (comme sur la fiche produit), donc le tiroir panier et le
+        compteur de l'en-tête se mettent à jour tout seuls.
+      {%- endcomment -%}
+      {%- for product in kn_products limit: s.count -%}
+        {%- if product.available -%}
+          {%- assign kn_variant = product.selected_or_first_available_variant -%}
+          <dialog
+            class="kn-qa__panel"
+            id="kn-qa-{{ product.id }}"
+            aria-labelledby="kn-qa-heading-{{ product.id }}"
+          >
+            <div class="kn-qa__sheet" data-kn-surface="light">
+              <div class="kn-qa__head">
+                <h3 class="kn-qa__heading" id="kn-qa-heading-{{ product.id }}">{{ s.quick_add_title | escape }}</h3>
+                <button
+                  type="button"
+                  class="kn-qa__close"
+                  data-kn-qa-close
+                  aria-label="{{ s.quick_add_close | escape }}"
+                >
+                  {%- render 'kn-icon', name: 'close', size: 20 -%}
+                </button>
+              </div>
+
+              <div class="kn-qa__item">
+                {%- if product.featured_image != blank -%}
+                  {%- assign kn_alt = product.featured_image.alt | default: product.title -%}
+                  <div class="kn-qa__media">
+                    {{
+                      product.featured_image
+                      | image_url: width: 400
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '200,400',
+                        sizes: '120px',
+                        alt: kn_alt
+                    }}
+                  </div>
+                {%- endif -%}
+                <div class="kn-qa__info">
+                  <p class="kn-qa__name">{{ product.title | escape }}</p>
+                  <p class="kn-qa__price">{{ product.price | money }}</p>
+                </div>
+              </div>
+
+              <product-form-component
+                id="KnQaForm-{{ product.id }}"
+                class="kn-qa__form"
+                data-section-id="{{ section.id }}"
+                data-product-id="{{ product.id }}"
+                data-quantity-default="1"
+                on:submit="/handleSubmit"
+              >
+                <div class="kn-visually-hidden" aria-live="assertive" aria-atomic="true" ref="liveRegion"></div>
+
+                {%- assign kn_form_id = 'KnQaFormEl-' | append: product.id -%}
+                {%- form 'product', product, id: kn_form_id, data-type: 'add-to-cart-form' -%}
+                  <input type="hidden" name="id" ref="variantId" value="{{ kn_variant.id }}">
+                  <input type="hidden" name="quantity" value="1">
+
+                  {%- unless product.has_only_default_variant -%}
+                    {%- for option in product.options_with_values -%}
+                      {%- assign kn_option_index = forloop.index0 -%}
+                      <div class="kn-qa__field">
+                        <label class="kn-label kn-qa__label" for="kn-qa-option-{{ product.id }}-{{ kn_option_index }}">
+                          {{- option.name | escape -}}
+                        </label>
+                        <div class="kn-qa__select-wrap">
+                          <select
+                            class="kn-qa__select"
+                            id="kn-qa-option-{{ product.id }}-{{ kn_option_index }}"
+                            data-kn-qa-option
+                          >
+                            {%- for value in option.values -%}
+                              <option value="{{ value | escape }}"{% if kn_variant.options[kn_option_index] == value %} selected{% endif %}>
+                                {{- value | escape -}}
+                              </option>
+                            {%- endfor -%}
+                          </select>
+                          <span class="kn-qa__caret" aria-hidden="true">
+                            {%- render 'kn-icon', name: 'chevron', size: 18 -%}
+                          </span>
+                        </div>
+                      </div>
+                    {%- endfor -%}
+                  {%- endunless -%}
+
+                  <add-to-cart-component
+                    class="kn-qa__atc"
+                    data-add-to-cart-animation="false"
+                    ref="addToCartButtonContainer"
+                  >
+                    <button
+                      type="submit"
+                      name="add"
+                      class="kn-btn kn-btn--primary kn-qa__button"
+                      ref="addToCartButton"
+                      on:click="/handleClick"
+                      data-kn-qa-submit
+                      data-label-add="{{ s.quick_add_label | escape }}"
+                      data-label-sold-out="{{ s.quick_add_sold_out | escape }}"
+                    >
+                      <span data-kn-qa-label>{{ s.quick_add_label | escape }}</span>
+                    </button>
+                  </add-to-cart-component>
+
+                  <span class="kn-qa__error hidden" ref="addToCartTextError">
+                    <span class="kn-qa__error-mark" aria-hidden="true">!</span>
+                  </span>
+                {%- endform -%}
+
+                <script type="application/json" data-kn-qa-variants>
+                  [
+                    {%- for variant in product.variants -%}
+                      {"id": {{ variant.id }}, "available": {{ variant.available | json }}, "options": {{ variant.options | json }}}{% unless forloop.last %},{% endunless %}
+                    {%- endfor -%}
+                  ]
+                </script>
+              </product-form-component>
+            </div>
+          </dialog>
+        {%- endif -%}
+      {%- endfor -%}
     {%- else -%}
       <div class="kn-home-empty">
         <p class="kn-lead">{{ s.empty_text | escape }}</p>
@@ -53,6 +198,307 @@
     {%- endif -%}
   </div>
 </div>
+
+<style>
+  .kn-qa {
+    position: relative;
+  }
+
+  /* Cadre transparent au format de la photo : il porte le bouton rond. */
+  .kn-qa__frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    aspect-ratio: var(--kn-ratio-card, 5 / 8);
+    pointer-events: none;
+  }
+
+  .kn-qa__open {
+    position: absolute;
+    right: var(--kn-space-2xs);
+    bottom: var(--kn-space-2xs);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background-color: var(--kn-ivory);
+    color: var(--kn-ink);
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background-color var(--kn-dur-2) var(--kn-ease-state),
+      color var(--kn-dur-2) var(--kn-ease-state);
+  }
+
+  .kn-qa__open:hover {
+    background-color: var(--kn-forest);
+    color: var(--kn-ivory);
+  }
+
+  .kn-qa__open:focus-visible {
+    outline: 2px solid var(--kn-forest);
+    outline-offset: 2px;
+  }
+
+  /* Panneau latéral, calé à droite sur toute la hauteur. */
+  .kn-qa__panel {
+    width: min(26rem, 100vw);
+    max-width: 100vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0 0 0 auto;
+    padding: 0;
+    border: 0;
+    background-color: var(--kn-ivory);
+    color: var(--kn-ink);
+  }
+
+  .kn-qa__panel::backdrop {
+    background-color: var(--kn-scrim, rgba(27, 26, 22, 0.4));
+  }
+
+  .kn-qa__sheet {
+    display: flex;
+    flex-direction: column;
+    gap: var(--kn-space-md);
+    height: 100%;
+    padding: var(--kn-space-md);
+    overflow-y: auto;
+    background-color: var(--kn-surface-bg);
+    color: var(--kn-surface-fg);
+  }
+
+  .kn-qa__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--kn-space-md);
+    padding-bottom: var(--kn-space-sm);
+    border-bottom: var(--kn-stroke, 1px) solid var(--kn-surface-line);
+  }
+
+  .kn-qa__heading {
+    margin: 0;
+    font-size: var(--kn-fs-h4);
+    font-weight: var(--kn-fw-medium);
+  }
+
+  .kn-qa__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: var(--kn-tap);
+    min-height: var(--kn-tap);
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .kn-qa__item {
+    display: flex;
+    gap: var(--kn-space-sm);
+  }
+
+  .kn-qa__media {
+    flex: 0 0 7.5rem;
+    aspect-ratio: var(--kn-ratio-card, 5 / 8);
+    background-color: var(--kn-sage);
+    border-radius: var(--kn-radius-media, 6px);
+    overflow: hidden;
+  }
+
+  .kn-qa__media img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .kn-qa__info {
+    min-width: 0;
+  }
+
+  .kn-qa__name {
+    margin: 0 0 var(--kn-space-2xs);
+    font-weight: var(--kn-fw-medium);
+  }
+
+  .kn-qa__price {
+    margin: 0;
+    color: var(--kn-surface-muted);
+  }
+
+  .kn-qa__field {
+    display: grid;
+    gap: var(--kn-space-2xs);
+    margin-bottom: var(--kn-space-md);
+  }
+
+  .kn-qa__label {
+    color: var(--kn-surface-muted);
+  }
+
+  .kn-qa__select-wrap {
+    position: relative;
+  }
+
+  .kn-qa__select {
+    width: 100%;
+    min-height: var(--kn-tap);
+    padding: 0 var(--kn-space-xl) 0 var(--kn-space-sm);
+    border: 1px solid var(--kn-surface-fg);
+    border-radius: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .kn-qa__select option {
+    background-color: var(--kn-ivory);
+    color: var(--kn-ink);
+  }
+
+  .kn-qa__caret {
+    position: absolute;
+    top: 50%;
+    right: var(--kn-space-sm);
+    display: inline-flex;
+    transform: translateY(-50%);
+    pointer-events: none;
+  }
+
+  .kn-qa__button {
+    width: 100%;
+  }
+
+  .kn-qa__error {
+    display: block;
+    margin-top: var(--kn-space-sm);
+    color: var(--kn-error, #a33a2a);
+    font-size: var(--kn-fs-sm);
+  }
+
+  .kn-qa__error.hidden {
+    display: none;
+  }
+
+  .kn-qa__error-mark {
+    margin-right: var(--kn-space-2xs);
+    font-weight: var(--kn-fw-bold);
+  }
+</style>
+
+<script>
+  (function () {
+    if (window.knQuickAddReady) return;
+    window.knQuickAddReady = true;
+
+    function refresh(dialog) {
+      var node = dialog.querySelector('[data-kn-qa-variants]');
+      var button = dialog.querySelector('[data-kn-qa-submit]');
+      var label = dialog.querySelector('[data-kn-qa-label]');
+      var input = dialog.querySelector('input[name="id"]');
+      if (!node || !button || !label || !input) return;
+
+      var variants = [];
+      try {
+        variants = JSON.parse(node.textContent);
+      } catch (error) {
+        return;
+      }
+
+      var selects = [].slice.call(dialog.querySelectorAll('[data-kn-qa-option]'));
+      var choice = selects.map(function (select) {
+        return select.value;
+      });
+      var soldOut = button.getAttribute('data-label-sold-out') || '';
+
+      var variant = null;
+      if (selects.length === 0) {
+        variant = variants[0] || null;
+      } else {
+        variant =
+          variants.filter(function (item) {
+            return choice.every(function (value, index) {
+              return item.options[index] === value;
+            });
+          })[0] || null;
+      }
+
+      var canAdd = Boolean(variant && variant.available);
+      input.value = variant ? String(variant.id) : '';
+      button.disabled = !canAdd;
+      label.textContent = canAdd ? button.getAttribute('data-label-add') : soldOut;
+
+      selects.forEach(function (select, selectIndex) {
+        [].forEach.call(select.options, function (option) {
+          var probe = choice.slice();
+          probe[selectIndex] = option.value;
+          var reachable = variants.some(function (item) {
+            return (
+              item.available &&
+              probe.every(function (value, index) {
+                return item.options[index] === value;
+              })
+            );
+          });
+          option.textContent = reachable ? option.value : option.value + ' (' + soldOut.toLowerCase() + ')';
+        });
+      });
+    }
+
+    document.addEventListener('click', function (event) {
+      var target = event.target;
+      if (!(target instanceof Element)) return;
+
+      var opener = target.closest('[data-kn-qa-open]');
+      if (opener) {
+        var dialog = document.getElementById(opener.getAttribute('data-kn-qa-open'));
+        if (dialog && typeof dialog.showModal === 'function') {
+          refresh(dialog);
+          dialog.showModal();
+        }
+        return;
+      }
+
+      if (target.closest('[data-kn-qa-close]')) {
+        var current = target.closest('dialog');
+        if (current) current.close();
+        return;
+      }
+
+      // Clic sur le voile : la cible est le dialogue lui-même, jamais son contenu.
+      if (target instanceof HTMLDialogElement && target.classList.contains('kn-qa__panel')) {
+        target.close();
+      }
+    });
+
+    document.addEventListener('change', function (event) {
+      var target = event.target;
+      if (!(target instanceof Element) || !target.hasAttribute('data-kn-qa-option')) return;
+      var dialog = target.closest('dialog');
+      if (dialog) refresh(dialog);
+    });
+
+    // Une fois la pièce ajoutée, le panneau se ferme et laisse place au tiroir panier.
+    document.addEventListener('submit', function (event) {
+      var form = event.target;
+      if (!(form instanceof Element) || !form.closest('.kn-qa__panel')) return;
+      window.setTimeout(function () {
+        var dialog = form.closest('dialog');
+        if (dialog && dialog.open) dialog.close();
+      }, 0);
+    });
+  })();
+</script>
 
 {% schema %}
 {
@@ -86,6 +532,34 @@
       "id": "link_label",
       "label": "Libellé du lien de la collection",
       "default": "Voir tout"
+    },
+    {
+      "type": "header",
+      "content": "Ajout rapide (icône panier)"
+    },
+    {
+      "type": "text",
+      "id": "quick_add_title",
+      "label": "Titre du panneau",
+      "default": "Ajout rapide"
+    },
+    {
+      "type": "text",
+      "id": "quick_add_label",
+      "label": "Libellé du bouton d'ajout",
+      "default": "Ajouter au panier"
+    },
+    {
+      "type": "text",
+      "id": "quick_add_sold_out",
+      "label": "Libellé quand la taille est épuisée",
+      "default": "Épuisé"
+    },
+    {
+      "type": "text",
+      "id": "quick_add_close",
+      "label": "Libellé du bouton de fermeture",
+      "default": "Fermer"
     },
     {
       "type": "header",
