@@ -1364,3 +1364,9 @@
 .kn-hub .kn-universe__note {
   margin: 0;
 }
+
+@media (min-width: 1024px) {
+  .kn-hub__grid:has(> :nth-child(5):last-child) {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+}
