@@ -1920,3 +1920,6 @@ summary.kn-nav__level1:hover {
   background-color: var(--kn-ivory);
   border-radius: var(--kn-radius);
 }
+.kn-header.is-scrolled {
+  border-block-end-color: transparent;
+}
