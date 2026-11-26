@@ -1289,8 +1289,21 @@
    -------------------------------------------------------------------------- */
 
 .kn-hub {
-  padding-block: var(--kn-space-lg) var(--kn-section-y);
+  padding-block: var(--kn-space-2xs) var(--kn-section-y);
 }
+
+.kn-hub .kn-home-head__title {
+  font-size: 1.25rem;
+}
+
+.kn-hub .kn-home-body {
+  margin-block-start: var(--kn-space-md);
+}
+
+.kn-hub .kn-hub__part + .kn-hub__part {
+  margin-block-start: var(--kn-space-2xl);
+}
+  
 
 .kn-hub__part + .kn-hub__part {
   margin-block-start: var(--kn-section-y);
