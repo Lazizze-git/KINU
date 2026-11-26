@@ -1432,7 +1432,7 @@ body:has(.kn-sticky.is-visible) .kn-footer {
 }
 @media (min-width: 768px) {
   .kn-pdp {
-    --kn-gal-ratio: 1 / 1;
+    --kn-gal-ratio: 4 / 5;
   }
 
   .kn-pdp__layout {
