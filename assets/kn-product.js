@@ -172,11 +172,40 @@ var DESKTOP_QUERY = '(min-width: 768px)';
       { passive: true }
     );
 
+    // Desktop >= 1024 px : les photos sont empilees (kn-product.css, fiche
+    // facon Kith). La vignette fait defiler jusqu'a la photo, et la vignette
+    // active suit le defilement.
+    var stacked = window.matchMedia('(min-width: 1024px)');
+
     thumbs.forEach(function (thumb) {
       thumb.addEventListener('click', function () {
-        goTo(parseInt(thumb.getAttribute('data-kn-index') || '0', 10));
+        var index = parseInt(thumb.getAttribute('data-kn-index') || '0', 10);
+        goTo(index);
+        if (stacked.matches && slides[index]) {
+          slides[index].scrollIntoView({
+            behavior: reducedMotion() ? 'auto' : 'smooth',
+            block: 'start'
+          });
+        }
       });
     });
+
+    if ('IntersectionObserver' in window) {
+      var watcher = new IntersectionObserver(
+        function (entries) {
+          if (!stacked.matches) return;
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            var n = slides.indexOf(entry.target);
+            if (n >= 0 && n !== current) paint(n);
+          });
+        },
+        { rootMargin: '-45% 0px -45% 0px' }
+      );
+      slides.forEach(function (slide) {
+        watcher.observe(slide);
+      });
+    }
 
     paint(0);
 

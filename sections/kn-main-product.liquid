@@ -119,6 +119,7 @@
         {%- render 'kn-product-gallery', product: kn_product, opts: kn_s -%}
       </div>
 
+      <div class="kn-pdp__side">
       <div class="kn-pdp__info">
         {%- if kn_category != blank -%}
           <p class="kn-label kn-pdp__eyebrow">{{ kn_category }} — {{ kn_universe_title }}</p>
@@ -173,6 +174,7 @@
       {%- endcomment -%}
       <div class="kn-pdp__spec">
         {%- render 'kn-product-details', product: kn_product, opts: kn_s, section_id: section.id -%}
+      </div>
       </div>
     </div>
 
