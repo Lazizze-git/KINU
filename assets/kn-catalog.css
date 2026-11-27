@@ -1370,3 +1370,15 @@
     grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 }
+
+.kn-collection__head {
+  padding-block-start: var(--kn-space-md);
+}
+
+.kn-collection__head:has(.kn-rayons) {
+  padding-block-end: var(--kn-space-xs);
+}
+
+.kn-rayons {
+  margin-block-start: var(--kn-space-sm);
+}
