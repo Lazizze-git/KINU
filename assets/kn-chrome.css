@@ -1920,3 +1920,11 @@ summary.kn-nav__level1:hover {
   background-color: var(--kn-ivory);
   border-radius: var(--kn-radius);
 }
+.kn-ship .kn-ship__text {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-label);
+  font-weight: var(--kn-fw-medium);
+  letter-spacing: var(--kn-ls-label);
+  text-transform: uppercase;
+  color: var(--kn-grey);
+}
