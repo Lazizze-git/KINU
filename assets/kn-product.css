@@ -1415,3 +1415,6 @@ body:has(.kn-sticky.is-visible) .kn-footer {
   font-weight: var(--kn-fw-regular);
   color: var(--kn-grey);
 }
+.kn-pdp__app .jdgm-star {
+  color: #1E4D3B !important;
+}
