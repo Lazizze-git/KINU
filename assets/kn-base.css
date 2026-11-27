@@ -438,6 +438,8 @@ a {
   display: none;
 }
 
+/* Le résumé du tiroir est un flex centré : sans `stretch`, la barre se
+   réduisait à la largeur de son texte au milieu du tiroir. */
 .kn-ship {
   display: grid;
   width: 100%;
