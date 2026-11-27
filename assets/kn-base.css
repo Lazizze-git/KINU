@@ -440,6 +440,8 @@ a {
 
 .kn-ship {
   display: grid;
+  width: 100%;
+  align-self: stretch;
   gap: var(--kn-space-2xs);
   padding-bottom: var(--kn-space-sm);
 }
