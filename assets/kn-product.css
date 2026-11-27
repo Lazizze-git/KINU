@@ -1406,3 +1406,6 @@ body:has(.kn-sticky.is-visible) .kn-footer {
 .kn-pdp__breadcrumb {
   margin-bottom: var(--kn-space-md);
 }
+.kn-pdp__app {
+  margin-top: var(--kn-space-xs);
+}
