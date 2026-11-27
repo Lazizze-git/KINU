@@ -221,6 +221,8 @@
     }
   },
   "content": {
+    "kn_free_shipping_remaining": "{{ amount }} away from free shipping",
+    "kn_free_shipping_reached": "Free shipping unlocked",
     "cancel": "Cancel",
     "discount": "Discount",
     "account_title": "Account",

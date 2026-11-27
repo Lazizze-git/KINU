@@ -1406,3 +1406,90 @@ body:has(.kn-sticky.is-visible) .kn-footer {
 .kn-pdp__breadcrumb {
   margin-bottom: var(--kn-space-md);
 }
+
+/* --------------------------------------------------------------------------
+   Fiche plein écran, façon Kith — desktop à partir de 1024 px (27/11/2026)
+
+   Les photos vont bord à bord à gauche, sans vignettes, deux par rangée ;
+   la colonne d'achat reste à droite. Mobile et tablette ne changent pas.
+
+   Pourquoi la tentative précédente cassait les proportions : en retirant la
+   largeur maximale, la galerie prenait ~55 % d'un grand écran et la photo, en
+   2:3, devenait bien plus haute que la fenêtre. Ici c'est la HAUTEUR de
+   l'écran qui fixe la taille : une photo fait exactement la hauteur visible
+   sous le header, et sa largeur en découle (2/3 de la hauteur, le rapport de
+   --kn-ratio-photo). Rien n'est recadré, rien n'est étiré. Sur un écran trop
+   étroit pour deux photos de cette taille, elles rétrécissent ensemble pour
+   laisser de la place à la colonne d'achat (26rem, marges comprises).
+   -------------------------------------------------------------------------- */
+
+@media (min-width: 1024px) {
+  .kn-pdp__inner {
+    container-type: inline-size;
+    max-width: none;
+    padding-left: 0;
+  }
+
+  .kn-pdp__inner:not(:has(.kn-pdp__breadcrumb)) {
+    padding-top: 0;
+  }
+
+  .kn-pdp__breadcrumb {
+    padding-left: var(--kn-gutter);
+  }
+
+  .kn-pdp__layout {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: clamp(2rem, 4vw, 4rem);
+  }
+
+  .kn-pdp__gallery {
+    position: static;
+  }
+
+  .kn-pdp .kn-gal:has(.kn-gal__thumbs) {
+    display: block;
+  }
+
+  .kn-pdp .kn-gal__thumbs {
+    display: none;
+  }
+
+  /* Une colonne pour une photo seule, deux dès qu'il y en a deux visibles
+     (le choix d'un coloris masque les photos des autres coloris). */
+  .kn-pdp .kn-gal__track:has(> .kn-gal__slide:not([hidden]) ~ .kn-gal__slide:not([hidden])) {
+    --kn-gal-cols: 2;
+  }
+
+  .kn-pdp .kn-gal__track {
+    /* 2/3 = --kn-ratio-photo ; à changer ensemble. Déclaré ici, sur la grille
+       elle-même, pour que --kn-gal-cols posé juste au-dessus soit bien lu. */
+    --kn-gal-h: calc(100svh - var(--kn-header-h));
+    --kn-gal-w: min(calc(var(--kn-gal-h) * 2 / 3), calc((100cqw - 26rem) / var(--kn-gal-cols, 1)));
+    display: grid;
+    grid-template-columns: repeat(var(--kn-gal-cols, 1), var(--kn-gal-w));
+    gap: 2px;
+  }
+
+  .kn-pdp .kn-gal__slide {
+    display: block;
+  }
+
+  .kn-pdp .kn-gal__slide[hidden] {
+    display: none;
+  }
+
+  .kn-pdp .kn-gal__frame {
+    border-radius: 0;
+  }
+
+  .kn-pdp__info {
+    padding-top: var(--kn-space-lg);
+  }
+
+  /* Avec une seule photo la colonne d'achat s'étirerait sur 800 px. */
+  .kn-pdp__info,
+  .kn-pdp__spec {
+    max-width: 32rem;
+  }
+}

@@ -1,0 +1,45 @@
+{%- doc -%}
+  Barre « livraison offerte » du panier (tiroir et page panier).
+
+  Le seuil vient du réglage de thème `kn_free_shipping_threshold`, en CHF. Il
+  doit rester égal au tarif gratuit réglé dans Shopify (Paramètres >
+  Expédition et livraison, zone Suisse) : la barre n'affiche qu'une promesse,
+  c'est le tarif d'expédition qui la tient.
+
+  La livraison offerte n'existe qu'en Suisse : la barre n'apparaît donc que
+  pour un panier en CHF. Un visiteur qui paie en euros ne la voit pas.
+
+  Le wrapper est toujours rendu, même vide, pour que le morphing du panier
+  retrouve le même nœud d'une mise à jour à l'autre.
+{%- enddoc -%}
+
+{%- liquid
+  assign kn_threshold = settings.kn_free_shipping_threshold | default: 0 | times: 100
+  assign kn_show = false
+  if kn_threshold > 0 and cart.item_count > 0 and cart.currency.iso_code == shop.currency
+    assign kn_show = true
+  endif
+-%}
+
+<div class="kn-ship">
+  {%- if kn_show -%}
+    {%- liquid
+      assign kn_left = kn_threshold | minus: cart.total_price
+      assign kn_pct = cart.total_price | times: 100 | divided_by: kn_threshold
+      if kn_pct > 100
+        assign kn_pct = 100
+      endif
+    -%}
+    <p class="kn-ship__text">
+      {%- if kn_left > 0 -%}
+        {%- assign kn_amount = kn_left | money -%}
+        {{- 'content.kn_free_shipping_remaining' | t: amount: kn_amount -}}
+      {%- else -%}
+        {{- 'content.kn_free_shipping_reached' | t -}}
+      {%- endif -%}
+    </p>
+    <div class="kn-ship__track" aria-hidden="true">
+      <span class="kn-ship__fill" style="width: {{ kn_pct }}%;"></span>
+    </div>
+  {%- endif -%}
+</div>

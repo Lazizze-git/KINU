@@ -429,3 +429,36 @@ a {
   border-radius: var(--kn-radius-media);
   background-color: var(--kn-media-bg);
 }
+
+/* --------------------------------------------------------------------------
+   Panier — barre « livraison offerte » (snippets/kn-free-shipping.liquid)
+   -------------------------------------------------------------------------- */
+
+.kn-ship:empty {
+  display: none;
+}
+
+.kn-ship {
+  display: grid;
+  gap: var(--kn-space-2xs);
+  padding-bottom: var(--kn-space-sm);
+}
+
+.kn-ship__text {
+  margin: 0;
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-sm);
+}
+
+.kn-ship__track {
+  height: 2px;
+  background-color: var(--kn-line);
+  overflow: hidden;
+}
+
+.kn-ship__fill {
+  display: block;
+  height: 100%;
+  background-color: var(--kn-forest);
+  transition: width var(--kn-dur-1, 0.2s) ease;
+}

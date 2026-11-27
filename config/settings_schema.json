@@ -1526,6 +1526,13 @@
         "visible_if": "{{ settings.cart_type == 'drawer' }}"
       },
       {
+        "type": "number",
+        "id": "kn_free_shipping_threshold",
+        "label": "Livraison offerte dès (CHF)",
+        "info": "Affiche dans le panier le montant restant avant la livraison offerte. Doit correspondre au tarif réglé dans Paramètres > Expédition et livraison. Mettre 0 pour masquer la barre.",
+        "default": 90
+      },
+      {
         "type": "header",
         "content": "t:content.cart_features"
       },

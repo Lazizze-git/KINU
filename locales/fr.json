@@ -181,6 +181,8 @@
     "zoom_media": "Zoom du support multimédia {{ index }}"
   },
   "content": {
+    "kn_free_shipping_remaining": "Plus que {{ amount }} pour la livraison offerte",
+    "kn_free_shipping_reached": "Livraison offerte",
     "reviews": "avis",
     "language": "Langue",
     "localization_region_and_language": "Région et langue",
