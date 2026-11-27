@@ -1409,3 +1409,9 @@ body:has(.kn-sticky.is-visible) .kn-footer {
 .kn-pdp__app {
   margin-top: var(--kn-space-xs);
 }
+.kn-pdp__app .jdgm-prev-badge__text {
+  font-family: var(--kn-font-ui);
+  font-size: var(--kn-fs-sm);
+  font-weight: var(--kn-fw-regular);
+  color: var(--kn-grey);
+}
