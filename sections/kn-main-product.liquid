@@ -125,6 +125,13 @@
         {%- endif -%}
 
         <h1 class="kn-pdp__title">{{ kn_product.title }}</h1>
+        {%- for kn_block in section.blocks -%}
+          {%- if kn_block.type == '@app' -%}
+            <div class="kn-pdp__app" {{ kn_block.shopify_attributes }}>
+              {%- render kn_block -%}
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
 
         <div class="kn-pdp__prices">
           <span class="kn-price kn-pdp__price" data-kn-price>{{ kn_price }}</span>
@@ -255,6 +262,7 @@
     { "type": "richtext", "id": "text_shipping", "label": "Texte de repli — Livraison" }
   ],
   "blocks": [
+    { "type": "@app" },
     {
       "type": "assurance",
       "name": "Argument de réassurance",
@@ -266,7 +274,7 @@
       ]
     }
   ],
-  "max_blocks": 3,
+  "max_blocks": 6,
   "presets": [{ "name": "Produit KINŪ" }]
 }
 {% endschema %}
