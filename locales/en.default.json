@@ -59,7 +59,8 @@
     "product": {
       "origin": "The origin",
       "size_guide": "Size guide",
-      "close": "Close"
+      "close": "Close",
+      "reviews": "Customer reviews"
     },
     "card": {
       "from": "From"
