@@ -100,5 +100,22 @@
       </summary>
       <div class="kn-acc__body kn-body">{{ kn_shipping }}</div>
     </details>
+    {%- endif -%}
+
+  {%- assign kn_reviews = reviews | strip -%}
+  {%- if kn_reviews != blank -%}
+    <details class="kn-acc__item kn-acc__item--reviews" name="kn-acc-{{ section_id }}">
+      <summary class="kn-acc__sum">
+        <span class="kn-label">{{ opts.title_reviews }}</span>
+      </summary>
+      <div class="kn-acc__body">{{ kn_reviews }}</div>
+    </details>
+    <script>
+      document.addEventListener('click', function (e) {
+        if (!e.target.closest('.jdgm-prev-badge')) return;
+        var d = document.querySelector('.kn-acc__item--reviews');
+        if (d) d.open = true;
+      }, true);
+    </script>
   {%- endif -%}
 </div>
