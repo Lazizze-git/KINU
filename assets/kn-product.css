@@ -1428,3 +1428,6 @@ body:has(.kn-sticky.is-visible) .kn-footer {
 .kn-acc__item--reviews #judgeme_product_reviews {
   zoom: 0.8;
 }
+.kn-acc__item--reviews .jm-star-rating__font-icon {
+  font-size: 25px !important;
+}
