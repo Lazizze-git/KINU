@@ -1926,3 +1926,11 @@ summary.kn-nav__level1:hover {
   font-weight: var(--kn-fw-regular);
   color: var(--kn-grey);
 }
+.cart-totals__icon :is(.horizontal, .vertical) {
+  transition: transform var(--animation-speed) var(--animation-easing);
+  transform-origin: 50% 50%;
+}
+
+details[open] > summary .cart-totals__icon .horizontal {
+  transform: rotate(90deg);
+}
