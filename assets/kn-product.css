@@ -1419,9 +1419,9 @@ body:has(.kn-sticky.is-visible) .kn-footer {
   color: #1E4D3B !important;
 }
 .kn-acc__item--reviews .jm-media-preview {
-  display: none;
+    display: none !important;
 }
 
 .kn-acc__item--reviews .jm-review-item:last-child {
-  border-bottom: 0;
+    border-bottom: 0 !important;
 }
