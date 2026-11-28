@@ -106,7 +106,8 @@
   {%- if kn_reviews != blank -%}
     <details class="kn-acc__item kn-acc__item--reviews" name="kn-acc-{{ section_id }}">
       <summary class="kn-acc__sum">
-        <span class="kn-label">{{ opts.title_reviews }}</span>
+                {%- assign kn_t_reviews = 'kinu.product.reviews' | t -%}
+        <span class="kn-label">{{ opts.title_reviews | default: kn_t_reviews }}</span>
       </summary>
       <div class="kn-acc__body">{{ kn_reviews }}</div>
     </details>
