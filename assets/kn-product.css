@@ -1418,3 +1418,10 @@ body:has(.kn-sticky.is-visible) .kn-footer {
 .kn-pdp__app .jdgm-star {
   color: #1E4D3B !important;
 }
+.kn-acc__item--reviews .jm-media-preview {
+  display: none;
+}
+
+.kn-acc__item--reviews .jm-review-item:last-child {
+  border-bottom: 0;
+}
