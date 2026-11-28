@@ -59,7 +59,8 @@
     "product": {
       "origin": "L’origine",
       "size_guide": "Guide des tailles",
-      "close": "Fermer"
+      "close": "Fermer",
+      "reviews": "Avis clients"
     },
     "card": {
       "from": "Dès"
