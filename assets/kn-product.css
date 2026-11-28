@@ -1425,3 +1425,6 @@ body:has(.kn-sticky.is-visible) .kn-footer {
 .kn-acc__item--reviews .jm-review-item:last-child {
     border-bottom: 0 !important;
 }
+.kn-acc__item--reviews #judgeme_product_reviews {
+  zoom: 0.85;
+}
