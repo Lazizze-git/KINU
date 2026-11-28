@@ -126,12 +126,14 @@
 
         <h1 class="kn-pdp__title">{{ kn_product.title }}</h1>
         {%- for kn_block in section.blocks -%}
-          {%- if kn_block.type == '@app' -%}
-            <div class="kn-pdp__app" {{ kn_block.shopify_attributes }}>
-              {%- render kn_block -%}
-            </div>
-          {%- endif -%}
-        {%- endfor -%}
+    {%- if kn_block.type == '@app' -%}
+      {%- unless kn_block.id contains 'review_widget' -%}
+        <div class="kn-pdp__app" {{ kn_block.shopify_attributes }}>
+          {%- render kn_block -%}
+        </div>
+      {%- endunless -%}
+    {%- endif -%}
+      {%- endfor -%}  
 
         <div class="kn-pdp__prices">
           <span class="kn-price kn-pdp__price" data-kn-price>{{ kn_price }}</span>
@@ -179,7 +181,14 @@
         est aussi l'ordre de lecture sur mobile et au clavier.
       {%- endcomment -%}
       <div class="kn-pdp__spec">
-        {%- render 'kn-product-details', product: kn_product, opts: kn_s, section_id: section.id -%}
+        {%- capture kn_reviews -%}
+  {%- for kn_block in section.blocks -%}
+    {%- if kn_block.type == '@app' and kn_block.id contains 'review_widget' -%}
+      <div {{ kn_block.shopify_attributes }}>{%- render kn_block -%}</div>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endcapture -%}
+{%- render 'kn-product-details', product: kn_product, opts: kn_s, section_id: section.id, reviews: kn_reviews -%}
       </div>
     </div>
 
@@ -256,6 +265,7 @@
     { "type": "text", "id": "title_description", "label": "Titre — Description", "default": "Description" },
     { "type": "text", "id": "title_origin", "label": "Titre — Origine", "info": "Volet affiché uniquement sur les pièces dont le métachamp « Récit d’origine » est rempli. Vide : « L’origine », traduit selon la langue du visiteur." },
     { "type": "text", "id": "title_material", "label": "Titre — Matière", "default": "Matière & entretien" },
+    { "type": "text", "id": "title_reviews", "label": "Titre — Avis", "default": "Avis clients" },
     { "type": "richtext", "id": "text_material", "label": "Texte de repli — Matière" },
     { "type": "checkbox", "id": "show_shipping", "label": "Afficher le volet Livraison", "info": "Masqué à la demande du client (octobre 2026) : le coût de livraison est calculé au paiement et le seuil de gratuité figure déjà sous le bouton.", "default": false },
     { "type": "text", "id": "title_shipping", "label": "Titre — Livraison", "default": "Livraison & retours" },
